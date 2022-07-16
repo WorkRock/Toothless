@@ -36,6 +36,7 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets\06.Controllers\BtnManager.cs" />
      <Compile Include="Assets\06.Controllers\gameManager.cs" />
     <Reference Include="UnityEngine">
         <HintPath>C:\Program Files\Unity\Hub\Editor\2019.4.36f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
