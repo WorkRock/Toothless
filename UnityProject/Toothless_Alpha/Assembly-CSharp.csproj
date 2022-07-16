@@ -61,15 +61,11 @@
     <Compile Include="Assets\02.Scripts\Player.cs" />
     <Compile Include="Assets\02.Scripts\Spawn_Atk.cs" />
     <Compile Include="Assets\02.Scripts\Wall.cs" />
+    <Compile Include="Assets\06.Controllers\BtnManager.cs" />
     <Compile Include="Assets\06.Controllers\ObjectManager.cs" />
     <Compile Include="Assets\06.Controllers\gameManager.cs" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
-=======
-     <Compile Include="Assets\06.Controllers\BtnManager.cs" />
-     <Compile Include="Assets\06.Controllers\gameManager.cs" />
->>>>>>> f5eeb8eb5eb57ec5a2f01fecf4d7755e47ed6f39
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2019.4.19f1\2019.4.36f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>
