@@ -1,12 +1,17 @@
 ﻿
+<<<<<<< HEAD
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{1AD642AF-88A9-1E6A-7E51-F6F87AB98CCB}"
+=======
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{af42d61a-a988-6a1e-7e51-f6f87ab98ccb}"
+>>>>>>> f5eeb8eb5eb57ec5a2f01fecf4d7755e47ed6f39
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1AD642AF-88A9-1E6A-7E51-F6F87AB98CCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
