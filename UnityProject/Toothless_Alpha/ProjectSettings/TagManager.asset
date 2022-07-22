@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Dragon_Atk_Fire
+  - Obstacle
+  - BorderBottom
   layers:
   - Default
   - TransparentFX

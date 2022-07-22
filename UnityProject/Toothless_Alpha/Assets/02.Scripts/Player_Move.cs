@@ -35,7 +35,7 @@ public class Player_Move : MonoBehaviour
             //방향 값(-1 or 1)
             fHor = Input.GetAxisRaw("Horizontal");
 
-            // -2 <= nowPos <= 2 이면
+            // 0 <= nowPos <= 2 이면
             if(nowPos + (int)fHor <= maxPos && nowPos + (int)fHor >= minPos)
             {
                 //현재 인덱스에 방향 값 +

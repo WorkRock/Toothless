@@ -58,9 +58,9 @@
   <ItemGroup>
     <Compile Include="Assets\02.Scripts\Dragon_Atk.cs" />
     <Compile Include="Assets\02.Scripts\Floor.cs" />
+    <Compile Include="Assets\02.Scripts\Obstacle.cs" />
     <Compile Include="Assets\02.Scripts\PlayerExp.cs" />
     <Compile Include="Assets\02.Scripts\Player_Move.cs" />
-    <Compile Include="Assets\02.Scripts\Spawn_Atk.cs" />
     <Compile Include="Assets\02.Scripts\Wall.cs" />
     <Compile Include="Assets\06.Controllers\BtnManager.cs" />
     <Compile Include="Assets\06.Controllers\ObjectManager.cs" />
@@ -653,6 +653,9 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.2D.Sprite.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
