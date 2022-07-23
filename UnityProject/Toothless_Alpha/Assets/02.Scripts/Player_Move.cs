@@ -45,4 +45,19 @@ public class Player_Move : MonoBehaviour
         //현 위치 -> 이동할 위치 (반드시 if문 밖에서)
         transform.position = Vector3.MoveTowards(transform.position, targetPos[nowPos].transform.position, playerSpeed);
     }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag.Equals("Dragon_Atk_Fire"))
+        {
+            gameObject.SetActive(false);
+            Time.timeScale = 0;
+        }
+
+        else if(collision.gameObject.tag.Equals("Obstacle"))
+        {
+            gameObject.SetActive(false);
+            Time.timeScale = 0;
+        }
+    }
 }

@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8260956869471360189}
   - component: {fileID: 8260956869471360190}
-  - component: {fileID: 2637854217311854207}
+  - component: {fileID: 3508303102899938990}
+  - component: {fileID: 4334737223868685789}
   - component: {fileID: -6575469993108396946}
   m_Layer: 0
   m_Name: Dragon_Atk_Fire
@@ -28,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 8260956869471360191}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -72,8 +73,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 4
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 0.9150943, g: 0.5291006, b: 0.23309007, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 47e7092d455fe1a4a9e36039df86e5ac, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -83,20 +84,84 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!136 &2637854217311854207
-CapsuleCollider:
+--- !u!60 &3508303102899938990
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8260956869471360191}
+  m_Enabled: 1
+  m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 0.09030816
-  m_Height: 0.18061633
-  m_Direction: 1
-  m_Center: {x: -0.0008078019, y: 0.00284587, z: 0}
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.57, y: 2.26}
+    newSize: {x: 0.2, y: 0.2}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.78499997, y: -0.47}
+      - {x: 0.78499997, y: -0.06}
+      - {x: 0.695, y: 0.17}
+      - {x: 0.585, y: 0.29999998}
+      - {x: 0.585, y: 0.56}
+      - {x: 0.49499997, y: 0.66999996}
+      - {x: 0.405, y: 0.77}
+      - {x: 0.405, y: 0.84999996}
+      - {x: 0.24499999, y: 1.04}
+      - {x: 0.21499999, y: 1.12}
+      - {x: 0.105, y: 1.04}
+      - {x: 0.105, y: 1.13}
+      - {x: 0.024999999, y: 1.13}
+      - {x: -0.065, y: 1.03}
+      - {x: -0.13499999, y: 1.02}
+      - {x: -0.275, y: 0.93}
+      - {x: -0.48499998, y: 0.76}
+      - {x: -0.525, y: 0.62}
+      - {x: -0.515, y: 0.48999998}
+      - {x: -0.645, y: 0.38}
+      - {x: -0.755, y: 0.25}
+      - {x: -0.78499997, y: 0.04}
+      - {x: -0.78499997, y: -0.48999998}
+      - {x: -0.695, y: -0.71999997}
+      - {x: -0.555, y: -0.9}
+      - {x: -0.465, y: -0.98999995}
+      - {x: -0.225, y: -1.12}
+      - {x: -0.13499999, y: -1.13}
+      - {x: 0.185, y: -1.13}
+      - {x: 0.465, y: -1}
+      - {x: 0.675, y: -0.75}
+      - {x: 0.775, y: -0.51}
+--- !u!50 &4334737223868685789
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8260956869471360191}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!114 &-6575469993108396946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,3 +174,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 617fbf538f1c9924ba78f3b5a5ae3ec8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: FireBall
+  speed: 1

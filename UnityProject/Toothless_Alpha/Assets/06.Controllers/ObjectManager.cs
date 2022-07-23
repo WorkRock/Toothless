@@ -5,10 +5,16 @@ using UnityEngine;
 public class ObjectManager : MonoBehaviour
 {
     //생성할 오브젝트 프리팹 연결
+    //1. 장애물
     public GameObject ObstaclePrefs;
+    //2. 드래곤 공격
+    public GameObject FireBallPrefs;
 
     //오브젝트 풀 생성(public X)
+    //1. 장애물
     GameObject[] ObstaclePool;
+    //2. 드래곤 공격
+    GameObject[] FireBallPool;
 
     //타겟풀 생성
     GameObject[] targetPool;
@@ -16,7 +22,10 @@ public class ObjectManager : MonoBehaviour
     void Awake()
     {
         //한번에 등장할 갯수만큼 오브젝트 풀 크기 설정
+        //1. 장애물 풀
         ObstaclePool = new GameObject[10];
+        //2. 공격 풀
+        FireBallPool = new GameObject[10];
 
         //오브젝트 생성(로딩시간)
         Generate();
@@ -30,6 +39,12 @@ public class ObjectManager : MonoBehaviour
             ObstaclePool[i] = Instantiate(ObstaclePrefs);
             ObstaclePool[i].SetActive(false);
         }
+
+        for(int i = 0; i < FireBallPool.Length; i++)
+        {
+            FireBallPool[i] = Instantiate(FireBallPrefs);
+            FireBallPool[i].SetActive(false);
+        }
     }
 
     //외부에서 오브젝트 풀에 접근할 함수 생성
@@ -37,9 +52,13 @@ public class ObjectManager : MonoBehaviour
     {
         switch (type)
         {
-            //타입명이 Obstacle일 때 타겟풀에 해당 오브젝트 풀 지정
+            //타입명에 따라 타겟풀에 해당 오브젝트 풀 지정
             case "Obstacle":
                 targetPool = ObstaclePool;
+                break;
+
+            case "FireBall":
+                targetPool = FireBallPool;
                 break;
           
         }
