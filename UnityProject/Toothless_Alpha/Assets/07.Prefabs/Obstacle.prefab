@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 1763919293245622718}
   - component: {fileID: 4049819109656879038}
   - component: {fileID: -6305727598239979234}
-  - component: {fileID: 3778578028475162387}
   - component: {fileID: -7541120306664570310}
+  - component: {fileID: -3606523484251143427}
   m_Layer: 0
   m_Name: Obstacle
   m_TagString: Obstacle
@@ -98,27 +98,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: Obstacle
   objSpeed: 0.5
---- !u!50 &3778578028475162387
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6543884311017051763}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!60 &-7541120306664570310
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -198,3 +177,24 @@ PolygonCollider2D:
       - {x: 0.009905979, y: -1.540558}
       - {x: 0.26834944, y: -1.4935683}
       - {x: 0.85572094, y: -1.4465785}
+--- !u!50 &-3606523484251143427
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6543884311017051763}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
