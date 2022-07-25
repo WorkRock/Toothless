@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8260956869471360189}
   - component: {fileID: 8260956869471360190}
-  - component: {fileID: 3508303102899938990}
   - component: {fileID: 4334737223868685789}
   - component: {fileID: -6575469993108396946}
+  - component: {fileID: 9052836556535051894}
   m_Layer: 0
   m_Name: Dragon_Atk_Fire
   m_TagString: Dragon_Atk_Fire
@@ -84,63 +84,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!60 &3508303102899938990
-PolygonCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8260956869471360191}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.57, y: 2.26}
-    newSize: {x: 0.2, y: 0.2}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 0.78499997, y: -0.47}
-      - {x: 0.78499997, y: -0.06}
-      - {x: 0.695, y: 0.17}
-      - {x: 0.585, y: 0.29999998}
-      - {x: 0.585, y: 0.56}
-      - {x: 0.49499997, y: 0.66999996}
-      - {x: 0.405, y: 0.77}
-      - {x: 0.405, y: 0.84999996}
-      - {x: 0.24499999, y: 1.04}
-      - {x: 0.21499999, y: 1.12}
-      - {x: 0.105, y: 1.04}
-      - {x: 0.105, y: 1.13}
-      - {x: 0.024999999, y: 1.13}
-      - {x: -0.065, y: 1.03}
-      - {x: -0.13499999, y: 1.02}
-      - {x: -0.275, y: 0.93}
-      - {x: -0.48499998, y: 0.76}
-      - {x: -0.525, y: 0.62}
-      - {x: -0.515, y: 0.48999998}
-      - {x: -0.645, y: 0.38}
-      - {x: -0.755, y: 0.25}
-      - {x: -0.78499997, y: 0.04}
-      - {x: -0.78499997, y: -0.48999998}
-      - {x: -0.695, y: -0.71999997}
-      - {x: -0.555, y: -0.9}
-      - {x: -0.465, y: -0.98999995}
-      - {x: -0.225, y: -1.12}
-      - {x: -0.13499999, y: -1.13}
-      - {x: 0.185, y: -1.13}
-      - {x: 0.465, y: -1}
-      - {x: 0.675, y: -0.75}
-      - {x: 0.775, y: -0.51}
 --- !u!50 &4334737223868685789
 Rigidbody2D:
   serializedVersion: 4
@@ -176,3 +119,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: FireBall
   speed: 1
+--- !u!70 &9052836556535051894
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8260956869471360191}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.010730147, y: -0.32562965}
+  m_Size: {x: 1.5095265, y: 1.5312594}
+  m_Direction: 0

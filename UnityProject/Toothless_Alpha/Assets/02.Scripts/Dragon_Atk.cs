@@ -22,10 +22,13 @@ public class Dragon_Atk : MonoBehaviour
 
     void Update()
     {
-        //스케일 점점 커지게
-        transform.localScale += new Vector3(0.002f, 0.002f, 0.002f);
-        if (transform.localScale.x >= 1f)
-            transform.localScale = new Vector3(1f, 1f, 1f);
+        if(Time.timeScale > 0)
+        {
+            //스케일 점점 커지게
+            transform.localScale += new Vector3(0.002f, 0.002f, 0.002f);
+            if (transform.localScale.x >= 1f)
+                transform.localScale = new Vector3(1f, 1f, 1f);
+        }
     }
 
     void OnTriggerEnter2D(Collider2D collision)
