@@ -35,5 +35,11 @@ public class Dragon_Atk : MonoBehaviour
     {
         if (collision.gameObject.tag.Equals("BorderBottom"))
             gameObject.SetActive(false);
+
+        else if (collision.gameObject.tag.Equals("Shield"))
+        {
+            StageManager.Stage++;   //쉴드로 공격 막을때마다 스테이지++ (수정해야함)
+            gameObject.SetActive(false);
+        }
     }
 }

@@ -9,7 +9,7 @@ public class Obstacle : MonoBehaviour
 
     //오브젝트 스피드
     public float objSpeed;
-    
+
     void OnEnable()
     {
         transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
