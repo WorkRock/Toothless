@@ -714,7 +714,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0.000030517578, y: 13}
+  m_AnchoredPosition: {x: 0.00012207031, y: 13}
   m_SizeDelta: {x: 220, y: 180}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &256037931
@@ -1750,6 +1750,7 @@ GameObject:
   - component: {fileID: 622320355}
   - component: {fileID: 622320354}
   - component: {fileID: 622320353}
+  - component: {fileID: 622320356}
   m_Layer: 5
   m_Name: UI_Func_Exit
   m_TagString: Untagged
@@ -1773,8 +1774,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -39, y: -72}
-  m_SizeDelta: {x: 157, y: 163}
+  m_AnchoredPosition: {x: -51, y: -72}
+  m_SizeDelta: {x: 140, y: 140}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &622320353
 MonoBehaviour:
@@ -1849,7 +1850,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b111392c59f017944aa959b9e6aab0c6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: febc5c40e31fb7d4895a7d76f072712a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1867,6 +1868,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 622320351}
   m_CullTransparentMesh: 0
+--- !u!114 &622320356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 622320351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 3, y: -3}
+  m_UseGraphicAlpha: 1
 --- !u!1 &643862491
 GameObject:
   m_ObjectHideFlags: 0
@@ -2197,7 +2213,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -0.000030517578, y: 13}
+  m_AnchoredPosition: {x: -0.00012207031, y: 13}
   m_SizeDelta: {x: 220, y: 180}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &864829630
@@ -2656,11 +2672,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UGLevel: {fileID: 168719784}
   NeedCoin: {fileID: 460771387}
+  UGBtn: {fileID: 2097285320}
   playerLevel: 0
-  playerNextLevel: 0
   atkUGLevel: 0
   totalCoin: 0
+  calCoin: 0
   playerNeedCoin: 0
+  BasicDefaultNeedCoin: 50
+  BasicPlusNeedCoin: 100
+  EditDefaultNeedCoin: 150
+  EditPlusNeedCoin: 500
+  BasicCorUGLevel: 1
+  EditCorUGLevel: 5
+  maxNeedCoin: 9999999
 --- !u!1 &1018290275
 GameObject:
   m_ObjectHideFlags: 0
@@ -2672,6 +2696,7 @@ GameObject:
   - component: {fileID: 1018290276}
   - component: {fileID: 1018290278}
   - component: {fileID: 1018290277}
+  - component: {fileID: 1018290279}
   m_Layer: 5
   m_Name: UpgradeText
   m_TagString: Untagged
@@ -2695,7 +2720,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -2}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1018290277
@@ -2739,6 +2764,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1018290275}
   m_CullTransparentMesh: 0
+--- !u!114 &1018290279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1018290275}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 1, g: 1, b: 1, a: 0.5}
+  m_EffectDistance: {x: 2, y: -2}
+  m_UseGraphicAlpha: 1
 --- !u!1 &1137521160
 GameObject:
   m_ObjectHideFlags: 0
@@ -3932,10 +3972,10 @@ MonoBehaviour:
   Level: {fileID: 254808242}
   Coin: {fileID: 932994161}
   Exp: {fileID: 1649619426}
-  playerLevel: 1
-  playerNextLevel: 0
+  playerLevel: 5
   curExp: 0
   totalExp: 0
+  calExp: 0
   BasicDefaultExp: 20
   BasicPlusExp: 1
   EditDefaultExp: 0
@@ -4110,7 +4150,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2097285319
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4128,8 +4168,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 4.0257, y: -386.81}
-  m_SizeDelta: {x: 314.45142, y: 71.013855}
+  m_AnchoredPosition: {x: 0, y: -383.3}
+  m_SizeDelta: {x: 190.77179, y: 71.013855}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2097285320
 MonoBehaviour:
@@ -4151,11 +4191,11 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
+    m_HighlightedColor: {r: 0.8490566, g: 0.7537573, b: 0.53266287, a: 1}
+    m_PressedColor: {r: 0.6666513, g: 1, b: 0.6367924, a: 1}
+    m_SelectedColor: {r: 0.85098046, g: 0.75294125, b: 0.53333336, a: 0}
+    m_DisabledColor: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -4174,8 +4214,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1248051298}
-        m_MethodName: UpgradeCom
+      - m_Target: {fileID: 980707909}
+        m_MethodName: UGbtnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4198,7 +4238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
