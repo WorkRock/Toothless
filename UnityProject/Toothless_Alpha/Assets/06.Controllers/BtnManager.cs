@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BtnManager : MonoBehaviour
 {
@@ -84,8 +85,14 @@ public class BtnManager : MonoBehaviour
         isOptionOn = true;
         Func.SetActive(true);
     }
+
+    public void UpgradeCom()
+    {
+        Debug.Log("Complete Upgrade");
+    }
+
     public void GameStart()
     {
-        Debug.Log("GameStart");
+        SceneManager.LoadScene("Ingame");
     }
 }
