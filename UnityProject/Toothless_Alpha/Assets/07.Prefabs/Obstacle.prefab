@@ -96,8 +96,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98bf6b5516300314a977109414fdfa7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  xSpeed: 0.3
   type: Obstacle
   objSpeed: 0.5
+  damage: 10
+  x: 0
 --- !u!60 &-7541120306664570310
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -192,7 +195,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1

@@ -1,9 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player_Move : MonoBehaviour
 {
+    //체력바 ui 관련
+    //플레이어 체력바
+    public Slider Player_HPBar;
+    //Dragon_Atk 클래스 객체 생성
+    public Dragon_Atk dragon;
+    //Obstacle 클래스 객체 생성
+    public Obstacle obstacle;
+
+
+    //플레이어 체력
+    public int Player_NowHP;
+    public int Player_TotalHP;
+
     //이동할 위치 배열로 선언
     public GameObject[] targetPos;
 
@@ -30,9 +44,28 @@ public class Player_Move : MonoBehaviour
     public float maxShieldDelay;
     public bool isShieldOn;
 
+    //함수 관련(플레이어 HP 증가)
+    public int nowLevel;
+    public int BasicDefaultHp;
+    public int BasicPlusHp;
+    public int EditDefaultHp;
+    public int EditPlusHp;
+    public int BasicCorLevel;
+    public int EditCorLevel;
+    public int maxHp;
+
     // Start is called before the first frame update
     void Start()
     {
+        //레벨
+        //nowLevel = PlayerPrefs.GetInt("Level");    
+        //totalHpCal(nowLevel - 1);
+        totalHpCal(nowLevel - 1);
+        Debug.Log("체력 : " + Player_TotalHP);
+
+        //체력 초기화
+        Player_NowHP = Player_TotalHP;
+
         //인덱스 초기화
         minPos = 0;
         nowPos = 1;
@@ -103,14 +136,44 @@ public class Player_Move : MonoBehaviour
     {
         if (collision.gameObject.tag.Equals("Dragon_Atk_Fire"))
         {
-            gameObject.SetActive(false);
-            Time.timeScale = 0;
+            collision.gameObject.SetActive(false);
+            //맞을때마다 현재 체력에서 드래곤 공격력만큼 뺌
+            Player_NowHP -= dragon.Dragon_Atk_Power;
+
+            // 체력바 조정(슬라이더 밸류값으로 조정)
+            Player_HPBar.value = Player_NowHP / (float)Player_TotalHP;
+
+            Debug.Log($"플레이어 체력 : {Player_NowHP}");
+            //0이하로 떨어지면 플레이어 비활성화
+            if (Player_NowHP <= 0)
+                gameObject.SetActive(false);
         }
 
         else if (collision.gameObject.tag.Equals("Obstacle"))
         {
-            gameObject.SetActive(false);
-            Time.timeScale = 0;
+            collision.gameObject.SetActive(false);
+            //맞을때마다 현재 체력에서 장애물 데미지만큼 뺌
+            Player_NowHP -= obstacle.damage;
+
+            // 체력바 조정(슬라이더 밸류값으로 조정)
+            Player_HPBar.value = Player_NowHP / (float)Player_TotalHP;
+
+            Debug.Log($"플레이어 체력 : {Player_NowHP}");
+            //0이하로 떨어지면 플레이어 비활성화
+            if (Player_NowHP <= 0)
+                gameObject.SetActive(false);
+        }
+    }
+
+    void totalHpCal(int nowLevel)
+    {
+        Player_TotalHP = BasicDefaultHp + Mathf.FloorToInt((nowLevel / BasicCorLevel) * BasicPlusHp)
+                    + Mathf.FloorToInt(EditDefaultHp + (nowLevel / EditCorLevel) * EditPlusHp);
+
+        // 만약 max로 잡아놓은 체력보다 높아질 시 max로 통일
+        if (Player_TotalHP >= maxHp)
+        {
+            Player_TotalHP = maxHp;
         }
     }
 }

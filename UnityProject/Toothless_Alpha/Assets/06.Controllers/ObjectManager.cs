@@ -9,12 +9,17 @@ public class ObjectManager : MonoBehaviour
     public GameObject ObstaclePrefs;
     //2. 드래곤 공격
     public GameObject FireBallPrefs;
+    //3. 플레이어 공격(하트)
+    public GameObject Player_AtkPrefs;
 
     //오브젝트 풀 생성(public X)
     //1. 장애물
     GameObject[] ObstaclePool;
     //2. 드래곤 공격
     GameObject[] FireBallPool;
+    //3. 플레이어 공격
+    GameObject[] Player_AtkPool;
+
 
     //타겟풀 생성
     GameObject[] targetPool;
@@ -26,6 +31,8 @@ public class ObjectManager : MonoBehaviour
         ObstaclePool = new GameObject[10];
         //2. 공격 풀
         FireBallPool = new GameObject[10];
+        //3. 플레이어 공격 풀
+        Player_AtkPool = new GameObject[10];
 
         //오브젝트 생성(로딩시간)
         Generate();
@@ -45,6 +52,12 @@ public class ObjectManager : MonoBehaviour
             FireBallPool[i] = Instantiate(FireBallPrefs);
             FireBallPool[i].SetActive(false);
         }
+
+        for(int i = 0; i < Player_AtkPool.Length; i++)
+        {
+            Player_AtkPool[i] = Instantiate(Player_AtkPrefs);
+            Player_AtkPool[i].SetActive(false);
+        }
     }
 
     //외부에서 오브젝트 풀에 접근할 함수 생성
@@ -60,6 +73,10 @@ public class ObjectManager : MonoBehaviour
             case "FireBall":
                 targetPool = FireBallPool;
                 break;
+
+            case "Player_Atk":
+                targetPool = Player_AtkPool;
+                break;
           
         }
 
@@ -74,18 +91,5 @@ public class ObjectManager : MonoBehaviour
         }
 
         return null;    //모두 비활성화 상태인 경우 null 리턴
-    }
-
-    //해당 오브젝트들을 전부 가져오는 함수
-    public GameObject[] GetPool(string type)
-    {
-        switch (type)
-        {
-            case "Obstacle":
-                targetPool = ObstaclePool;
-                break;
-        }
-
-        return targetPool;
     }
 }

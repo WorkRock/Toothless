@@ -7,6 +7,9 @@ public class Dragon_Atk : MonoBehaviour
     //드래곤 공격 타입
     public string type;
 
+    //공격력
+    public int Dragon_Atk_Power;
+
     //발사 스피드
     public float speed = 1f;
 
@@ -35,11 +38,5 @@ public class Dragon_Atk : MonoBehaviour
     {
         if (collision.gameObject.tag.Equals("BorderBottom"))
             gameObject.SetActive(false);
-
-        else if (collision.gameObject.tag.Equals("Shield"))
-        {
-            StageManager.Stage++;   //쉴드로 공격 막을때마다 스테이지++ (수정해야함)
-            gameObject.SetActive(false);
-        }
     }
 }

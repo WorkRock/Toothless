@@ -29,6 +29,9 @@ public class gameManager : MonoBehaviour
     GameObject newAtkObj;
     GameObject newObstacle;
 
+    //드래곤 객체 생성
+    //public Dragon dragon;
+
     void Start()
     {
         InvokeRepeating("SpawnObstacle", 1f, 1f);
@@ -64,13 +67,12 @@ public class gameManager : MonoBehaviour
         {
             Vector3 dirVec = ObjTargetPoints[2].transform.position - newObstacle.transform.position;
             newObstacle.GetComponent<Rigidbody2D>().AddForce(dirVec * obstacle.objSpeed, ForceMode2D.Impulse);
-        }
-        
+        }    
     }
 
     public void SpawnFireBall()
     {
-        ranPoint = Random.Range(0, 2);
+        ranPoint = Random.Range(0, 3);
 
         //오브젝트 풀에서 꺼내기
         newAtkObj = objectManager.MakeObj(fireBall.type);
