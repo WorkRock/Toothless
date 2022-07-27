@@ -56,7 +56,7 @@ public class Result : MonoBehaviour
         totalGetExp = BasicDefaultGetExp;
         totalGetCoin = BasicDefaultGetCoin;
 
-        for(int i = 1; i < playerLastStage+1; i++)
+        for(int i = 1; i < playerLastStage; i++)
         {
             totalGetExpCal(i);
             realTotalGetExp += totalGetExp;
@@ -65,9 +65,6 @@ public class Result : MonoBehaviour
             realTotalGetCoin += totalGetCoin;
         }
         
-        realTotalGetExp += Mathf.FloorToInt(EditDefaultGetExp + (playerLastStage / EditCorGetExpStage) * EditPlusGetExp);
-        realTotalGetCoin += Mathf.FloorToInt(EditDefaultGetCoin + (playerLastStage / EditCorGetCoinStage) * EditPlusGetCoin);
-
         LastStage.text = playerLastStage.ToString();
         BestStage.text = playerBestStage.ToString();
         
@@ -93,7 +90,8 @@ public class Result : MonoBehaviour
 
         else
         {
-            calGetExp = Mathf.FloorToInt((playerLastStage / BasicCorGetExpStage) * BasicPlusGetExp);
+            calGetExp = Mathf.FloorToInt((playerLastStage / BasicCorGetExpStage) * BasicPlusGetExp)
+            + Mathf.FloorToInt(EditDefaultGetExp + (playerLastStage / EditCorGetExpStage) * EditPlusGetExp);
         }
 
         totalGetExp += calGetExp;
@@ -112,7 +110,8 @@ public class Result : MonoBehaviour
 
         else
         {
-            calGetCoin = Mathf.FloorToInt((playerLastStage / BasicCorGetCoinStage) * BasicPlusGetCoin);
+            calGetCoin = Mathf.FloorToInt((playerLastStage / BasicCorGetCoinStage) * BasicPlusGetCoin)
+            + Mathf.FloorToInt(EditDefaultGetCoin + (playerLastStage / EditCorGetCoinStage) * EditPlusGetCoin);
         }
 
         totalGetCoin += calGetCoin;

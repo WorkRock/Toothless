@@ -127,7 +127,7 @@ public class LobbyManager : MonoBehaviour
         }
 
         totalExp += calExp;
-
+        Debug.Log("TotalExp : " + totalExp);
         // 만약 max로 잡아놓은 경험치 값보다 높아질 시 max로 통일
         if (totalExp >= maxExp)
         {
