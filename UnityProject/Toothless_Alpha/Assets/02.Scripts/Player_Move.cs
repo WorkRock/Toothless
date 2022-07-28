@@ -70,6 +70,8 @@ public class Player_Move : MonoBehaviour
         minPos = 0;
         nowPos = 1;
         maxPos = targetPos.Length - 1;
+
+        //쉴드 비활성화
         playerShield.SetActive(false);
     }
 
@@ -134,7 +136,7 @@ public class Player_Move : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag.Equals("Dragon_Atk_Fire"))
+        if (collision.gameObject.tag.Equals("Dragon_Atk_Fire") || collision.gameObject.tag.Equals("Dragon_Atk_Ice") || collision.gameObject.tag.Equals("Dragon_Atk_Water"))
         {
             collision.gameObject.SetActive(false);
             //맞을때마다 현재 체력에서 드래곤 공격력만큼 뺌
@@ -161,7 +163,9 @@ public class Player_Move : MonoBehaviour
             Debug.Log($"플레이어 체력 : {Player_NowHP}");
             //0이하로 떨어지면 플레이어 비활성화
             if (Player_NowHP <= 0)
+            {
                 gameObject.SetActive(false);
+            }
         }
     }
 

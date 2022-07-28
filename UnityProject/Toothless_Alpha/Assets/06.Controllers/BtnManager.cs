@@ -94,5 +94,6 @@ public class BtnManager : MonoBehaviour
     public void GameStart()
     {
         SceneManager.LoadScene("Ingame");
+        PlayerPrefs.SetInt("Stage", 1);
     }
 }

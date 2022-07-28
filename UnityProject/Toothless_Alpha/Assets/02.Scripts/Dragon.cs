@@ -10,6 +10,9 @@ public class Dragon : MonoBehaviour
 
     public Slider Dragon_HPBar;
 
+    //드래곤 타입
+    public string type;
+
     //드래곤 체력
     public int Dragon_NowHP;
     public int Dragon_TotalHP;
@@ -23,16 +26,18 @@ public class Dragon : MonoBehaviour
     public int BasicCorStage;
     public int EditCorStage;
     public int maxHp;
-    
-    /*
-    private void OnEnable()
+
+    //드래곤 체력바 연결하는 방법 : 활성화될때 프리팹의 자식에서 슬라이더를 찾아 Dragon_HPBar 컴포넌트에 연결시킨다.
+    void OnEnable()
     {
-        Dragon_NowHP = Dragon_TotalHP;
+        Dragon_HPBar = gameObject.GetComponentInChildren<Slider>();
+        //다시 활성화 될때 hp바는 만땅으로
+        Dragon_HPBar.value = 1.0f;
     }
-    */
 
     void Start()
     {
+        type = "Dragon";
         nowStage = PlayerPrefs.GetInt("Stage");
         Dragon_TotalHP = BasicDefaultHp;
         totalHpCal(nowStage-1);
@@ -59,6 +64,8 @@ public class Dragon : MonoBehaviour
                 nowStage++;
                 PlayerPrefs.SetInt("Stage", nowStage);
                 PlayerPrefs.Save();
+                //드래곤 사망 정보 저장 0-생존 1-사망
+                PlayerPrefs.SetInt("isDragonDie", 1);
             }
                 
         }

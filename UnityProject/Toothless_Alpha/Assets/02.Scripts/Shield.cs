@@ -23,7 +23,7 @@ public class Shield : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag.Equals("Dragon_Atk_Fire"))
+        if(collision.gameObject.tag.Equals("Dragon_Atk_Fire") || collision.gameObject.tag.Equals("Dragon_Atk_Ice") || collision.gameObject.tag.Equals("Dragon_Atk_Water"))
         {
             //1. 드래곤 공격 오브젝트 비활성화
             collision.gameObject.SetActive(false);

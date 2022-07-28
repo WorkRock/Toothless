@@ -39,4 +39,10 @@ public class Player_Atk : MonoBehaviour
             Player_Atk_Power = maxAtk;
         }
     }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag.Equals("BorderTop"))
+            gameObject.SetActive(false);
+    }
 }

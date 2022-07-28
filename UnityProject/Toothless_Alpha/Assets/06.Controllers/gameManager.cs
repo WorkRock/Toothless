@@ -21,21 +21,31 @@ public class gameManager : MonoBehaviour
     //랜덤 생성 위치
     public int ranPoint;
 
+    //랜덤 생성 오브젝트(공격)
+    public int ranBall;
+
     //타겟위치로 자연스럽게 커지면서 이동하기 위해 타겟설정
-    //public Transform[] ObjTargetPoints;
     public GameObject[] ObjTargetPoints;
 
     //풀에서 꺼내오는 뉴 오브젝트
     GameObject newAtkObj;
     GameObject newObstacle;
 
-    //드래곤 객체 생성
-    //public Dragon dragon;
+    //새로 스폰되는 드래곤
+    GameObject newDragon;
+
 
     void Start()
     {
         InvokeRepeating("SpawnObstacle", 1f, 1f);
-        InvokeRepeating("SpawnFireBall", 2f, 2f);
+        InvokeRepeating("SpawnDragonBall", 2f, 2f);
+    }
+
+    void Update()
+    {
+        //PlayerPrefs의 드래곤 사망정보를 받아와서 1(사망)이면 드래곤 생성
+        if (PlayerPrefs.GetInt("isDragonDie") == 1)
+            SpawnDragon();
     }
 
     public void SpawnObstacle()
@@ -70,16 +80,33 @@ public class gameManager : MonoBehaviour
         }    
     }
 
-    public void SpawnFireBall()
+    public void SpawnDragonBall()
     {
         ranPoint = Random.Range(0, 3);
+        //0 : 파이어볼, 1 : 아이스볼, 2 : 워터볼
+        ranBall = Random.Range(0, 3);
 
-        //오브젝트 풀에서 꺼내기
-        newAtkObj = objectManager.MakeObj(fireBall.type);
-        newAtkObj.transform.position = SpawnPoints[ranPoint].transform.position;
+        if(ranBall == 0)
+        {
+            //오브젝트 풀에서 꺼내기
+            newAtkObj = objectManager.MakeObj("FireBall");
+            newAtkObj.transform.position = SpawnPoints[ranPoint].transform.position;
+        }
 
-        
-        
+        else if(ranBall == 1)
+        {
+            //오브젝트 풀에서 꺼내기
+            newAtkObj = objectManager.MakeObj("IceBall");
+            newAtkObj.transform.position = SpawnPoints[ranPoint].transform.position;
+        }
+
+        else if (ranBall == 2)
+        {
+            //오브젝트 풀에서 꺼내기
+            newAtkObj = objectManager.MakeObj("WaterBall");
+            newAtkObj.transform.position = SpawnPoints[ranPoint].transform.position;
+        }
+
         //오브젝트가 생성되고 떨어질 때 일자로 떨어지지 않고 기울기에 맞게 비스듬하게 떨어지게 하기
 
         //왼쪽 스폰인 경우
@@ -101,5 +128,13 @@ public class gameManager : MonoBehaviour
             newAtkObj.GetComponent<Rigidbody2D>().AddForce(dirVec * fireBall.speed, ForceMode2D.Impulse);
         }
         
+    }
+
+    public void SpawnDragon()
+    {
+        newDragon = objectManager.MakeDragon();
+        newDragon.transform.position = new Vector3(0f, 4f, 0f);
+        //드래곤 생존 정보 갱신 : 0(사망) 상태로
+        PlayerPrefs.SetInt("isDragonDie", 0); 
     }
 }

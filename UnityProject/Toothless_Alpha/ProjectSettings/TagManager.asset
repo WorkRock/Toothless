@@ -9,6 +9,9 @@ TagManager:
   - BorderBottom
   - Shield
   - Player_Atk
+  - Dragon_Atk_Ice
+  - Dragon_Atk_Water
+  - BorderTop
   layers:
   - Default
   - TransparentFX

@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Obstacle : MonoBehaviour
 {
-    public float xSpeed;
-
     //오브젝트의 타입 설정
     public string type;
 
@@ -15,7 +13,6 @@ public class Obstacle : MonoBehaviour
     //장애물 데미지
     public int damage;
 
-    public float x;
 
     void OnEnable()
     {
