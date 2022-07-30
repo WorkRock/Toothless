@@ -27,7 +27,7 @@ public class Dragon : MonoBehaviour
     public int EditCorStage;
     public int maxHp;
 
-    //드래곤 체력바 연결하는 방법 : 활성화될때 프리팹의 자식에서 슬라이더를 찾아 Dragon_HPBar 컴포넌트에 연결시킨다.
+    //드래곤 체력바 연결하는 방법 : 활성화될때 프리팹의 자식에서 슬라이더를 Dragon_HPBar 컴포넌트에 연결시킨다.
     void OnEnable()
     {
         Dragon_HPBar = gameObject.GetComponentInChildren<Slider>();

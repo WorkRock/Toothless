@@ -380,7 +380,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1653626872153444468, guid: 4d156f764e1089f419f722b19d956973, type: 3}
   Dragon_HPBar: {fileID: 0}
-  type: Dragon
+  type: Blue
   Dragon_NowHP: 0
   Dragon_TotalHP: 0
   nowStage: 0

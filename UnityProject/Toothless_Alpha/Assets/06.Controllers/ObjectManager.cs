@@ -193,79 +193,39 @@ public class ObjectManager : MonoBehaviour
         return null;    //모두 비활성화 상태인 경우 null 리턴
     }
 
-    public GameObject MakeDragon()
-    {  
-        if (PlayerPrefs.GetInt("isDragonDie") == 1)
-        {
-            // 1 - 블루 드래곤
-            if(nowStage % 10 == 1)
-            {
-                Dragon_Blue.SetActive(true);
-                return Dragon_Blue;
-            }
-            // 2 - 그린 드래곤
-            else if(nowStage % 10 == 2)
-            {
-                Dragon_Green.SetActive(true);
-                return Dragon_Green;
-            }
-            // 3 - 핑크 드래곤
-            else if (nowStage % 10 == 3)
-            {
-                Dragon_Pink.SetActive(true);
-                return Dragon_Pink;
-            }
-            // 4 - 퍼플 드래곤
-            else if (nowStage % 10 == 4)
-            {
-                Dragon_Purple.SetActive(true);
-                return Dragon_Purple;
-            }
-            // 5 - 블랙 드래곤
-            else if (nowStage % 10 == 5)
-            {
-                Dragon_Black.SetActive(true);
-                return Dragon_Black;
-            }
-            // 6 - 레드 드래곤
-            else if (nowStage % 10 == 6)
-            {
-                Dragon_Red.SetActive(true);
-                return Dragon_Red;
-            }
-            // 7 - 옐로우 드래곤
-            else if (nowStage % 10 == 7)
-            {
-                Dragon_Yellow.SetActive(true);
-                return Dragon_Yellow;
-            }
-            // 8 - 옐로우 드래곤 2
-            else if (nowStage % 10 == 8)
-            {
-                Dragon_Yellow_2.SetActive(true);
-                return Dragon_Yellow_2;
-            }
-            // 9 - 옐로우 드래곤 3
-            else if (nowStage % 10 == 9)
-            {
-                Dragon_Yellow_3.SetActive(true);
-                return Dragon_Yellow_3;
-            }
-            // 10 - 옐로우 드래곤 4
-            else if (nowStage % 10 == 0)
-            {
-                Dragon_Yellow_4.SetActive(true);
-                return Dragon_Yellow_4;
-            }
-
-        }
-          
-        return null;    //모두 비활성화 상태인 경우 null 리턴
-       
-    }
-
-    void Update()
+    //드래곤 만드는 함수(게임 매니저에서 조건에 따라 접근)
+    public GameObject MakeDragon(string type)
     {
-        nowStage = PlayerPrefs.GetInt("Stage");
+        switch (type)
+        {
+            case "Blue":
+                targetDragon = Dragon_Blue;
+                break;
+            case "Green":
+                targetDragon = Dragon_Green;
+                break;
+            case "Pink":
+                targetDragon = Dragon_Pink;
+                break;
+            case "Purple":
+                targetDragon = Dragon_Purple;
+                break;
+            case "Black":
+                targetDragon = Dragon_Black;
+                break;
+            case "Red":
+                targetDragon = Dragon_Red;
+                break;
+            case "Yellow":
+                targetDragon = Dragon_Yellow;
+                break;
+        }
+
+        if(!targetDragon.activeSelf)
+        {
+            targetDragon.SetActive(true);
+            return targetDragon;
+        }
+        return null;
     }
 }
