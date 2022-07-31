@@ -1,5 +1,13 @@
 sceneSetups:
+<<<<<<< HEAD
 - path: Assets/01.Scenes/Lobby.unity
+=======
+<<<<<<< HEAD
+- path: Assets/01.Scenes/Ingame.unity
+=======
+- path: Assets/01.Scenes/Result.unity
+>>>>>>> 981a9819a366b528400498ad88156a6b0dc6a8fb
+>>>>>>> 6664ca6707898dc8a37b9fc57bfd2c2bb94fbc35
   isLoaded: 1
   isActive: 1
   isSubScene: 0
