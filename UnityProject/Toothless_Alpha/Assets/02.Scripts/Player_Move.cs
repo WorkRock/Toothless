@@ -44,7 +44,9 @@ public class Player_Move : MonoBehaviour
     public float maxShieldDelay;
     public bool isShieldOn;
 
-    //함수 관련(플레이어 HP 증가)
+    //함수 관련
+    // 공통
+    // 1. 플레이어 HP
     public int nowLevel;
     public int BasicDefaultHp;
     public int BasicPlusHp;
@@ -54,12 +56,22 @@ public class Player_Move : MonoBehaviour
     public int EditCorLevel;
     public int maxHp;
 
+    // 2. 플레이어 경험치 획득량
+    public int nowStage;
+    public int BasicDefaultGet_Exp;
+    public int BasicPlusGet_Exp;
+    public int EditDefaultGet_Exp;
+    public int EditPlusGet_Exp;
+    public int BasicCorStage;
+    public int EditCorStage;
+    public int maxGet_Exp;
+    // 3. 플레이어 경험치 필요량
+
     // Start is called before the first frame update
     void Start()
     {
-        //레벨
-        //nowLevel = PlayerPrefs.GetInt("Level");    
-        //totalHpCal(nowLevel - 1);
+        
+        // 1. 체력 증가 함수
         totalHpCal(nowLevel - 1);
         Debug.Log("체력 : " + Player_TotalHP);
 
@@ -169,6 +181,8 @@ public class Player_Move : MonoBehaviour
         }
     }
 
+    //@플레이어 관련 함수@
+    // 1. 플레이어 체력(레벨 비례)
     void totalHpCal(int nowLevel)
     {
         Player_TotalHP = BasicDefaultHp + Mathf.FloorToInt((nowLevel / BasicCorLevel) * BasicPlusHp)
@@ -179,5 +193,17 @@ public class Player_Move : MonoBehaviour
         {
             Player_TotalHP = maxHp;
         }
+    }
+
+    // 2. 플레이어 경험치 획득량(스테이지 비례)
+    void Player_GetExp()
+    {
+
+    }
+
+    // 3. 플레이어 경험치 필요량(레벨 비례)
+    void Player_NeedExp()
+    {
+
     }
 }

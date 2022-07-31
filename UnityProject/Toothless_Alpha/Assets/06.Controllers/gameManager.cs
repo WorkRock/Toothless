@@ -39,6 +39,8 @@ public class gameManager : MonoBehaviour
 
     void Start()
     {
+        PlayerPrefs.SetInt("Stage", 1);
+        PlayerPrefs.Save();
         InvokeRepeating("SpawnObstacle", 1f, 1f);
         InvokeRepeating("SpawnDragonBall", 2f, 2f);
     }
