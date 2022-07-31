@@ -9,6 +9,14 @@ public class LobbyManager : MonoBehaviour
     public Text Coin;
     public Slider Exp;
 
+    public GameObject UI_Lobby_Player;
+    public BtnManager btnManager;
+
+    // UI_Lobby_Player 좌 우 움직임 값
+    public float rot;
+
+    public float fdt;
+    public float maxT;
 
     // Player 레벨 및 경험치 계산용 변수들
     public int playerLevel;
@@ -38,28 +46,52 @@ public class LobbyManager : MonoBehaviour
         PlayerPrefs.Save();
 
         // 획득한 경험치 및 코인을 불러옴
-        
+
         curExp = PlayerPrefs.GetInt("Exp");
         playerLevel = PlayerPrefs.GetInt("Level");
-        //playerNextLevel = playerLevel+1;
 
         calExp = 0;
 
         totalExp = BasicDefaultExp;
 
-        for (int i = 1; i < playerLevel+1; i++)
+        for (int i = 1; i < playerLevel + 1; i++)
             totalExpCal(i);
     }
 
     // Update is called once per frame
     void Update()
     {
+        
+
+        UIPlayerMove();
+
         totalCoin = PlayerPrefs.GetInt("Coin");
         // 레벨 및 코인 텍스트 출력
         Level.text = playerLevel.ToString();
         Coin.text = totalCoin.ToString();
         levelEdit();
         funcTest();
+    }
+
+    void UIPlayerMove()
+    {
+        if (!btnManager.isLobby)
+        {
+            fdt += Time.deltaTime;
+
+            if (fdt > maxT)
+            {
+                rot *= (-1);
+                fdt = 0;
+            }
+        }
+
+        else
+        {
+            rot = 0;
+        }
+
+        UI_Lobby_Player.transform.rotation = Quaternion.Euler(0, 0, rot);
     }
 
     // 레벨 변경값 테스트를 위한 메소드
@@ -86,10 +118,10 @@ public class LobbyManager : MonoBehaviour
         {
             playerLevel++;
             curExp -= totalExp;
-            
+
             // 코인 값 변화 확인을 위한 테스트
             totalCoin += 100000;
-            
+
             // 토탈 경험치를 빼주어도 0보다 클 시 재귀
             if (curExp > 0)
             {
@@ -141,5 +173,4 @@ public class LobbyManager : MonoBehaviour
         calExp = Mathf.FloorToInt((playerLevel / BasicCorLevel) * BasicPlusExp)
                     + Mathf.FloorToInt(EditDefaultExp + (playerLevel / EditCorLevel) * EditPlusExp);
     }
-
 }

@@ -45,8 +45,10 @@
      <Compile Include="Assets\02.Scripts\Shield.cs" />
      <Compile Include="Assets\02.Scripts\Wall.cs" />
      <Compile Include="Assets\06.Controllers\BtnManager.cs" />
+     <Compile Include="Assets\06.Controllers\FadeController.cs" />
      <Compile Include="Assets\06.Controllers\LobbyManager.cs" />
      <Compile Include="Assets\06.Controllers\ObjectManager.cs" />
+     <Compile Include="Assets\06.Controllers\SoundManager.cs" />
      <Compile Include="Assets\06.Controllers\StageManager.cs" />
      <Compile Include="Assets\06.Controllers\gameManager.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
