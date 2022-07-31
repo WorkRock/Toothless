@@ -8,6 +8,9 @@ public class BtnManager : MonoBehaviour
     public GameObject UI_Lobby;
 
     public GameObject OutLobbyText;
+    public GameObject IntroBG;
+    public GameObject IntroLogo;
+
 
     public GameObject UI_Lobby_Info;
     public GameObject UI_Lobby_Shop;
@@ -20,13 +23,13 @@ public class BtnManager : MonoBehaviour
     public bool isLobby;
 
     public bool isSoundOn;
-    public bool isSoundOff;
-
+    public bool isSoundPlay;
     public bool isFuncOn;
     public bool isInfoOn;
     public bool isShopOn;
     public bool isCreditOn;
     public bool isOptionOn;
+
 
     public string sceneName;
 
@@ -37,7 +40,7 @@ public class BtnManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(isLobby == false)
+        if(!isLobby)
         {
             inLobby();
         }
@@ -59,6 +62,8 @@ public class BtnManager : MonoBehaviour
         if(Input.anyKeyDown)
         {
             isLobby = true;
+            IntroBG.SetActive(false);
+            IntroLogo.SetActive(false);
             OutLobbyText.SetActive(false);
             UI_Lobby.SetActive(true);
         }
@@ -96,6 +101,7 @@ public class BtnManager : MonoBehaviour
 
     public void FuncExit()
     {
+        isSoundPlay = true;
         isInfoOn = false;
         isShopOn = false;
         isCreditOn = false;
@@ -110,6 +116,7 @@ public class BtnManager : MonoBehaviour
 
     public void EnterInfo()
     {
+        isSoundPlay = true;
         isFuncOn = true;
         isInfoOn = true;
         Func.SetActive(true);
@@ -118,6 +125,7 @@ public class BtnManager : MonoBehaviour
 
     public void EnterShop()
     {
+        isSoundPlay = true;
         isFuncOn = true;
         isShopOn = true;
         Func.SetActive(true);
@@ -125,12 +133,14 @@ public class BtnManager : MonoBehaviour
     }
     public void EnterCredit()
     {
+        isSoundPlay = true;
         isFuncOn = true;
         isCreditOn = true;
         Func.SetActive(true);
     }
     public void EnterOption()
     {
+        isSoundPlay = true;
         isFuncOn = true;
         isOptionOn = true;
         Func.SetActive(true);
@@ -141,7 +151,6 @@ public class BtnManager : MonoBehaviour
         if(isSoundOn)
         {
             isSoundOn = false;
-            isSoundOff = true;
             SoundOff.SetActive(true);
             SoundOn.SetActive(false);
         }
@@ -149,7 +158,6 @@ public class BtnManager : MonoBehaviour
         else
         {
             isSoundOn = true;
-            isSoundOff = false;
             SoundOff.SetActive(false);
             SoundOn.SetActive(true);
         }

@@ -61,8 +61,6 @@ public class LobbyManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-
         UIPlayerMove();
 
         totalCoin = PlayerPrefs.GetInt("Coin");

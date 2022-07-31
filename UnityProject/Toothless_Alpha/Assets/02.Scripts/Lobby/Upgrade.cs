@@ -1,10 +1,10 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Upgrade : MonoBehaviour
-{
+{ 
     public Text UGLevel;
     public Text NeedCoin;
     public Text UGText;
@@ -23,7 +23,7 @@ public class Upgrade : MonoBehaviour
     public int playerLevel;
     public int atkUGLevel;
 
-
+    public bool isBtnClicked;
     private bool isCanUG;
     private bool isFirstUG;
     private bool isSecondUG;
@@ -44,6 +44,8 @@ public class Upgrade : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        isBtnClicked = false;
+
         // 테스트를 위한 초기화
         PlayerPrefs.SetInt("AtkUG", 1);
         PlayerPrefs.Save();
@@ -128,6 +130,8 @@ public class Upgrade : MonoBehaviour
 
     public void UGbtnClick()
     {
+        Debug.Log("BtnClick");
+        isBtnClicked = true;
         UpgradeATK();
     }
 

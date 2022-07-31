@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
-    public AudioSource Lobby_BtnClick;
-    public AudioSource Lobby_BGM;
+    public AudioClip Lobby_BtnClick;
+    public AudioClip Lobby_BGM;
+    public AudioClip Lobby_FuncOut;
+    public AudioClip Lobby_Func_Upgrade;
 
+    public AudioSource audioSource;
+    public AudioSource gameBgm;
+    public Upgrade upgrade;
     public BtnManager btnManager;
     public string sceneName;
     public bool isSoundPlay;
@@ -15,8 +20,7 @@ public class SoundManager : MonoBehaviour
     void Start()
     {
         isSoundPlay = false;
-        Lobby_BGM.playOnAwake = true;
-
+        Invoke("playBgm",4.0f);
     }
 
     // Update is called once per frame
@@ -24,25 +28,26 @@ public class SoundManager : MonoBehaviour
     {
         if (!btnManager.isSoundOn)
         {
-            Lobby_BGM.mute = true;
+            gameBgm.mute = true;
+            audioSource.mute = true;
             return;
         }
 
         else
         {
-            Lobby_BGM.mute = false;
-            checkLobbyBtnSoundPlay();
-
+            gameBgm.mute = false;
+            audioSource.mute = false;
+            checkSceneSound();
         }
     }
 
-
+    
     void checkSceneSound()
     {
         switch (btnManager.checkSceneName())
         {
             case "Lobby":
-                checkLobbyBtnSoundPlay();
+                checkLobbyBtn();
                 break;
 
             case "Ingame":
@@ -53,21 +58,45 @@ public class SoundManager : MonoBehaviour
 
         }
     }
+    
 
-
-    void checkLobbyBtnSoundPlay()
+    void checkLobbyBtn()
     {
-        if (btnManager.isFuncOn && isSoundPlay == false)
+        if (btnManager.isSoundOn && btnManager.isLobby)
         {
-            Lobby_BtnClick.Play();
-            isSoundPlay = true;
+            if(btnManager.isSoundPlay && btnManager.isFuncOn)
+            {
+                audioSource.PlayOneShot(Lobby_BtnClick);
+                btnManager.isSoundPlay = false;
+            }
+
+            else if(btnManager.isSoundPlay && !btnManager.isFuncOn)
+            {
+                audioSource.PlayOneShot(Lobby_FuncOut);
+                btnManager.isSoundPlay = false;
+            }
         }
 
-        else if (btnManager.isFuncOn == false)
+        if(btnManager.isShopOn && btnManager.isLobby)
         {
-            isSoundPlay = false;
+            upgradeBtn();
         }
     }
 
+    void upgradeBtn()
+    {
+        if(upgrade.isBtnClicked)
+        {
+            Debug.Log("Upgrade");
+            audioSource.PlayOneShot(Lobby_Func_Upgrade);
+            upgrade.isBtnClicked = false;
+        }
+    }
+
+    void playBgm()
+    {
+        gameBgm.Play();
+        gameBgm.loop = true;
+    }
 
 }

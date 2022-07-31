@@ -39,6 +39,8 @@
      <Compile Include="Assets\02.Scripts\Dragon.cs" />
      <Compile Include="Assets\02.Scripts\Dragon_Atk.cs" />
      <Compile Include="Assets\02.Scripts\Floor.cs" />
+     <Compile Include="Assets\02.Scripts\Lobby\FadeImage.cs" />
+     <Compile Include="Assets\02.Scripts\Lobby\FadeText.cs" />
      <Compile Include="Assets\02.Scripts\Lobby\Upgrade.cs" />
      <Compile Include="Assets\02.Scripts\Obstacle.cs" />
      <Compile Include="Assets\02.Scripts\Player_Atk.cs" />

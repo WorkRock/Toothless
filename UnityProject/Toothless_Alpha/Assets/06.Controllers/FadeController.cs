@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FadeController : MonoBehaviour
+public class FadeText : MonoBehaviour
 {
     public float animTime;         // Fade 애니메이션 재생 시간 (단위:초).  
     private Text fadeImage;            // UGUI의 Image컴포넌트 참조 변수.  
-
     private float start = 1f;           // Mathf.Lerp 메소드의 첫번째 값.  
     private float end = 0f;             // Mathf.Lerp 메소드의 두번째 값.  
     private float time = 0f;            // Mathf.Lerp 메소드의 시간 값.  
@@ -46,14 +45,14 @@ public class FadeController : MonoBehaviour
             stopIn = true;
             stopOut = false;
             time = 0;
-            Debug.Log("StopIn");
         }
         if (time >= 2 && stopOut == false)
         {
+
             stopIn = false; //하얗게 전환되고 나서 씬 전환 후 다시 풀거라 넣었다. 그냥 게임 끝낼거면 넣을 필요 없음.
+            
             stopOut = true;
             time = 0;
-            Debug.Log("StopOut");
         }
 
     }
