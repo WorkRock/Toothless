@@ -95,4 +95,9 @@ public class BtnManager : MonoBehaviour
     {
         SceneManager.LoadScene("Ingame");
     }
+
+    public void goLobby()
+    {
+        SceneManager.LoadScene("Lobby");
+    }
 }

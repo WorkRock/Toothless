@@ -8,59 +8,107 @@ public class Upgrade : MonoBehaviour
     public Text UGLevel;
     public Text NeedCoin;
 
+    public Button UGBtn;
+
     public int playerLevel;
-    public int playerNextLevel;
     public int atkUGLevel;
+
+
+    private bool isCanUG;
+
     public int totalCoin;
+    public int calCoin;
     public int playerNeedCoin;
+
+
+    public int BasicDefaultNeedCoin;
+    public int BasicPlusNeedCoin;
+    public int EditDefaultNeedCoin;
+    public int EditPlusNeedCoin;
+    public int BasicCorUGLevel;
+    public int EditCorUGLevel;
+    public int maxNeedCoin;
     // Start is called before the first frame update
     void Start()
     {
         // 테스트를 위한 초기화
-        PlayerPrefs.SetInt("AtkUG",1);
-
+        PlayerPrefs.SetInt("AtkUG", 1);
+        PlayerPrefs.Save();
         atkUGLevel = PlayerPrefs.GetInt("AtkUG");
         playerLevel = PlayerPrefs.GetInt("Level");
         totalCoin = PlayerPrefs.GetInt("Coin");
-        playerNextLevel = playerLevel + 1;
+
+        calCoin = 0;
+
+        playerNeedCoin = BasicDefaultNeedCoin;
+
+        for (int i = 1; i < playerLevel + 1; i++)
+            needCoinCal(i);
     }
 
     // Update is called once per frame
     void Update()
     {
+        totalCoin = PlayerPrefs.GetInt("Coin");
         UGLevel.text = atkUGLevel.ToString();
         NeedCoin.text = playerNeedCoin.ToString();
+
+        checkUGPossible();
+
+        UGBtn.interactable = isCanUG;
     }
 
-    void needCoinCal()
+    void checkUGPossible()
     {
-        /*
-        // 플레이어의 다음 레벨까지 I가 더해짐
-        for(int i = 1; i < playerNextLevel; i++)
-        {   
-            // i가 플레이어 레벨보다 작을 시에는 contiune
-            if(i < playerLevel)
-                continue;
-
-            // total 경험치 계산 : 기본 경험치 + 보정 경험치
-            // 기본 경험치 : (이전 레벨 경험치 + (현재 레벨 / 기본 경험치 보정 레벨)*(기본 경험치 가중치))
-            // 보정 경험치 : (이전 레벨 보정 경험치 + (현재 레벨 / 보정 경험치 보정 레벨)*(보정 경험치 가중치))
-            totalExp += 
-                ((i / BasicCorLevel) * BasicPlusExp)
-                + (EditDefaultExp + (i / EditCorLevel) * EditPlusExp);
-            Debug.Log("i :" + i);
-            Debug.Log("BasicCal : " + (i / BasicCorLevel) * BasicPlusExp);
-            Debug.Log("EditCal : " + EditDefaultExp + (i / EditCorLevel) * EditPlusExp);
-            Debug.Log("+Total Exp : " + totalExp);
+        if (totalCoin > playerNeedCoin)
+        {
+            isCanUG = true;
         }
+
+        else
+        {
+            isCanUG = false;
+        }
+    }
+
+    public void UGbtnClick()
+    {
+        UpgradeATK();
+    }
+
+    void UpgradeATK()
+    {
+        totalCoin -= playerNeedCoin;
+        atkUGLevel++;
+        PlayerPrefs.SetInt("Coin", totalCoin);
+        PlayerPrefs.Save();
+        needCoinCal(atkUGLevel);
+
+    }
+
+
+    void needCoinCal(int atkUGLevel)
+    {
+        if (atkUGLevel == 1)
+            return;
+
+        else
+        {
+            totalNeedCoinFormula(atkUGLevel);
+        }
+
+        playerNeedCoin += calCoin;
 
         // 만약 max로 잡아놓은 경험치 값보다 높아질 시 max로 통일
-        if(totalExp >= maxExp)
+        if (playerNeedCoin >= maxNeedCoin)
         {
-            totalExp = maxExp;
+            playerNeedCoin = maxNeedCoin;
         }
+    }
 
-        Debug.Log("Total Exp : " + totalExp);
-        */
+    void totalNeedCoinFormula(int atkUGLevel)
+    {
+        calCoin = Mathf.FloorToInt((atkUGLevel / BasicCorUGLevel) * BasicPlusNeedCoin)
+                    + Mathf.FloorToInt(EditDefaultNeedCoin + (atkUGLevel / EditCorUGLevel) * EditPlusNeedCoin);
     }
 }
