@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Player_Move : MonoBehaviour
 {
@@ -171,9 +172,13 @@ public class Player_Move : MonoBehaviour
             Player_HPBar.value = Player_NowHP / (float)Player_TotalHP;
 
             Debug.Log($"플레이어 체력 : {Player_NowHP}");
-            //0이하로 떨어지면 플레이어 비활성화
+            //0이하로 떨어지면 플레이어 비활성화, 시간 정지,  결과 씬 전환
             if (Player_NowHP <= 0)
+            {
                 gameObject.SetActive(false);
+                Time.timeScale = 0;
+                SceneManager.LoadScene("Result");
+            }
         }
 
         else if (collision.gameObject.tag.Equals("Obstacle"))
@@ -186,10 +191,13 @@ public class Player_Move : MonoBehaviour
             Player_HPBar.value = Player_NowHP / (float)Player_TotalHP;
 
             Debug.Log($"플레이어 체력 : {Player_NowHP}");
-            //0이하로 떨어지면 플레이어 비활성화
+            //0이하로 떨어지면 플레이어 비활성화, 시간 정지, 결과 씬 전환
             if (Player_NowHP <= 0)
             {
                 gameObject.SetActive(false);
+                Time.timeScale = 0;
+                SceneManager.LoadScene("Result");
+                
             }
         }
     }

@@ -10,6 +10,8 @@ public class Dragon : MonoBehaviour
 
     public Slider Dragon_HPBar;
 
+    public ObjectManager objectManager;
+
     //드래곤 타입
     public string type;
 
@@ -27,16 +29,21 @@ public class Dragon : MonoBehaviour
     public int EditCorStage;
     public int maxHp;
 
+    public static bool isHit;
+
+
     //드래곤 체력바 연결하는 방법 : 활성화될때 프리팹의 자식에서 슬라이더를 Dragon_HPBar 컴포넌트에 연결시킨다.
     void OnEnable()
     {
         Dragon_HPBar = gameObject.GetComponentInChildren<Slider>();
         //다시 활성화 될때 hp바는 만땅으로
         Dragon_HPBar.value = 1.0f;
+        objectManager = GetComponent<ObjectManager>();
     }
 
     void Start()
     {
+        objectManager = GetComponent<ObjectManager>();
         type = "Dragon";
         nowStage = PlayerPrefs.GetInt("Stage");
         Dragon_TotalHP = BasicDefaultHp;
@@ -50,6 +57,9 @@ public class Dragon : MonoBehaviour
         if(collision.gameObject.tag.Equals("Player_Atk"))
         {
             collision.gameObject.SetActive(false);
+            //폭발 효과
+            isHit = true;
+
             Dragon_NowHP -= player.Player_Atk_Power;
 
             Debug.Log($"hp value : {Dragon_NowHP / (float)Dragon_TotalHP}");
@@ -71,6 +81,7 @@ public class Dragon : MonoBehaviour
         }
     }
 
+
     void totalHpCal(int nowStage)
     {
         Dragon_TotalHP = BasicDefaultHp +  Mathf.FloorToInt((nowStage / BasicCorStage) * BasicPlusHp)
@@ -82,5 +93,4 @@ public class Dragon : MonoBehaviour
             Dragon_TotalHP = maxHp;
         }
     }
-
 }

@@ -36,6 +36,8 @@ public class gameManager : MonoBehaviour
     //현 스테이지의 1의 자리를 받아와서 스폰할 드래곤 종류를 결정
     public int nowStage;
 
+    //폭발 효과
+    public GameObject Explosion;
 
     void Start()
     {
@@ -52,6 +54,8 @@ public class gameManager : MonoBehaviour
         //PlayerPrefs의 드래곤 사망정보를 받아와서 1(사망)이면 드래곤 생성
         if (PlayerPrefs.GetInt("isDragonDie") == 1)
             Invoke("SpawnDragon", 3f);
+
+        ExplosionOn();
     }
 
     public void SpawnObstacle()
@@ -209,4 +213,19 @@ public class gameManager : MonoBehaviour
         //드래곤 리스폰 후에는 다시 사망 정보를 갱신!
         PlayerPrefs.SetInt("isDragonDie", 0);
     }    
+
+    void ExplosionOn()
+    {
+        if (Dragon.isHit == true)
+        {
+            Explosion.SetActive(true);
+            Invoke("ExplosionOff", 0.5f);
+        }
+    }
+
+    void ExplosionOff()
+    {
+        Explosion.SetActive(false);
+        Dragon.isHit = false;
+    }
 }
