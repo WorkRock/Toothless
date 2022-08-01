@@ -308,7 +308,7 @@ Transform:
   m_GameObject: {fileID: 5413620391910814898}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 1}
   m_Children:
   - {fileID: 5413620392148339686}
   - {fileID: 5413620392223374902}
@@ -427,6 +427,7 @@ MonoBehaviour:
   BasicCorStage: 1
   EditCorStage: 10
   maxHp: 6000
+  effect: {fileID: 139366, guid: b185c1a9cf067374586d095111b15bd1, type: 3}
 --- !u!1 &5413620392148339689
 GameObject:
   m_ObjectHideFlags: 0

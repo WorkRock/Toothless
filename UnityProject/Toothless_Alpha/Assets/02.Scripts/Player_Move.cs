@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Player_Move : MonoBehaviour
 {
@@ -46,17 +47,27 @@ public class Player_Move : MonoBehaviour
 
     //함수 관련
     // 공통
-    // 1. 플레이어 HP
     public int nowLevel;
+    public int BasicCorLevel;
+    public int EditCorLevel;
+    // 1. 플레이어 HP(레벨 & 업그레이드)
     public int BasicDefaultHp;
     public int BasicPlusHp;
     public int EditDefaultHp;
     public int EditPlusHp;
-    public int BasicCorLevel;
-    public int EditCorLevel;
+   
     public int maxHp;
 
-    // 2. 플레이어 경험치 획득량
+    // 2. 플레이어 공격력(레벨 & 업그레이드)
+    public int BasicDefaultPlayer_Atk;
+    public int BasicPlusPlayer_Atk;
+    public int EditDefaultPlayer_Atk;
+    public int EditPlusPlayer_Atk;
+    public int maxPlayer_Atk;
+
+    // 3. 플레이어 경험치 필요량(레벨)
+
+    // 4. 플레이어 경험치 획득량(스테이지)
     public int nowStage;
     public int BasicDefaultGet_Exp;
     public int BasicPlusGet_Exp;
@@ -65,7 +76,10 @@ public class Player_Move : MonoBehaviour
     public int BasicCorStage;
     public int EditCorStage;
     public int maxGet_Exp;
-    // 3. 플레이어 경험치 필요량
+   
+
+    
+    
 
     // Start is called before the first frame update
     void Start()
@@ -158,9 +172,13 @@ public class Player_Move : MonoBehaviour
             Player_HPBar.value = Player_NowHP / (float)Player_TotalHP;
 
             Debug.Log($"플레이어 체력 : {Player_NowHP}");
-            //0이하로 떨어지면 플레이어 비활성화
+            //0이하로 떨어지면 플레이어 비활성화, 시간 정지,  결과 씬 전환
             if (Player_NowHP <= 0)
+            {
                 gameObject.SetActive(false);
+                Time.timeScale = 0;
+                SceneManager.LoadScene("Result");
+            }
         }
 
         else if (collision.gameObject.tag.Equals("Obstacle"))
@@ -173,10 +191,13 @@ public class Player_Move : MonoBehaviour
             Player_HPBar.value = Player_NowHP / (float)Player_TotalHP;
 
             Debug.Log($"플레이어 체력 : {Player_NowHP}");
-            //0이하로 떨어지면 플레이어 비활성화
+            //0이하로 떨어지면 플레이어 비활성화, 시간 정지, 결과 씬 전환
             if (Player_NowHP <= 0)
             {
                 gameObject.SetActive(false);
+                Time.timeScale = 0;
+                SceneManager.LoadScene("Result");
+                
             }
         }
     }
@@ -195,14 +216,21 @@ public class Player_Move : MonoBehaviour
         }
     }
 
-    // 2. 플레이어 경험치 획득량(스테이지 비례)
-    void Player_GetExp()
+    // 2. 플레이어 공격력(레벨, 업그레이드 레벨 비례)
+    void totalPlayer_AtkCal()
+    {
+
+    }
+    
+
+    // 3. 플레이어 경험치 필요량(레벨 비례)
+    void Player_NeedExp()
     {
 
     }
 
-    // 3. 플레이어 경험치 필요량(레벨 비례)
-    void Player_NeedExp()
+    // 4. 플레이어 경험치 획득량(스테이지 비례)
+    void Player_GetExp()
     {
 
     }

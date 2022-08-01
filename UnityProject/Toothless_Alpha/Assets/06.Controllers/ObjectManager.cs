@@ -21,7 +21,7 @@ public class ObjectManager : MonoBehaviour
     public GameObject Dragon_BlackPrefs;
     public GameObject Dragon_RedPrefs;
     public GameObject Dragon_YellowPrefs;
-
+  
     //오브젝트 풀 생성(public X)
     //1. 장애물
     GameObject[] ObstaclePool;
@@ -43,7 +43,7 @@ public class ObjectManager : MonoBehaviour
     GameObject Dragon_Yellow_2;
     GameObject Dragon_Yellow_3;
     GameObject Dragon_Yellow_4;
-
+  
 
 
     //타겟풀 생성
@@ -76,9 +76,7 @@ public class ObjectManager : MonoBehaviour
         Dragon_Yellow_2 = new GameObject();
         Dragon_Yellow_3 = new GameObject();
         Dragon_Yellow_4 = new GameObject();
-
-
-
+     
 
         //오브젝트 생성(로딩시간)
         Generate();
@@ -177,7 +175,6 @@ public class ObjectManager : MonoBehaviour
             case "Player_Atk":
                 targetPool = Player_AtkPool;
                 break;
-
         }
 
         //타겟풀의 크기만큼 오브젝트를 검사, 비활성화 상태이면 1.활성화시킨 후 2. 리턴
