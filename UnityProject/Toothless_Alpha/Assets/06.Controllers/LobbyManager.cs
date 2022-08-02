@@ -9,6 +9,13 @@ public class LobbyManager : MonoBehaviour
     public Text Coin;
     public Slider Exp;
 
+
+    public Text InfoLevel;
+    public Text InfoAtk;
+    public Text InfoHP;
+    public Text InfoExp;
+
+
     public GameObject UI_Lobby_Player;
     public BtnManager btnManager;
 
@@ -67,12 +74,29 @@ public class LobbyManager : MonoBehaviour
         // 레벨 및 코인 텍스트 출력
         Level.text = playerLevel.ToString();
         Coin.text = totalCoin.ToString();
+        
         levelEdit();
         funcTest();
+
+        if(btnManager.isInfoOn)
+        {
+            InfoLevel.text = playerLevel.ToString();
+            InfoAtk.text = "Test";
+            InfoHP.text = "Test";
+            InfoExp.text = "<color=green>"+curExp.ToString() + "</color>" + " / " + totalExp.ToString();
+        }
     }
 
     void UIPlayerMove()
     {
+        fdt += Time.deltaTime;
+
+            if (fdt > maxT)
+            {
+                rot *= (-1);
+                fdt = 0;
+            }
+        /*
         if (!btnManager.isLobby)
         {
             fdt += Time.deltaTime;
@@ -88,7 +112,8 @@ public class LobbyManager : MonoBehaviour
         {
             rot = 0;
         }
-
+        */
+        
         UI_Lobby_Player.transform.rotation = Quaternion.Euler(0, 0, rot);
     }
 
@@ -157,7 +182,7 @@ public class LobbyManager : MonoBehaviour
         }
 
         totalExp += calExp;
-        Debug.Log("TotalExp : " + totalExp);
+        // Debug.Log("TotalExp : " + totalExp);
         // 만약 max로 잡아놓은 경험치 값보다 높아질 시 max로 통일
         if (totalExp >= maxExp)
         {

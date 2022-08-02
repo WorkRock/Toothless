@@ -46,12 +46,12 @@ public class Result : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        /* 
         playerLastStage = PlayerPrefs.GetInt("Stage");
         playerBestStage = PlayerPrefs.GetInt("BStage");
         playerNowExp = PlayerPrefs.GetInt("Exp");
         totalCoin = PlayerPrefs.GetInt("Coin");
-        */
+        
+        checkBStage();
 
         totalGetExp = BasicDefaultGetExp;
         totalGetCoin = BasicDefaultGetCoin;
@@ -68,19 +68,27 @@ public class Result : MonoBehaviour
         LastStage.text = playerLastStage.ToString();
         BestStage.text = playerBestStage.ToString();
         
-        Debug.Log("획득 경험치 : " + realTotalGetExp);
-        Debug.Log("획득 코인 : " + realTotalGetCoin);
+        //Debug.Log("획득 경험치 : " + realTotalGetExp);
+        //Debug.Log("획득 코인 : " + realTotalGetCoin);
         GetExp.text = realTotalGetExp.ToString();
         GetCoin.text = realTotalGetCoin.ToString();
 
         playerNowExp += totalGetExp;
         totalCoin += totalGetCoin;
 
-        /*
+        
         PlayerPrefs.SetInt("Exp",playerNowExp);
         PlayerPrefs.SetInt("Coin",totalCoin);
         PlayerPrefs.SetInt("BStage",playerBestStage);
-        */
+        
+    }
+
+    void checkBStage()
+    {
+        if(playerBestStage < playerLastStage)
+        {
+            playerBestStage = playerLastStage;
+        }
     }
 
     void totalGetExpCal(int playerLastStage)
@@ -95,7 +103,7 @@ public class Result : MonoBehaviour
         }
 
         totalGetExp += calGetExp;
-        Debug.Log("totalGetExpCal : " + calGetExp);
+        //Debug.Log("totalGetExpCal : " + calGetExp);
         // 만약 max로 잡아놓은 경험치 값보다 높아질 시 max로 통일
         if (totalGetExp >= maxGetExp)
         {
@@ -115,7 +123,7 @@ public class Result : MonoBehaviour
         }
 
         totalGetCoin += calGetCoin;
-        Debug.Log("totalGetCoinCal : " + calGetCoin);
+        //Debug.Log("totalGetCoinCal : " + calGetCoin);
         // 만약 max로 잡아놓은 경험치 값보다 높아질 시 max로 통일
         if (totalGetCoin >= maxGetCoin)
         {

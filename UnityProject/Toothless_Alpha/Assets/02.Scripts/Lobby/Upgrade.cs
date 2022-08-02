@@ -23,7 +23,7 @@ public class Upgrade : MonoBehaviour
     public int playerLevel;
     public int atkUGLevel;
 
-    public bool isBtnClicked;
+    //public bool isBtnClicked;
     private bool isCanUG;
     private bool isFirstUG;
     private bool isSecondUG;
@@ -44,7 +44,7 @@ public class Upgrade : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        isBtnClicked = false;
+       //isBtnClicked = false;
 
         // 테스트를 위한 초기화
         PlayerPrefs.SetInt("AtkUG", 1);
@@ -130,8 +130,10 @@ public class Upgrade : MonoBehaviour
 
     public void UGbtnClick()
     {
-        Debug.Log("BtnClick");
-        isBtnClicked = true;
+        // Debug.Log("BtnClick");
+        //isBtnClicked = true;
+        PlayerPrefs.SetInt("isShop",1);
+        PlayerPrefs.Save();
         UpgradeATK();
     }
 
@@ -147,7 +149,7 @@ public class Upgrade : MonoBehaviour
 
     void needCoinCal(int atkUGLevel)
     {
-        Debug.Log("needCoinCal(atkUGLevel) : " + this.atkUGLevel);  
+        //Debug.Log("needCoinCal(atkUGLevel) : " + this.atkUGLevel);  
 
         if (atkUGLevel == 1)
             return;
@@ -157,8 +159,8 @@ public class Upgrade : MonoBehaviour
             totalNeedCoinFormula(this.atkUGLevel);
         }
 
-        Debug.Log("playerNeedCoin : " + playerNeedCoin);
-        Debug.Log("calCoin : " + calCoin);
+        //Debug.Log("playerNeedCoin : " + playerNeedCoin);
+        //Debug.Log("calCoin : " + calCoin);
         playerNeedCoin += calCoin;
 
         // 만약 max로 잡아놓은 경험치 값보다 높아질 시 max로 통일
