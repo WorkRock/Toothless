@@ -96,11 +96,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98bf6b5516300314a977109414fdfa7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xSpeed: 0.3
   type: Obstacle
+  nowStage: 0
   objSpeed: 0.5
   damage: 10
-  x: 0
+  Total__ComObj_Speed: 0
+  BasicDefault_ComObj_Speed: 5
+  BasicPlus_ComObj_Speed: 0
+  EditDefault_ComObj_Speed: 0
+  EditPlus_ComObj_Speed: 1.5
+  BasicCorStage_ComObj_Speed: 0
+  EditCorStage_ComObj_Speed: 10
+  max_ComObj_Speed: 15
 --- !u!60 &-7541120306664570310
 PolygonCollider2D:
   m_ObjectHideFlags: 0

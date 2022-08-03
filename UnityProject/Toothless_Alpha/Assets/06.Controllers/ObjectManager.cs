@@ -57,11 +57,11 @@ public class ObjectManager : MonoBehaviour
     {
         //한번에 등장할 갯수만큼 오브젝트 풀 크기 설정
         //1. 장애물 풀
-        ObstaclePool = new GameObject[10];
+        ObstaclePool = new GameObject[30];
         //2. 공격 풀
-        FireBallPool = new GameObject[10];
-        IceBallPool = new GameObject[10];
-        WaterBallPool = new GameObject[10];
+        FireBallPool = new GameObject[30];
+        IceBallPool = new GameObject[30];
+        WaterBallPool = new GameObject[30];
         //3. 플레이어 공격 풀
         Player_AtkPool = new GameObject[10];
         //4. 드래곤 (10마리)

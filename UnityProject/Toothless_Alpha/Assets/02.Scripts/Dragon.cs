@@ -38,13 +38,21 @@ public class Dragon : MonoBehaviour
         Dragon_HPBar = gameObject.GetComponentInChildren<Slider>();
         //다시 활성화 될때 hp바는 만땅으로
         Dragon_HPBar.value = 1.0f;
-        objectManager = GetComponent<ObjectManager>();
+       
+    }
+
+    void OnDisable()
+    {
+        nowStage++;
+        PlayerPrefs.SetInt("Stage", nowStage);
+        //드래곤 사망 정보 저장 0-생존 1-사망
+        PlayerPrefs.SetInt("isDragonDie", 1);
+        PlayerPrefs.Save();
     }
 
     void Start()
     {
-        objectManager = GetComponent<ObjectManager>();
-        type = "Dragon";
+        //type = "Dragon";
         nowStage = PlayerPrefs.GetInt("Stage");
         Dragon_TotalHP = BasicDefaultHp;
         totalHpCal(nowStage-1);
@@ -70,14 +78,8 @@ public class Dragon : MonoBehaviour
             Debug.Log($"드래곤 체력 : {Dragon_NowHP}");
             if (Dragon_NowHP <= 0)
             {
-                gameObject.SetActive(false);
-                nowStage++;
-                PlayerPrefs.SetInt("Stage", nowStage);
-                PlayerPrefs.Save();
-                //드래곤 사망 정보 저장 0-생존 1-사망
-                PlayerPrefs.SetInt("isDragonDie", 1);
-            }
-                
+                Invoke("Disappear", 0.5f);
+            }        
         }
     }
 
@@ -92,5 +94,10 @@ public class Dragon : MonoBehaviour
         {
             Dragon_TotalHP = maxHp;
         }
+    }
+
+    void Disappear()
+    {
+        gameObject.SetActive(false);
     }
 }
