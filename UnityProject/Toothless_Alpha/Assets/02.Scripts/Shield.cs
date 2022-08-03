@@ -41,18 +41,18 @@ public class Shield : MonoBehaviour
             if (transform.position.x < 0)
             {
                 newAtk.transform.rotation = Quaternion.Euler(0, 0f, -20f);
-                newAtk.GetComponent<Rigidbody2D>().AddForce(dirVec, ForceMode2D.Impulse);
+                newAtk.GetComponent<Rigidbody2D>().AddForce(dirVec * 1.5f, ForceMode2D.Impulse);
             }
 
             else if(transform.position.x > 0)
             {
                 newAtk.transform.rotation = Quaternion.Euler(0f, 0f, 20f);
-                newAtk.GetComponent<Rigidbody2D>().AddForce(dirVec, ForceMode2D.Impulse);
+                newAtk.GetComponent<Rigidbody2D>().AddForce(dirVec * 1.5f, ForceMode2D.Impulse);
             }
 
             else
             {
-                newAtk.GetComponent<Rigidbody2D>().AddForce(dirVec, ForceMode2D.Impulse);
+                newAtk.GetComponent<Rigidbody2D>().AddForce(dirVec * 1.5f, ForceMode2D.Impulse);
             }
         }
     }

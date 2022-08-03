@@ -7,12 +7,8 @@ public class Obstacle : MonoBehaviour
     //오브젝트의 타입 설정
     public string type;
 
-    //오브젝트 스피드
-    public float objSpeed;
-
     //장애물 데미지
     public int damage;
-
 
     void OnEnable()
     {
@@ -26,8 +22,7 @@ public class Obstacle : MonoBehaviour
 
 
     void Update()
-    {
-       
+    {     
         if (Time.timeScale > 0)
         {
             //스케일 점점 커지게
@@ -44,5 +39,4 @@ public class Obstacle : MonoBehaviour
         if (collision.gameObject.tag.Equals("BorderBottom"))
             gameObject.SetActive(false);
     }
-
 }

@@ -85,7 +85,7 @@ GameObject:
   - component: {fileID: 3475107843620141792}
   - component: {fileID: 7145013472094706211}
   m_Layer: 0
-  m_Name: mouse_01
+  m_Name: Dragon_Mouse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -380,6 +380,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1653626872153444468, guid: 4d156f764e1089f419f722b19d956973, type: 3}
   Dragon_HPBar: {fileID: 0}
+  objectManager: {fileID: 0}
   type: Blue
   Dragon_NowHP: 0
   Dragon_TotalHP: 0
@@ -391,7 +392,6 @@ MonoBehaviour:
   BasicCorStage: 1
   EditCorStage: 10
   maxHp: 6000
-  effect: {fileID: 139366, guid: b185c1a9cf067374586d095111b15bd1, type: 3}
 --- !u!1 &5897584414381016259
 GameObject:
   m_ObjectHideFlags: 0
