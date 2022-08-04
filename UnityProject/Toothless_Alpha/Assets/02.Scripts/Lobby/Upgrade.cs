@@ -26,6 +26,7 @@ public class Upgrade : MonoBehaviour
 
     public int playerLevel;
     public int atkUGLevel;
+    public int nextUGLevel;
 
     //public bool isBtnClicked;
     private bool isCanUG;
@@ -54,8 +55,8 @@ public class Upgrade : MonoBehaviour
     public float BasicPlusUGDMG;
     public float EditDefaultUGDMG;
     public float EditPlusUGDMG;
-    public float BasicCorUGDMGLevel;
-    public float EditCorUGDMGLevel;
+    public int BasicCorUGDMGLevel;
+    public int EditCorUGDMGLevel;
     public float maxUGDMG;
 
     // Start is called before the first frame update
@@ -71,6 +72,8 @@ public class Upgrade : MonoBehaviour
         playerLevel = PlayerPrefs.GetInt("Level");
         totalCoin = PlayerPrefs.GetInt("Coin");
 
+        nextUGLevel = atkUGLevel+1;
+        
         playerNeedCoin = BasicDefaultNeedCoin;
         totalUGDMG = BasicDefaultUGDMG;
 
@@ -78,21 +81,20 @@ public class Upgrade : MonoBehaviour
 
         // playerNeedCoin = BasicDefaultNeedCoin + EditDefaultNeedCoin;
 
-        if (playerLevel == 1)
+        if (atkUGLevel == 1)
         {
-            needCoinCal(playerLevel);
-            totalUGDMGCal(playerLevel);
-            totalUGDMGNext += (totalUGDMG + totalUGDMGFormula(atkUGLevel+1));
+            totalUGDMGNext = totalUGDMGFormula(atkUGLevel+1);
         }
 
         else
         {
-            for (int i = 1; i < playerLevel; i++)
+            for (int i = 1; i < atkUGLevel-1; i++)
             {
                 needCoinCal(i);
-                totalUGDMGCal(i);
+                
             }
-            totalUGDMGNext += (totalUGDMG + totalUGDMGFormula(atkUGLevel));
+            totalUGDMGCal(atkUGLevel-1);
+            totalUGDMGNext = totalUGDMGFormula(atkUGLevel);
         }
 
     }
@@ -104,8 +106,10 @@ public class Upgrade : MonoBehaviour
 
         UGLevel.text = atkUGLevel.ToString();
 
-        UGDmgNow.text = totalUGDMG.ToString();
-        UGDmgNext.text = totalUGDMGNext.ToString();
+        Debug.Log("totalUGDMG : " + totalUGDMG);
+        
+        UGDmgNow.text = (100*totalUGDMG).ToString() + "%";
+        UGDmgNext.text = (100*totalUGDMGNext).ToString() +"%";
 
 
         coinTxt();
@@ -173,8 +177,18 @@ public class Upgrade : MonoBehaviour
         PlayerPrefs.Save();
 
         needCoinCal(atkUGLevel);
+
         totalUGDMGCal(atkUGLevel);
-        totalUGDMGNext += totalUGDMGFormula(atkUGLevel);
+        totalUGDMGNext = totalUGDMGFormula(atkUGLevel+1);
+        if (totalUGDMG >= maxUGDMG)
+        {
+            totalUGDMG = maxUGDMG;   
+        }
+
+        if(totalUGDMGNext >= maxUGDMG)
+        {
+            totalUGDMGNext = maxUGDMG;
+        }        
     }
 
 
@@ -212,7 +226,9 @@ public class Upgrade : MonoBehaviour
 
         else
         {
-            totalUGDMG += totalUGDMGFormula(atkUGLevel);
+            totalUGDMG = totalUGDMGFormula(this.atkUGLevel);
+            Debug.Log("추가한 값 : " + totalUGDMG);
+            Debug.Log("this.atkUGLevel-1 : " + (this.atkUGLevel));
         }
 
 
@@ -223,11 +239,19 @@ public class Upgrade : MonoBehaviour
         }
     }
 
-    float totalUGDMGFormula(int atkUGLevel)
+    float totalUGDMGFormula(int toAtkUGLevel)
     {
         float calUGDMG;
-        calUGDMG = Mathf.FloorToInt((this.atkUGLevel / BasicCorUGDMGLevel) * BasicPlusUGDMG)
-                    + Mathf.FloorToInt(EditDefaultUGDMG + (this.atkUGLevel / EditCorUGDMGLevel) * EditPlusUGDMG);
+        Debug.Log("this.atkUGLevel : " + (toAtkUGLevel-1));
+        Debug.Log("atkUGLevel : " + atkUGLevel);
+        Debug.Log("1 : "+Mathf.FloorToInt(((toAtkUGLevel-1) / BasicCorUGDMGLevel)));
+        Debug.Log("2 : "+Mathf.FloorToInt(((toAtkUGLevel-1) / BasicCorUGDMGLevel)) * BasicPlusUGDMG);
+        Debug.Log("3 : "+Mathf.FloorToInt((toAtkUGLevel-1) / EditCorUGDMGLevel));
+        Debug.Log("4 : "+Mathf.FloorToInt((toAtkUGLevel-1) / EditCorUGDMGLevel) * EditPlusUGDMG);
+        calUGDMG = BasicDefaultUGDMG + Mathf.FloorToInt(((toAtkUGLevel-1) / BasicCorUGDMGLevel)) * BasicPlusUGDMG
+                    + EditDefaultUGDMG + Mathf.FloorToInt((toAtkUGLevel) / EditCorUGDMGLevel) * EditPlusUGDMG;
+        
+        Debug.Log("업그레이드 시 추가되는 값 : " + calUGDMG);
         return calUGDMG;
     }
 
