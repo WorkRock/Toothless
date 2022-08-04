@@ -4,11 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Upgrade : MonoBehaviour
-{ 
+{
     public Text UGLevel;
     public Text NeedCoin;
     public Text UGText;
     public Button UGBtn;
+
+    public Text UGDmgNow;
+    public Text UGDmgNext;
+
 
     public GameObject FirsstUGSliderParent;
     public GameObject SecondUGSliderParent;
@@ -41,10 +45,23 @@ public class Upgrade : MonoBehaviour
     public int BasicCorUGLevel;
     public int EditCorUGLevel;
     public int maxNeedCoin;
+
+
+    public float totalUGDMG;
+    public float totalUGDMGNext;
+
+    public float BasicDefaultUGDMG;
+    public float BasicPlusUGDMG;
+    public float EditDefaultUGDMG;
+    public float EditPlusUGDMG;
+    public float BasicCorUGDMGLevel;
+    public float EditCorUGDMGLevel;
+    public float maxUGDMG;
+
     // Start is called before the first frame update
     void Start()
     {
-       //isBtnClicked = false;
+        //isBtnClicked = false;
 
         // 테스트를 위한 초기화
         PlayerPrefs.SetInt("AtkUG", 1);
@@ -55,14 +72,17 @@ public class Upgrade : MonoBehaviour
         totalCoin = PlayerPrefs.GetInt("Coin");
 
         playerNeedCoin = BasicDefaultNeedCoin;
+        totalUGDMG = BasicDefaultUGDMG;
 
         calCoin = 0;
 
-        playerNeedCoin = BasicDefaultNeedCoin + EditDefaultNeedCoin;
+        // playerNeedCoin = BasicDefaultNeedCoin + EditDefaultNeedCoin;
 
-        if(playerLevel == 1)
+        if (playerLevel == 1)
         {
             needCoinCal(playerLevel);
+            totalUGDMGCal(playerLevel);
+            totalUGDMGNext += (totalUGDMG + totalUGDMGFormula(atkUGLevel+1));
         }
 
         else
@@ -70,18 +90,24 @@ public class Upgrade : MonoBehaviour
             for (int i = 1; i < playerLevel; i++)
             {
                 needCoinCal(i);
-            }          
+                totalUGDMGCal(i);
+            }
+            totalUGDMGNext += (totalUGDMG + totalUGDMGFormula(atkUGLevel));
         }
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
         totalCoin = PlayerPrefs.GetInt("Coin");
-        
+
         UGLevel.text = atkUGLevel.ToString();
-        
+
+        UGDmgNow.text = totalUGDMG.ToString();
+        UGDmgNext.text = totalUGDMGNext.ToString();
+
+
         coinTxt();
         checkUGPossible();
 
@@ -93,7 +119,7 @@ public class Upgrade : MonoBehaviour
 
     void coinTxt()
     {
-        if(isCanUG)
+        if (isCanUG)
         {
             NeedCoin.text = playerNeedCoin.ToString();
             UGText.text = "Upgrade";
@@ -101,10 +127,10 @@ public class Upgrade : MonoBehaviour
 
         else
         {
-            if(atkUGLevel == maxUGLevel)
+            if (atkUGLevel == maxUGLevel)
             {
                 NeedCoin.text = "<color=green>Max Level</color>";
-                
+
             }
 
             else
@@ -132,7 +158,7 @@ public class Upgrade : MonoBehaviour
     {
         // Debug.Log("BtnClick");
         //isBtnClicked = true;
-        PlayerPrefs.SetInt("isShop",1);
+        PlayerPrefs.SetInt("isShop", 1);
         PlayerPrefs.Save();
         UpgradeATK();
     }
@@ -141,15 +167,19 @@ public class Upgrade : MonoBehaviour
     {
         totalCoin -= playerNeedCoin;
         atkUGLevel++;
+
+        PlayerPrefs.SetInt("AtkUG", atkUGLevel);
         PlayerPrefs.SetInt("Coin", totalCoin);
         PlayerPrefs.Save();
+
         needCoinCal(atkUGLevel);
+        totalUGDMGCal(atkUGLevel);
+        totalUGDMGNext += totalUGDMGFormula(atkUGLevel);
     }
 
 
     void needCoinCal(int atkUGLevel)
     {
-        //Debug.Log("needCoinCal(atkUGLevel) : " + this.atkUGLevel);  
 
         if (atkUGLevel == 1)
             return;
@@ -159,8 +189,6 @@ public class Upgrade : MonoBehaviour
             totalNeedCoinFormula(this.atkUGLevel);
         }
 
-        //Debug.Log("playerNeedCoin : " + playerNeedCoin);
-        //Debug.Log("calCoin : " + calCoin);
         playerNeedCoin += calCoin;
 
         // 만약 max로 잡아놓은 경험치 값보다 높아질 시 max로 통일
@@ -177,9 +205,39 @@ public class Upgrade : MonoBehaviour
     }
 
 
+    void totalUGDMGCal(int atkUGLevel)
+    {
+        if (this.atkUGLevel == 1)
+            return;
+
+        else
+        {
+            totalUGDMG += totalUGDMGFormula(atkUGLevel);
+        }
+
+
+        // 만약 max로 잡아놓은 경험치 값보다 높아질 시 max로 통일
+        if (totalUGDMG >= maxUGDMG)
+        {
+            totalUGDMG = maxUGDMG;
+        }
+    }
+
+    float totalUGDMGFormula(int atkUGLevel)
+    {
+        float calUGDMG;
+        calUGDMG = Mathf.FloorToInt((this.atkUGLevel / BasicCorUGDMGLevel) * BasicPlusUGDMG)
+                    + Mathf.FloorToInt(EditDefaultUGDMG + (this.atkUGLevel / EditCorUGDMGLevel) * EditPlusUGDMG);
+        return calUGDMG;
+    }
+
+
+
+
+
     void ATKLogoCheck()
     {
-        if(atkUGLevel < firstUGLevel)
+        if (atkUGLevel < firstUGLevel)
         {
             isFirstUG = true;
             isSecondUG = false;
@@ -197,9 +255,9 @@ public class Upgrade : MonoBehaviour
 
     void ATKLogoSlider()
     {
-        if(isFirstUG)
+        if (isFirstUG)
         {
-            if(atkUGLevel == 1)
+            if (atkUGLevel == 1)
             {
                 FirsstUGSlider.value = 0 / (float)firstUGLevel;
             }
@@ -209,14 +267,14 @@ public class Upgrade : MonoBehaviour
                 FirsstUGSlider.value = atkUGLevel / (float)firstUGLevel;
             }
 
-            
+
         }
 
-        else if(isSecondUG)
+        else if (isSecondUG)
         {
             float checkValue = (atkUGLevel - firstUGLevel) / (float)firstUGLevel;
 
-            if(checkValue >= 1)
+            if (checkValue >= 1)
             {
                 checkValue = 1;
             }

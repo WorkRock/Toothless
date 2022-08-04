@@ -111,10 +111,6 @@ public class SoundManager : MonoBehaviour
 
         if (isSoundOn == 1)
         {
-            BGM.mute = false;
-            audioSource.mute = false;
-            // Debug.Log("isShop" + isShop);
-
             switch (SceneManager.GetActiveScene().name)
             {
                 case "Lobby":
@@ -128,13 +124,14 @@ public class SoundManager : MonoBehaviour
                     else
                     {
                         BGM.mute = false;
+                        audioSource.mute = false;
                         PlayBGM(BGMList[0].name);
                     }
 
                     if (fdt > lobbyDelayTime)
                     {
                         BGM.mute = false;
-                        lobbyDelay = false;
+                        lobbyDelay = true;
                         PlayBGM(BGMList[0].name);
                         fdt = 0;
                     }
@@ -151,8 +148,10 @@ public class SoundManager : MonoBehaviour
 
                 case "Result":
                     fdt = 0;
+                    lobbyDelay = true;
                     PlayBGM(BGMList[2].name);
                     BGM.volume = 1.0f;
+                    audioSource.mute = false;
                     break;
 
             }
