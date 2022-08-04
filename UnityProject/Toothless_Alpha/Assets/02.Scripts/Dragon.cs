@@ -6,10 +6,10 @@ using UnityEngine.UI;
 public class Dragon : MonoBehaviour
 {
     //Player_Atk 클래스 객체 생성
-    public Player_Atk player;
+    public Player_Move player;
 
     public Slider Dragon_HPBar;
-
+    
     public ObjectManager objectManager;
 
     //드래곤 타입
@@ -38,7 +38,12 @@ public class Dragon : MonoBehaviour
         Dragon_HPBar = gameObject.GetComponentInChildren<Slider>();
         //다시 활성화 될때 hp바는 만땅으로
         Dragon_HPBar.value = 1.0f;
-       
+    }
+
+    void Update()
+    {
+        // 체력바 조정
+        Dragon_HPBar.value = Dragon_NowHP / (float)Dragon_TotalHP;
     }
 
     void OnDisable()
@@ -52,7 +57,6 @@ public class Dragon : MonoBehaviour
 
     void Start()
     {
-        //type = "Dragon";
         nowStage = PlayerPrefs.GetInt("Stage");
         Dragon_TotalHP = BasicDefaultHp;
         totalHpCal(nowStage-1);
@@ -68,18 +72,14 @@ public class Dragon : MonoBehaviour
             //폭발 효과
             isHit = true;
 
-            Dragon_NowHP -= player.Player_Atk_Power;
+            Dragon_NowHP -= player.Player_TotalAtk;
 
-            Debug.Log($"hp value : {Dragon_NowHP / (float)Dragon_TotalHP}");
-
-            // 체력바 조정
-            Dragon_HPBar.value = Dragon_NowHP / (float)Dragon_TotalHP;
 
             Debug.Log($"드래곤 체력 : {Dragon_NowHP}");
             if (Dragon_NowHP <= 0)
             {
                 Invoke("Disappear", 0.5f);
-            }        
+            }
         }
     }
 

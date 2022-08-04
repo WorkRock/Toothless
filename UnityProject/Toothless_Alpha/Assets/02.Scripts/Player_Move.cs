@@ -6,27 +6,43 @@ using UnityEngine.SceneManagement;
 
 public class Player_Move : MonoBehaviour
 {
-    //체력바 ui 관련
+    //UI 관련
     //플레이어 체력바
     public Slider Player_HPBar;
+    //쉴드 쿨타임
+    public Image ShieldCoolTime;
+
+    //쉴드 딜레이
+    public float curDelay = 0f;
+    public float maxDelay = 1f;
+    public float curShieldDelay;
+    public float maxShieldDelay;
+    public bool isShieldOn;
+
     //Dragon_Atk 클래스 객체 생성
     public Dragon_Atk dragon;
     //Obstacle 클래스 객체 생성
     public Obstacle obstacle;
-
-
-    //플레이어 체력
-    public int Player_NowHP;
-    public int Player_TotalHP;
+    //게임매니저
+    public gameManager gameManager;
 
     //이동할 위치 배열로 선언
     public GameObject[] targetPos;
 
     //플레이어 쉴드 오브젝트 연결
-    public GameObject playerShield;
+    public GameObject[] playerShield;
+
+    //쉴드 이미지 UI
+    public GameObject[] shieldImgs;
 
     //플레이어의 콜라이더 연결
     public CapsuleCollider2D capsuleCollider2D;
+
+    //무적상태일 때 플레이어 흐리게
+    public SpriteRenderer spriteRenderer;
+
+    public int playerShieldNum;
+    private int onShieldNum;
 
     //이동 속도
     public float playerSpeed;
@@ -38,59 +54,72 @@ public class Player_Move : MonoBehaviour
     private int nowPos; //1
     private int maxPos; //2
 
-    //쉴드 딜레이
-    public float curDelay = 0f;
-    public float maxDelay = 1f;
-    public float curShieldDelay;
-    public float maxShieldDelay;
-    public bool isShieldOn;
-
     //함수 관련
-    // 공통
+    // 플레이어 공통
     public int nowLevel;
-    public int BasicCorLevel;
-    public int EditCorLevel;
+
     // 1. 플레이어 HP(레벨 & 업그레이드)
+    //플레이어 체력
+    public int Player_TotalHP;
+    public int Player_NowHP;
     public int BasicDefaultHp;
     public int BasicPlusHp;
     public int EditDefaultHp;
     public int EditPlusHp;
-   
+    public int BasicCorLevel_HP;               //보정레벨_기본 : 0
+    public int EditCorLevel_HP;                //보정레벨_보정값 : 10
     public int maxHp;
 
     // 2. 플레이어 공격력(레벨 & 업그레이드)
-    public int BasicDefaultPlayer_Atk;
-    public int BasicPlusPlayer_Atk;
-    public int EditDefaultPlayer_Atk;
-    public int EditPlusPlayer_Atk;
-    public int maxPlayer_Atk;
+    public int Player_TotalAtk;
+    public int BasicDefaultPlayer_Atk;      //기본_Default : 30
+    public int BasicPlusPlayer_Atk;         //기본_가중치 : 0
+    public int EditDefaultPlayer_Atk;       //보정값_Default : 0
+    public int EditPlusPlayer_Atk;          //보정값_가중치 : 15
+    public int BasicCorLevel_Atk;           //보정레벨_기본 : 0
+    public int EditCorLevel_Atk;            //보정레벨_보정값 : 10
+    public int maxPlayer_Atk;               //최대(or최소)값 : 500
 
-    // 3. 플레이어 경험치 필요량(레벨)
 
-    // 4. 플레이어 경험치 획득량(스테이지)
+    // 3. 장애물 공격력 함수
+    //최종 공격력
+    public int Total_ComObj_Atk;
+
+    public int BasicDefault_ComObj_Atk;     //기본_Default : 10
+    public int BasicPlus_ComObj_Atk;        //기본_가중치 : 2
+    public int EditDefault_ComObj_Atk;      //보정값_Default : 0
+    public int EditPlus_ComObj_Atk;         //보정값_가중치 : 20
+    public int BasicCorStage_ComObj_Atk;    //보정스테이지_기본 : 0
+    public int EditCorStage_ComObj_Atk;     //보정스테이지_보정값 : 10
+    public int max_ComObj_Atk;              //최대(or최소)값 : 99999
+
+    // 4. 드래곤 공격력 함수
+    //최종 공격력
+    public int Total_ComAtk_Atk;
+
+    public int BasicDefault_ComAtk_Atk;     //기본_Default : 10
+    public int BasicPlus_ComAtk_Atk;        //기본_가중치 : 2
+    public int EditDefault_ComAtk_Atk;      //보정값_Default : 0
+    public int EditPlus_ComAtk_Atk;         //보정값_가중치 : 20
+    public int BasicCorStage_ComAtk_Atk;    //보정스테이지_기본 : 0
+    public int EditCorStage_ComAtk_Atk;     //보정스테이지_보정값 : 10
+    public int max_ComAtk_Atk;              //최대(or최소)값 : 99999
+
     public int nowStage;
-    public int BasicDefaultGet_Exp;
-    public int BasicPlusGet_Exp;
-    public int EditDefaultGet_Exp;
-    public int EditPlusGet_Exp;
-    public int BasicCorStage;
-    public int EditCorStage;
-    public int maxGet_Exp;
-   
 
-    
-    
 
     // Start is called before the first frame update
     void Start()
     {
-        
-        // 1. 체력 증가 함수
-        totalHpCal(nowLevel - 1);
-        Debug.Log("체력 : " + Player_TotalHP);
-
+        playerShieldNum = 0;
+        nowLevel = PlayerPrefs.GetInt("Level");
+        //플레이어 체력, 공격력은 로비에서 업그레이드 하여 게임중에는 변하지 않으므로 Start에서 한번만 호출
+        // 1. 플레이어 체력 계산 함수
+        totalHpCal();
         //체력 초기화
         Player_NowHP = Player_TotalHP;
+        // 2. 플레이어 공격력 계산 함수
+        totalPlayer_AtkCal();
 
         //인덱스 초기화
         minPos = 0;
@@ -98,14 +127,51 @@ public class Player_Move : MonoBehaviour
         maxPos = targetPos.Length - 1;
 
         //쉴드 비활성화
-        playerShield.SetActive(false);
+        for (int i = 0; i < playerShield.Length; i++)
+        {
+            playerShield[i].SetActive(false);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         MovePlayer();
-        ShieldOn();            
+        if(Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            ShieldSwap();
+        }
+        ShieldOn();
+        nowStage = PlayerPrefs.GetInt("Stage");
+        Total_ComObj_AtkCal();
+        Total_ComAtk_AtkCal();
+
+        // 쉴드 쿨타임
+        ShieldCoolTime.fillAmount = Mathf.Lerp(0, 100, (curShieldDelay / maxShieldDelay) / 100);
+
+        // 체력바 조정(슬라이더 밸류값으로 조정)
+        Player_HPBar.value = Player_NowHP / (float)Player_TotalHP;
+
+        for (int i = 0; i < shieldImgs.Length; i++)
+        {
+            if (i == playerShieldNum)
+            {
+                shieldImgs[i].SetActive(true);
+            }
+
+            else
+                shieldImgs[i].SetActive(false);
+        }
+
+
+        for (int i = 0; i < playerShield.Length; i++)
+        {
+            if(playerShield[i].activeSelf)
+            {
+                playerShield[i].transform.position = gameObject.transform.position;
+            }
+        }
+
     }
 
     public void MovePlayer()
@@ -127,25 +193,46 @@ public class Player_Move : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, targetPos[nowPos].transform.position, playerSpeed);
     }
 
+    public void ShieldSwap()
+    {
+        float fVer = Input.GetAxisRaw("Vertical");
+        Debug.Log("fVer : " + fVer);
+        playerShieldNum += (int)fVer;
+    
+        if(playerShieldNum > playerShield.Length-1)
+        {
+            playerShieldNum = 0;
+        }
+
+        else if(playerShieldNum < 0)
+        {
+            playerShieldNum = playerShield.Length - 1;
+        }
+    }
+
     public void ShieldOn()
     {
         curDelay += Time.deltaTime;
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            isShieldOn = true;
+            
             if (curDelay > maxDelay)
             {
-                //쉴드 킬때 플레이어 콜라이더 잠시 끄기(옆으로 이동할때 이동속도가 공격 꺼지는 속도보다 빨라서 죽는판정남)
-                capsuleCollider2D.enabled = false;
-                playerShield.SetActive(true);
+                gameObject.tag = "Player_OnShield";
+                isShieldOn = true;
+                playerShield[playerShieldNum].SetActive(true);
+                onShieldNum = playerShieldNum;
                 curDelay = 0;
                 Debug.Log("ShieldOn");
-            }  
+            }
         }
         if (isShieldOn)
+        {
             curShieldDelay += Time.deltaTime;
+        }
 
-        if(curShieldDelay > maxShieldDelay)
+
+        if (curShieldDelay > maxShieldDelay)
         {
             ShieldOff();
             isShieldOn = false;
@@ -155,21 +242,26 @@ public class Player_Move : MonoBehaviour
 
     public void ShieldOff()
     {
-        //쉴드 꺼지면 플레이어 콜라이더 다시 켜기
-        capsuleCollider2D.enabled = true;
-        playerShield.SetActive(false);
+        gameObject.tag = "Player";
+        playerShield[onShieldNum].SetActive(false);
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag.Equals("Dragon_Atk_Fire") || collision.gameObject.tag.Equals("Dragon_Atk_Ice") || collision.gameObject.tag.Equals("Dragon_Atk_Water"))
+        if (collision.gameObject.tag.Equals("Dragon_Atk_Fire") || collision.gameObject.tag.Equals("Dragon_Atk_Ice") || collision.gameObject.tag.Equals("Dragon_Atk_Water") || collision.gameObject.tag.Equals("Dragon_Atk_Electric"))
         {
+            if (gameObject.tag == "Player_OnShield")
+                return;
+
             collision.gameObject.SetActive(false);
             //맞을때마다 현재 체력에서 드래곤 공격력만큼 뺌
-            Player_NowHP -= dragon.Dragon_Atk_Power;
+            Player_NowHP -= Total_ComAtk_Atk;
 
-            // 체력바 조정(슬라이더 밸류값으로 조정)
-            Player_HPBar.value = Player_NowHP / (float)Player_TotalHP;
+            //무적상태 시 색깔 흐리게
+            OnSuperEffect();
+            //무적상태(1)
+            capsuleCollider2D.enabled = false;
+            Invoke("OffSuper", 1f);
 
             Debug.Log($"플레이어 체력 : {Player_NowHP}");
             //0이하로 떨어지면 플레이어 비활성화, 시간 정지,  결과 씬 전환
@@ -178,6 +270,7 @@ public class Player_Move : MonoBehaviour
                 gameObject.SetActive(false);
                 Time.timeScale = 0;
                 SceneManager.LoadScene("Result");
+                PlayerPrefs.SetInt("Stage", nowStage);
             }
         }
 
@@ -185,10 +278,13 @@ public class Player_Move : MonoBehaviour
         {
             collision.gameObject.SetActive(false);
             //맞을때마다 현재 체력에서 장애물 데미지만큼 뺌
-            Player_NowHP -= obstacle.damage;
+            Player_NowHP -= Total_ComObj_Atk;
 
-            // 체력바 조정(슬라이더 밸류값으로 조정)
-            Player_HPBar.value = Player_NowHP / (float)Player_TotalHP;
+            //무적상태 시 색깔 흐리게
+            OnSuperEffect();
+            //무적상태(1)
+            capsuleCollider2D.enabled = false;
+            Invoke("OffSuper", 1f);
 
             Debug.Log($"플레이어 체력 : {Player_NowHP}");
             //0이하로 떨어지면 플레이어 비활성화, 시간 정지, 결과 씬 전환
@@ -197,41 +293,79 @@ public class Player_Move : MonoBehaviour
                 gameObject.SetActive(false);
                 Time.timeScale = 0;
                 SceneManager.LoadScene("Result");
-                
+                PlayerPrefs.SetInt("Stage", nowStage);
             }
         }
     }
 
-    //@플레이어 관련 함수@
-    // 1. 플레이어 체력(레벨 비례)
-    void totalHpCal(int nowLevel)
+    //무적상태 끄기
+    void OffSuper()
     {
-        Player_TotalHP = BasicDefaultHp + Mathf.FloorToInt((nowLevel / BasicCorLevel) * BasicPlusHp)
-                    + Mathf.FloorToInt(EditDefaultHp + (nowLevel / EditCorLevel) * EditPlusHp);
-
-        // 만약 max로 잡아놓은 체력보다 높아질 시 max로 통일
-        if (Player_TotalHP >= maxHp)
-        {
-            Player_TotalHP = maxHp;
-        }
+        capsuleCollider2D.enabled = true;
     }
 
-    // 2. 플레이어 공격력(레벨, 업그레이드 레벨 비례)
+    void OnSuperEffect()
+    {
+        //피격시 스프라이트 흐리게
+        spriteRenderer.color = new Color(1, 1, 1, 0.4f);
+        Invoke("OffSuperEffect", 1f);
+    }
+
+    void OffSuperEffect()
+    {
+        spriteRenderer.color = new Color(1, 1, 1, 1);
+    }
+
+    //@플레이어 관련 함수@
+    // 1. 플레이어 체력(레벨 비례)
+    void totalHpCal()
+    {
+        if (nowLevel == 1)
+            return;
+        else if ((BasicDefaultHp + ((nowLevel - 1) * BasicPlusHp)) +
+                           EditDefaultHp + Mathf.FloorToInt(((nowLevel - 1) / (float)EditCorLevel_HP) * EditPlusHp) >= maxHp)
+            Player_TotalHP = maxHp;
+        else
+        {
+            Player_TotalHP = (BasicDefaultHp + ((nowLevel - 1) * BasicPlusHp)) +
+                           EditDefaultHp + Mathf.FloorToInt((nowLevel - 1) / (float)EditCorLevel_HP) * EditPlusHp;
+        }
+
+    }
+
+    // 2. 플레이어 공격력(레벨 비례)
     void totalPlayer_AtkCal()
     {
 
+        if ((BasicDefaultPlayer_Atk + ((nowLevel - 1) * BasicPlusPlayer_Atk)) +
+                            EditDefaultPlayer_Atk + Mathf.FloorToInt((nowLevel - 1) / (float)EditCorLevel_Atk) * EditPlusPlayer_Atk >= maxPlayer_Atk)
+            Player_TotalAtk = maxPlayer_Atk;
+        else
+            Player_TotalAtk = (BasicDefaultPlayer_Atk + ((nowLevel - 1) * BasicPlusPlayer_Atk)) +
+                            EditDefaultPlayer_Atk + Mathf.FloorToInt((nowLevel - 1) / (float)EditCorLevel_Atk) * EditPlusPlayer_Atk;
     }
-    
 
-    // 3. 플레이어 경험치 필요량(레벨 비례)
-    void Player_NeedExp()
+
+
+    // 3. 장애물 공격력
+    void Total_ComObj_AtkCal()
     {
-
+        if (((BasicDefault_ComObj_Atk + ((nowStage - 1) * BasicPlus_ComObj_Atk)) +
+                            EditDefault_ComObj_Atk + Mathf.FloorToInt((nowStage - 1) / EditCorStage_ComObj_Atk) * EditPlus_ComObj_Atk) >= max_ComObj_Atk)
+            Total_ComObj_Atk = max_ComObj_Atk;
+        else
+            Total_ComObj_Atk = ((BasicDefault_ComObj_Atk + ((nowStage - 1) * BasicPlus_ComObj_Atk)) +
+                            EditDefault_ComObj_Atk + Mathf.FloorToInt((nowStage - 1) / EditCorStage_ComObj_Atk) * EditPlus_ComObj_Atk);
     }
 
-    // 4. 플레이어 경험치 획득량(스테이지 비례)
-    void Player_GetExp()
+    // 4. 드래곤 공격력
+    void Total_ComAtk_AtkCal()
     {
-
+        if (((BasicDefault_ComAtk_Atk + ((nowStage - 1) * BasicPlus_ComAtk_Atk)) +
+                            EditDefault_ComAtk_Atk + Mathf.FloorToInt((nowStage - 1) / EditCorStage_ComAtk_Atk) * EditPlus_ComAtk_Atk) >= max_ComAtk_Atk)
+            Total_ComAtk_Atk = max_ComAtk_Atk;
+        else
+            Total_ComAtk_Atk = ((BasicDefault_ComAtk_Atk + ((nowStage - 1) * BasicPlus_ComAtk_Atk)) +
+                            EditDefault_ComAtk_Atk + Mathf.FloorToInt((nowStage - 1) / EditCorStage_ComAtk_Atk) * EditPlus_ComAtk_Atk);
     }
 }

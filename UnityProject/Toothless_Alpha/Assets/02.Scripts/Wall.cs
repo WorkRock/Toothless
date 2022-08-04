@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Wall : MonoBehaviour
 {
+    //오브젝트의 속도 받아오기 위해 게임매니저 객체 생성
+    public gameManager gameManager;
+
     //배경 스크롤 속도
     public float scrollSpeed = 0.5f;
     //머터리얼 객체 생성
@@ -24,5 +27,7 @@ public class Wall : MonoBehaviour
         Vector3 newOffset = new Vector3(newOffSetX, 0, 0);
 
         myMaterial.mainTextureOffset = newOffset;
+
+        scrollSpeed = gameManager.Total__ComObj_Speed * 0.07f;
     }
 }

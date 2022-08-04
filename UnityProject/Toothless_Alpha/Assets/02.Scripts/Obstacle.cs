@@ -7,9 +7,6 @@ public class Obstacle : MonoBehaviour
     //오브젝트의 타입 설정
     public string type;
 
-    //장애물 데미지
-    public int damage;
-
     void OnEnable()
     {
         transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);

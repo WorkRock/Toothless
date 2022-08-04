@@ -12,6 +12,12 @@ TagManager:
   - Dragon_Atk_Ice
   - Dragon_Atk_Water
   - BorderTop
+  - Dragon_Atk_Electric
+  - Player_OnShield
+  - PyroShield
+  - IceShield
+  - WaterShield
+  - ElectroShield
   layers:
   - Default
   - TransparentFX

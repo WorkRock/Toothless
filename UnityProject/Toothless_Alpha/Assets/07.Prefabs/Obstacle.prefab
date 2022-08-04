@@ -97,17 +97,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: Obstacle
-  nowStage: 0
-  objSpeed: 0.5
   damage: 10
-  Total__ComObj_Speed: 0
-  BasicDefault_ComObj_Speed: 5
-  BasicPlus_ComObj_Speed: 0
-  EditDefault_ComObj_Speed: 0
-  EditPlus_ComObj_Speed: 1.5
-  BasicCorStage_ComObj_Speed: 0
-  EditCorStage_ComObj_Speed: 10
-  max_ComObj_Speed: 15
+  Total__ComObj_Atk: 0
+  BasicDefault_ComObj_Atk: 40
+  BasicPlus_ComObj_Atk: 2
+  EditDefault_ComObj_Atk: 0
+  EditPlus_ComObj_Atk: 20
+  BasicCorStage_ComObj_Atk: 0
+  EditCorStage_ComObj_Atk: 10
+  max_ComObj_Atk: 99999
+  nowStage: 0
 --- !u!60 &-7541120306664570310
 PolygonCollider2D:
   m_ObjectHideFlags: 0

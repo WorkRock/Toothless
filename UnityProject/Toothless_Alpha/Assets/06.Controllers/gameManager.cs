@@ -5,6 +5,18 @@ using UnityEngine.UI;
 
 public class gameManager : MonoBehaviour
 {
+    public GameObject cutScene;
+
+
+    //드래곤 종류(기본 : 비활성화 상태)
+    public GameObject Dragon_Blue;
+    public GameObject Dragon_Green;
+    public GameObject Dragon_Pink;
+    public GameObject Dragon_Purple;
+    public GameObject Dragon_Black;
+    public GameObject Dragon_Red;
+    public GameObject Dragon_Yellow;
+
     //오브젝트 매니저 객체 연결
     public ObjectManager objectManager;
 
@@ -17,29 +29,20 @@ public class gameManager : MonoBehaviour
     //오브젝트 생성, 공격 생성 위치를 저장할 배열 연결
     public Transform[] SpawnPoints;
 
-    //오브젝트 생성 주기
-    //드래곤
-    public float Enemy_ATK_TotalDelay;
-
     //스폰 딜레이 계산
-    [SerializeField]
-    private float fdt_Atk;      //드래곤볼 스폰 딜레이
-    
     [SerializeField]
     private float fdt_Dragon;   //드래곤 스폰 딜레이
 
-    [SerializeField]
-    private float fdt_Obs;      //장애물 스폰 딜레이
-
-    //@@@@@@@@@@@@@보류
     [SerializeField]
     private float fdt;      //오브젝트 스폰 딜레이
 
     //스테이지 정보
     public int nowStage;
 
-    //장애물, 드래곤 공격 함수 관련
-    //드래곤
+    // 1. 장애물, 드래곤볼 생성 주기 함수 관련
+    //드래곤볼 최종 딜레이
+    public float Enemy_ATK_TotalDelay;
+    //드래곤볼
     public float BasicDefaultEnemy_ATKDelay;
     public float BasicPlusEnemy_ATKDelay;
     public float EditDefaultEnemy_ATKDelay;
@@ -47,11 +50,9 @@ public class gameManager : MonoBehaviour
     public float maxEnemy_ATKDelay;
     public int BasicCorStage_Enemy;
     public int EditCorStage_Enemy;
-
-
-    //장애물
+    //장애물 최종 딜레이
     public float Obj_ATK_TotalDelay;
-
+    //장애물
     public float BasicDefaultObj_ATKDelay;
     public float BasicPlusObj_ATKDelay;
     public float EditDefaultObj_ATKDelay;
@@ -60,8 +61,10 @@ public class gameManager : MonoBehaviour
     public int BasicCorStage_Obj;
     public int EditCorStage_Obj;
 
-    //장애물 속도 함수 관련
-    public float Total__ComObj_Speed;       //최종 장애물 속도
+    // 2. 장애물, 드래곤 볼 속도 함수 관련
+    //장애물
+    //최종 장애물 속도
+    public float Total__ComObj_Speed;       
 
     public float BasicDefault_ComObj_Speed; //기본_Default : 5
     public float BasicPlus_ComObj_Speed;    //기본_가중치 : 0
@@ -71,8 +74,9 @@ public class gameManager : MonoBehaviour
     public int EditCorStage_ComObj_Speed;   //보정스테이지_보정값 : 10
     public float max_ComObj_Speed;          //최대(or최소)값 : 15
 
-    //드래곤 볼 속도 함수 관련
-    public float Total__ComAtk_Speed;       //최종 장애물 속도
+    //드래곤 볼
+    //최종 드래곤볼 속도
+    public float Total__ComAtk_Speed;       
 
     public float BasicDefault_ComAtk_Speed; //기본_Default : 5
     public float BasicPlus_ComAtk_Speed;    //기본_가중치 : 0
@@ -86,14 +90,14 @@ public class gameManager : MonoBehaviour
     public int ranPoint;    //위치 
     public int ranObj;      //장애물의 랜덤 좌표
     public int ranAtk;      //드래곤볼의 랜덤 좌표
-    public int ranBall;     //드래곤 공격
+    public int ranBall;     //드래곤볼 랜덤 종류
 
     //타겟위치로 자연스럽게 커지면서 이동하기 위해 타겟설정
     public GameObject[] ObjTargetPoints;
 
     //풀에서 꺼내오는 뉴 오브젝트
-    GameObject newAtkObj;
-    GameObject newObstacle;
+    public GameObject newAtkObj;
+    public GameObject newObstacle;
 
     //새로 스폰되는 드래곤
     GameObject newDragon;
@@ -111,6 +115,10 @@ public class gameManager : MonoBehaviour
 
     void Start()
     {
+        Eye_Atk.SetActive(false);
+        Mouse_Atk.SetActive(false);
+        Eye_Hit.SetActive(false);
+
         Obj_ATK_TotalDelay = BasicDefaultObj_ATKDelay;
         Enemy_ATK_TotalDelay = BasicDefaultEnemy_ATKDelay;  //5초
         PlayerPrefs.SetInt("isDragonDie",isDragonDie);   
@@ -123,65 +131,43 @@ public class gameManager : MonoBehaviour
         isDragonDie = PlayerPrefs.GetInt("isDragonDie");
         //현 스테이지의 1의 자리를 받아와서 스폰할 드래곤 종류를 결정
         nowStage = PlayerPrefs.GetInt("Stage");
-
        
         Total__ComObj_SpeedCal();   //장애물 속도 함수 관련
-        Total__ComAtk_SpeedCal();   //드래곤볼 속도 함수 관련
-
+        Total__ComAtk_SpeedCal();   //드래곤볼 속도 함수 관련                             
 
         //드래곤 공격 주기 함수 관련
 
         //드래곤 사망정보를 받아와서 1(사망)이면 드래곤 생성
         if (isDragonDie == 1)
         {
+            Eye_Atk.SetActive(false);
+            Eye_Hit.SetActive(false);
             fdt_Dragon += Time.deltaTime;
 
             if (fdt_Dragon > 3.0f)
             {
                 SpawnDragon();
                 fdt_Dragon = 0;
-                fdt_Atk = 0;
             }
         }
 
-        /*
+        //드래곤 살아있을 때
         else
         {
-            //드래곤 공격 주기 함수 호출
-            Enemy_ATK_TotalDelayCal();
-            
-            fdt_Atk += Time.deltaTime;
+            //피격 애니메이션 재생
+            if (Dragon.isHit == true)
+                Eye_Hit.SetActive(true);
+            else
+                Eye_Hit.SetActive(false);
 
-            if (fdt_Atk > Enemy_ATK_TotalDelay)
-            {
-                SpawnDragonBall();
-                fdt_Atk = 0;
-            }
-        }
-        
-        //장애물 스폰 주기 함수 관련(드래곤 사망 여부와 관계 X)
+            Enemy_ATK_TotalDelayCal();  //드래곤 공격 주기 함수 호출    
+            Obj_ATK_TotalDelayCal();    //장애물 등장 주기 함수 호출
 
-        fdt_Obs += Time.deltaTime;
-        //장애물 등장 주기 함수 호출
-        Obj_ATK_TotalDelayCal();
-        if (fdt_Obs > Obj_ATK_TotalDelay)
-        {
-            SpawnObstacle();
-            fdt_Obs = 0;
-        }
-        */
-        //@@@@@@@@@@@@보류
-        else
-        {
-            //드래곤 공격 주기 함수 호출
-            Enemy_ATK_TotalDelayCal();
-            //장애물 등장 주기 함수 호출
-            Obj_ATK_TotalDelayCal();
             fdt += Time.deltaTime;
 
             if (fdt > Obj_ATK_TotalDelay)
             {
-                ranBall = Random.Range(0, 3);
+                ranBall = Random.Range(0, 4);
                 ranObj = Random.Range(0, 3);
 
                 switch (ranObj)
@@ -209,103 +195,6 @@ public class gameManager : MonoBehaviour
       
         //폭발 효과 함수
         ExplosionOn();
-
-        //피격 애니메이션 재생
-        if (Dragon.isHit == true)
-            Eye_Hit.SetActive(true);    
-        else
-            Eye_Hit.SetActive(false);
-        
-    }
-
-    public void SpawnObstacle()
-    {
-        //0, 1, 2
-        ranObj = Random.Range(0, 3);
-
-        //오브젝트 풀에서 꺼내기
-        newObstacle = objectManager.MakeObj(obstacle.type);
-        newObstacle.transform.position = SpawnPoints[ranObj].transform.position;
-
-        
-        //오브젝트가 생성되고 떨어질 때 일자로 떨어지지 않고 기울기에 맞게 비스듬하게 떨어지게 하기
-        
-        //왼쪽 스폰인 경우
-        if (ranObj == 0)
-        {
-            Vector3 dirVec = ObjTargetPoints[0].transform.position - newObstacle.transform.position;
-            newObstacle.GetComponent<Rigidbody2D>().AddForce(dirVec * Total__ComObj_Speed * 0.1f, ForceMode2D.Impulse);
-        }
-        //가운데 스폰인 경우
-        else if (ranObj == 1)
-        {
-            Vector3 dirVec = ObjTargetPoints[1].transform.position - newObstacle.transform.position;
-            newObstacle.GetComponent<Rigidbody2D>().AddForce(dirVec * Total__ComObj_Speed * 0.1f, ForceMode2D.Impulse);
-        }
-        //오른쪽 스폰인 경우
-        else if (ranObj == 2)
-        {
-            Vector3 dirVec = ObjTargetPoints[2].transform.position - newObstacle.transform.position;
-            newObstacle.GetComponent<Rigidbody2D>().AddForce(dirVec * Total__ComObj_Speed * 0.1f, ForceMode2D.Impulse);
-        }    
-    }
-
-    public void SpawnDragonBall()
-    {
-        //애니메이션 재생
-        Eye_Atk.SetActive(true);
-        Invoke("OffAtkAnim", 1.5f);
-
-        //드래곤이 살아있을 때만 드래곤 공격을 생성
-        if(isDragonDie != 1)
-        {
-            ranAtk = Random.Range(0, 3);
-            //0 : 파이어볼, 1 : 아이스볼, 2 : 워터볼
-            ranBall = Random.Range(0, 3);
-
-            if (ranBall == 0)
-            {
-                //오브젝트 풀에서 꺼내기
-                newAtkObj = objectManager.MakeObj("FireBall");
-                newAtkObj.transform.position = SpawnPoints[ranAtk].transform.position;
-            }
-
-            else if (ranBall == 1)
-            {
-                //오브젝트 풀에서 꺼내기
-                newAtkObj = objectManager.MakeObj("IceBall");
-                newAtkObj.transform.position = SpawnPoints[ranAtk].transform.position;
-            }
-
-            else if (ranBall == 2)
-            {
-                //오브젝트 풀에서 꺼내기
-                newAtkObj = objectManager.MakeObj("WaterBall");
-                newAtkObj.transform.position = SpawnPoints[ranAtk].transform.position;
-            }
-
-            //오브젝트가 생성되고 떨어질 때 일자로 떨어지지 않고 기울기에 맞게 비스듬하게 떨어지게 하기
-
-            //왼쪽 스폰인 경우
-            if (ranAtk == 0)
-            {
-                Vector3 dirVec = ObjTargetPoints[0].transform.position - newAtkObj.transform.position;
-                newAtkObj.GetComponent<Rigidbody2D>().AddForce(dirVec * fireBall.speed, ForceMode2D.Impulse);
-            }
-            //가운데 스폰인 경우
-            else if (ranAtk == 1)
-            {
-                Mouse_Atk.SetActive(true);
-                Vector3 dirVec = ObjTargetPoints[1].transform.position - newAtkObj.transform.position;
-                newAtkObj.GetComponent<Rigidbody2D>().AddForce(dirVec * fireBall.speed, ForceMode2D.Impulse);
-            }
-            //오른쪽 스폰인 경우
-            else if (ranAtk == 2)
-            {
-                Vector3 dirVec = ObjTargetPoints[2].transform.position - newAtkObj.transform.position;
-                newAtkObj.GetComponent<Rigidbody2D>().AddForce(dirVec * fireBall.speed, ForceMode2D.Impulse);
-            }
-        }      
     }
 
     public void SpawnDragon()
@@ -317,62 +206,52 @@ public class gameManager : MonoBehaviour
             // 1 - 블루 드래곤
             if (nowStage % 10 == 1)
             {
-                newDragon = objectManager.MakeDragon("Blue");
-                newDragon.transform.position = new Vector3(0f, 4f, 0f);
+                Dragon_Blue.SetActive(true);
             }
             // 2 - 그린 드래곤
             else if (nowStage % 10 == 2)
             {
-                newDragon = objectManager.MakeDragon("Green");
-                newDragon.transform.position = new Vector3(0f, 4f, 0f);
+                Dragon_Green.SetActive(true);
             }
             // 3 - 핑크 드래곤
             else if (nowStage % 10 == 3)
             {
-                newDragon = objectManager.MakeDragon("Pink");
-                newDragon.transform.position = new Vector3(0f, 4f, 0f);
+                Dragon_Pink.SetActive(true);
             }
             // 4 - 퍼플 드래곤
             else if (nowStage % 10 == 4)
             {
-                newDragon = objectManager.MakeDragon("Purple");
-                newDragon.transform.position = new Vector3(0f, 4f, 0f);
+                Dragon_Purple.SetActive(true);
             }
             // 5 - 블랙 드래곤
             else if (nowStage % 10 == 5)
             {
-                newDragon = objectManager.MakeDragon("Black");
-                newDragon.transform.position = new Vector3(0f, 4f, 0f);
+                Dragon_Black.SetActive(true);
             }
             // 6 - 레드 드래곤
             else if (nowStage % 10 == 6)
             {
-                newDragon = objectManager.MakeDragon("Red");
-                newDragon.transform.position = new Vector3(0f, 4f, 0f);
+                Dragon_Red.SetActive(true);
             }
             // 7 - 옐로우 드래곤
             else if (nowStage % 10 == 7)
             {
-                newDragon = objectManager.MakeDragon("Yellow");
-                newDragon.transform.position = new Vector3(0f, 4f, 0f);
+                Dragon_Yellow.SetActive(true);
             }
             // 8 - 옐로우 드래곤 2
             else if (nowStage % 10 == 8)
             {
-                newDragon = objectManager.MakeDragon("Yellow");
-                newDragon.transform.position = new Vector3(0f, 4f, 0f);
+                Dragon_Yellow.SetActive(true);
             }
             // 9 - 옐로우 드래곤 3
             else if (nowStage % 10 == 9)
             {
-                newDragon = objectManager.MakeDragon("Yellow");
-                newDragon.transform.position = new Vector3(0f, 4f, 0f);
+                Dragon_Yellow.SetActive(true);
             }
             // 10 - 옐로우 드래곤 4
             else if (nowStage % 10 == 0)
             {
-                newDragon = objectManager.MakeDragon("Yellow");
-                newDragon.transform.position = new Vector3(0f, 4f, 0f);
+                Dragon_Yellow.SetActive(true);
             }
 
         }
@@ -381,7 +260,7 @@ public class gameManager : MonoBehaviour
         PlayerPrefs.Save();
     }    
 
-    //@@@@@@@@@@@@@@@@@@@보류
+   
     void SpawnObjects()
     {
         //애니메이션 재생
@@ -409,6 +288,13 @@ public class gameManager : MonoBehaviour
             {
                 //오브젝트 풀에서 꺼내기
                 newAtkObj = objectManager.MakeObj("WaterBall");
+                newAtkObj.transform.position = SpawnPoints[ranAtk].transform.position;
+            }
+
+            else if (ranBall == 3)
+            {
+                //오브젝트 풀에서 꺼내기
+                newAtkObj = objectManager.MakeObj("ElectricBall");
                 newAtkObj.transform.position = SpawnPoints[ranAtk].transform.position;
             }
 
@@ -467,6 +353,8 @@ public class gameManager : MonoBehaviour
         {
             Explosion.SetActive(true);
             Invoke("ExplosionOff", 0.5f);
+            if (isDragonDie == 1)
+                Invoke("ExplosionOff", 1.2f);
         }
     }
 
@@ -483,7 +371,7 @@ public class gameManager : MonoBehaviour
             return;
         
         //최종 적 공격 딜레이
-        if (BasicDefaultEnemy_ATKDelay - EditDefaultEnemy_ATKDelay < maxEnemy_ATKDelay)
+        if (BasicDefaultEnemy_ATKDelay - EditDefaultEnemy_ATKDelay <= maxEnemy_ATKDelay)
             Enemy_ATK_TotalDelay = maxEnemy_ATKDelay;
         else
             Enemy_ATK_TotalDelay = BasicDefaultEnemy_ATKDelay - (((nowStage - 1) * BasicPlusEnemy_ATKDelay) + (Mathf.FloorToInt((nowStage - 1) / (float)EditCorStage_Enemy) * EditPlusEnemy_ATKDelay));
@@ -497,14 +385,14 @@ public class gameManager : MonoBehaviour
         if (nowStage == 1)
             return;
         //최종 장애물 딜레이
-        if (BasicDefaultObj_ATKDelay - EditDefaultObj_ATKDelay < maxObj_ATKDelay)
+        if (BasicDefaultObj_ATKDelay - EditDefaultObj_ATKDelay <= maxObj_ATKDelay)
             Obj_ATK_TotalDelay = maxObj_ATKDelay;
         else
             Obj_ATK_TotalDelay = BasicDefaultObj_ATKDelay - (((nowStage - 1) * BasicPlusObj_ATKDelay) + (Mathf.FloorToInt((nowStage - 1) / (float)EditCorStage_Obj) * EditPlusObj_ATKDelay));
 
     }
 
-    //장애물 속도 증가 함수
+    //장애물, 드래곤볼 속도 증가 함수
     void Total__ComObj_SpeedCal()
     {
         if (BasicDefault_ComObj_Speed + EditDefault_ComObj_Speed > max_ComObj_Speed)
@@ -520,17 +408,12 @@ public class gameManager : MonoBehaviour
         else
             Total__ComAtk_Speed = BasicDefault_ComAtk_Speed + ((nowStage - 1) * EditDefault_ComAtk_Speed);
     }
-
+    
 
     //애니메이션 끄기
     void OffAtkAnim()
     {
         Eye_Atk.SetActive(false);
         Mouse_Atk.SetActive(false);
-    }
-
-    void OffHitAnim()
-    {
-        Eye_Hit.SetActive(false);
     }
 }
