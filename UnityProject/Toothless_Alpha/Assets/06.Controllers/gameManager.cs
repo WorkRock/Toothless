@@ -5,8 +5,13 @@ using UnityEngine.UI;
 
 public class gameManager : MonoBehaviour
 {
+    //컷씬
     public GameObject cutScene;
 
+    //게임 시작 카운트 다운
+    public GameObject StartCT_G;
+    public Text StartCT;
+    public float setTime = 3f;
 
     //드래곤 종류(기본 : 비활성화 상태)
     public GameObject Dragon_Blue;
@@ -115,6 +120,9 @@ public class gameManager : MonoBehaviour
 
     void Start()
     {
+        //1초 후 카운트 다운 시작
+        Invoke("OnCountDown", 1f);
+    
         Eye_Atk.SetActive(false);
         Mouse_Atk.SetActive(false);
         Eye_Hit.SetActive(false);
@@ -128,6 +136,25 @@ public class gameManager : MonoBehaviour
 
     void Update()
     {
+        //카운트 다운 겜오브젝트(텍스트)가 활성화 상태일때만 카운트 시작
+        if(StartCT_G.activeSelf)
+        {
+            setTime -= Time.deltaTime;
+            //1초까지는 3, 2, 1 을 표시
+            if (setTime >= 1)
+            {
+                StartCT.text = Mathf.Round(setTime).ToString();
+            }
+
+            //0초에는 0이 아니라 GO! 텍스트를 표시
+            else
+            {
+                StartCT.text = "GO!";
+                Invoke("OffCountDown", 1f);
+            }
+        }   
+        
+
         isDragonDie = PlayerPrefs.GetInt("isDragonDie");
         //현 스테이지의 1의 자리를 받아와서 스폰할 드래곤 종류를 결정
         nowStage = PlayerPrefs.GetInt("Stage");
@@ -144,6 +171,7 @@ public class gameManager : MonoBehaviour
             Eye_Hit.SetActive(false);
             fdt_Dragon += Time.deltaTime;
 
+            //3초 후에 소환
             if (fdt_Dragon > 3.0f)
             {
                 SpawnDragon();
@@ -415,5 +443,18 @@ public class gameManager : MonoBehaviour
     {
         Eye_Atk.SetActive(false);
         Mouse_Atk.SetActive(false);
+    }
+
+    //카운트다운 표시
+    void OnCountDown()
+    {
+        StartCT_G.SetActive(true);
+        StartCT.enabled = true;
+    }
+
+    //카운트다운 끄기
+    void OffCountDown()
+    {
+        StartCT.enabled = false;
     }
 }

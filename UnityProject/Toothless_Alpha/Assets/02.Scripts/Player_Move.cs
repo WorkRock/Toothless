@@ -9,6 +9,10 @@ public class Player_Move : MonoBehaviour
     //UI 관련
     //플레이어 체력바
     public Slider Player_HPBar;
+
+    //플레이어 쉴드 오브젝트 연결
+    public GameObject[] playerShield;
+
     //쉴드 쿨타임
     public Image ShieldCoolTime;
 
@@ -28,9 +32,6 @@ public class Player_Move : MonoBehaviour
 
     //이동할 위치 배열로 선언
     public GameObject[] targetPos;
-
-    //플레이어 쉴드 오브젝트 연결
-    public GameObject[] playerShield;
 
     //쉴드 이미지 UI
     public GameObject[] shieldImgs;
@@ -163,7 +164,7 @@ public class Player_Move : MonoBehaviour
                 shieldImgs[i].SetActive(false);
         }
 
-
+        //이동할 때 쉴드 끊김 방지
         for (int i = 0; i < playerShield.Length; i++)
         {
             if(playerShield[i].activeSelf)
@@ -218,10 +219,28 @@ public class Player_Move : MonoBehaviour
             
             if (curDelay > maxDelay)
             {
-                gameObject.tag = "Player_OnShield";
+                //gameObject.tag = "Player_OnShield";
                 isShieldOn = true;
                 playerShield[playerShieldNum].SetActive(true);
                 onShieldNum = playerShieldNum;
+                //
+                // 0 - pyro, 1 - ice, 2 - water, 3 - electro
+                switch (onShieldNum)
+                {
+                    case 0:
+                        gameObject.tag = "PyroShield";
+                        break;
+                    case 1:
+                        gameObject.tag = "IceShield";
+                        break;
+                    case 2:
+                        gameObject.tag = "WaterShield";
+                        break;
+                    case 3:
+                        gameObject.tag = "ElectroShield";
+                        break;
+                }                  
+                //
                 curDelay = 0;
                 Debug.Log("ShieldOn");
             }
@@ -248,9 +267,16 @@ public class Player_Move : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag.Equals("Dragon_Atk_Fire") || collision.gameObject.tag.Equals("Dragon_Atk_Ice") || collision.gameObject.tag.Equals("Dragon_Atk_Water") || collision.gameObject.tag.Equals("Dragon_Atk_Electric"))
+        //같은 속성의 공격만 방어 가능, 공격과 일치하는 쉴드가 아니면 방어 불가
+        if (collision.gameObject.tag.Equals("Dragon_Atk_Fire")
+            || collision.gameObject.tag.Equals("Dragon_Atk_Ice")
+            || collision.gameObject.tag.Equals("Dragon_Atk_Water")
+            || collision.gameObject.tag.Equals("Dragon_Atk_Electric"))
         {
-            if (gameObject.tag == "Player_OnShield")
+            if (collision.gameObject.tag.Equals("Dragon_Atk_Fire") && gameObject.tag.Equals("PyroShield")
+                ||  collision.gameObject.tag.Equals("Dragon_Atk_Ice") && gameObject.tag.Equals("IceShield")
+                ||  collision.gameObject.tag.Equals("Dragon_Atk_Water") && gameObject.tag.Equals("WaterShield")
+                ||  collision.gameObject.tag.Equals("Dragon_Atk_Electric") && gameObject.tag.Equals("ElectroShield"))
                 return;
 
             collision.gameObject.SetActive(false);
