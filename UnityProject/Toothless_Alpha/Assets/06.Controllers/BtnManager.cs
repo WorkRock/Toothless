@@ -64,7 +64,6 @@ public class BtnManager : MonoBehaviour
 
 
     private int isSoundOn;
-    public bool isSoundPlay;
     public bool isFuncOn;
     public bool isInfoOn;
     public bool isShopOn;
@@ -101,6 +100,7 @@ public class BtnManager : MonoBehaviour
 
             case "Ingame":
                 isLobby = false;
+                funcOn();
                 break;
 
             case "Result":
@@ -188,7 +188,6 @@ public class BtnManager : MonoBehaviour
 
     public void FuncExit()
     {
-        isSoundPlay = true;
         isInfoOn = false;
         isShopOn = false;
         isCreditOn = false;
@@ -205,7 +204,6 @@ public class BtnManager : MonoBehaviour
 
     public void EnterInfo()
     {
-        isSoundPlay = true;
         isFuncOn = true;
         isInfoOn = true;
         Func.SetActive(true);
@@ -216,7 +214,6 @@ public class BtnManager : MonoBehaviour
     {
         PlayerPrefs.SetInt("isShop", 0);
         PlayerPrefs.Save();
-        isSoundPlay = true;
         isFuncOn = true;
         isShopOn = true;
         Func.SetActive(true);
@@ -224,14 +221,12 @@ public class BtnManager : MonoBehaviour
     }
     public void EnterCredit()
     {
-        isSoundPlay = true;
         isFuncOn = true;
         isCreditOn = true;
         Func.SetActive(true);
     }
     public void EnterOption()
     {
-        isSoundPlay = true;
         isFuncOn = true;
         isOptionOn = true;
         Func.SetActive(true);

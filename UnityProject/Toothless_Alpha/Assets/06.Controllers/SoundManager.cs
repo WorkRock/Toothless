@@ -87,6 +87,7 @@ public class SoundManager : MonoBehaviour
         PlayerPrefs.Save();
         lobbyDelay = true;
         fdt = 0;
+        
         isSoundOn = 1;
 
         PlayerPrefs.SetInt("isSoundOn", isSoundOn);

@@ -76,13 +76,13 @@ public class LobbyManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        /*
         // 테스트를 위한 레벨 및 경험치값 초기화
         PlayerPrefs.SetInt("Level", 1);
         PlayerPrefs.SetInt("Exp", 0);
-        PlayerPrefs.SetInt("Coin", 15000);
+        PlayerPrefs.SetInt("Coin", 0);
         PlayerPrefs.Save();
-        
+        */
         // 획득한 경험치 및 코인을 불러옴
 
         curExp = PlayerPrefs.GetInt("Exp");
@@ -155,12 +155,17 @@ public class LobbyManager : MonoBehaviour
         UI_Lobby_Player.transform.rotation = Quaternion.Euler(0, 0, rot);
     }
 
+    
     // 레벨 변경값 테스트를 위한 메소드
     void funcTest()
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
-            curExp += 100;
+            // 코인 값 변화 확인을 위한 테스트
+            curExp += 1000;
+            totalCoin += 100000;
+            PlayerPrefs.SetInt("Coin", totalCoin);
+            PlayerPrefs.Save();
         }
     }
 
@@ -180,8 +185,6 @@ public class LobbyManager : MonoBehaviour
             playerLevel++;
             curExp -= totalExp;
 
-            // 코인 값 변화 확인을 위한 테스트
-            totalCoin += 100000;
 
             // 토탈 경험치를 빼주어도 0보다 클 시 재귀
             if (curExp > 0)

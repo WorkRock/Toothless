@@ -68,10 +68,12 @@ public class Upgrade : MonoBehaviour
     {
         isBtnClicked = false;
 
+        /*
         // 테스트를 위한 초기화
         PlayerPrefs.SetInt("AtkUG", 1);
         PlayerPrefs.Save();
-
+        */
+        
         atkUGLevel = PlayerPrefs.GetInt("AtkUG");
         playerLevel = PlayerPrefs.GetInt("Level");
         totalCoin = PlayerPrefs.GetInt("Coin");
