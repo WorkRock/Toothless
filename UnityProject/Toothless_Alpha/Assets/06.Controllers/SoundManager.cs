@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class SoundManager : MonoBehaviour
 {
+    
     private static SoundManager instance = null;
 
     void Awake()
@@ -39,7 +40,7 @@ public class SoundManager : MonoBehaviour
             return instance;
         }
     }
-
+    
     public AudioClip Lobby_Func_Upgrade;
 
     [System.Serializable]
@@ -143,12 +144,14 @@ public class SoundManager : MonoBehaviour
                 case "Ingame":
                     fdt = 0;
                     PlayBGM(BGMList[1].name);
+                    BGM.mute = false;
                     BGM.volume = 0.5f;
                     audioSource.mute = false;
                     break;
 
                 case "Result":
                     fdt = 0;
+                    BGM.mute = false;
                     lobbyDelay = true;
                     PlayBGM(BGMList[2].name);
                     BGM.volume = 1.0f;

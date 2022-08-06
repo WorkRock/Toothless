@@ -12,15 +12,19 @@ public class IG_SoundManager : MonoBehaviour
         public AudioClip audio;
     }
 
+    //public AudioSource BGM;
     public AudioSource audioSource1;
     public AudioSource audioSource2;
     //오디오 목록
+
+    //public AudioType BGMList;
     public AudioType[] AudioList;
 
     public int isSoundOn;
    
     void Start()
     {
+        //BGM = gameObject.AddComponent<AudioSource>();
         audioSource1 = gameObject.AddComponent<AudioSource>();
         audioSource2 = gameObject.AddComponent<AudioSource>();
     }

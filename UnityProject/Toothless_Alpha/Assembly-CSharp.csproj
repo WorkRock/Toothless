@@ -72,6 +72,7 @@
     <Compile Include="Assets\02.Scripts\Wall.cs" />
     <Compile Include="Assets\06.Controllers\BtnManager.cs" />
     <Compile Include="Assets\06.Controllers\FadeController.cs" />
+    <Compile Include="Assets\06.Controllers\IG_BtnManager.cs" />
     <Compile Include="Assets\06.Controllers\IG_SoundManager.cs" />
     <Compile Include="Assets\06.Controllers\LobbyManager.cs" />
     <Compile Include="Assets\06.Controllers\ObjectManager.cs" />
