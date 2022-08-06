@@ -51,6 +51,11 @@ public class Result : MonoBehaviour
         playerNowExp = PlayerPrefs.GetInt("Exp");
         totalCoin = PlayerPrefs.GetInt("Coin");
         
+        playerLastStage -= 1;
+        
+        Debug.Log("playerLastStage : " + playerLastStage);
+        Debug.Log("playerBestStage : " + playerBestStage);
+
         checkBStage();
 
         totalGetExp = BasicDefaultGetExp;

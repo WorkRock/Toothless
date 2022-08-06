@@ -46,12 +46,13 @@ public class LobbyManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         // 테스트를 위한 레벨 및 경험치값 초기화
         PlayerPrefs.SetInt("Level", 1);
         PlayerPrefs.SetInt("Exp", 0);
         PlayerPrefs.SetInt("Coin", 15000);
         PlayerPrefs.Save();
-
+        
         // 획득한 경험치 및 코인을 불러옴
 
         curExp = PlayerPrefs.GetInt("Exp");
