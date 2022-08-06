@@ -116,9 +116,11 @@ public class Player_Move : MonoBehaviour
         nowLevel = PlayerPrefs.GetInt("Level");
         //플레이어 체력, 공격력은 로비에서 업그레이드 하여 게임중에는 변하지 않으므로 Start에서 한번만 호출
         // 1. 플레이어 체력 계산 함수
-        totalHpCal();
+        
         //체력 초기화
-        Player_NowHP = Player_TotalHP;
+        Player_NowHP = BasicDefaultHp;
+
+        totalHpCal();
         // 2. 플레이어 공격력 계산 함수
         totalPlayer_AtkCal();
 

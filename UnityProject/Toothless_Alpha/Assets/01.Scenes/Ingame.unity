@@ -182,7 +182,7 @@ MonoBehaviour:
   BasicCorStage_Enemy: 0
   EditCorStage_Enemy: 10
   Obj_ATK_TotalDelay: 0
-  BasicDefaultObj_ATKDelay: 5
+  BasicDefaultObj_ATKDelay: 0.8
   BasicPlusObj_ATKDelay: 0.025
   EditDefaultObj_ATKDelay: 0
   EditPlusObj_ATKDelay: 0.1
@@ -1084,6 +1084,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Player_HPBar: {fileID: 982731330}
+  playerShield:
+  - {fileID: 1102685605}
+  - {fileID: 1449066860}
+  - {fileID: 627795105}
+  - {fileID: 1107756607}
   ShieldCoolTime: {fileID: 418107414}
   curDelay: 0
   maxDelay: 1
@@ -1098,11 +1103,6 @@ MonoBehaviour:
   - {fileID: 2010311840}
   - {fileID: 1581330950}
   - {fileID: 1307340849}
-  playerShield:
-  - {fileID: 1102685605}
-  - {fileID: 1449066860}
-  - {fileID: 627795105}
-  - {fileID: 1107756607}
   shieldImgs:
   - {fileID: 2007418525}
   - {fileID: 508874392}
