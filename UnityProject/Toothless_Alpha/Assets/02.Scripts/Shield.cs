@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Shield : MonoBehaviour
 {
+    //인게임 사운드 매니저
+    public IG_SoundManager soundManager;
+
     //쉴드가 플레이어 따라 움직이게 하기
     public Transform player;
 
@@ -27,15 +30,11 @@ public class Shield : MonoBehaviour
 
     void ShieldTrigger()
     {
+        soundManager.PlayAudio2("Parrying");
         Time.timeScale = 0.1f;
         CutScene.SetActive(true);
-        Invoke("OnRealTime", 0.03f);
+        Invoke("OnRealTime", 0.06f);
         Invoke("CutSceneOff", 0.3f);
-
-
-
-
-
     }
     void OnTriggerEnter2D(Collider2D collision)
     {

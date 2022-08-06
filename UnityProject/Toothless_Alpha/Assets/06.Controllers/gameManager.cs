@@ -5,12 +5,15 @@ using UnityEngine.UI;
 
 public class gameManager : MonoBehaviour
 {
+    //인게임 사운드 매니저
+    public IG_SoundManager soundManager;
+
     //컷씬
     public GameObject cutScene;
 
     //게임 시작 카운트 다운
-    public GameObject StartCT_G;
-    public Text StartCT;
+    public GameObject ReadyImg;
+    public GameObject GoImg;
     public float setTime = 3f;
 
     //드래곤 종류(기본 : 비활성화 상태)
@@ -69,7 +72,7 @@ public class gameManager : MonoBehaviour
     // 2. 장애물, 드래곤 볼 속도 함수 관련
     //장애물
     //최종 장애물 속도
-    public float Total__ComObj_Speed;       
+    public float Total__ComObj_Speed;
 
     public float BasicDefault_ComObj_Speed; //기본_Default : 5
     public float BasicPlus_ComObj_Speed;    //기본_가중치 : 0
@@ -81,7 +84,7 @@ public class gameManager : MonoBehaviour
 
     //드래곤 볼
     //최종 드래곤볼 속도
-    public float Total__ComAtk_Speed;       
+    public float Total__ComAtk_Speed;
 
     public float BasicDefault_ComAtk_Speed; //기본_Default : 5
     public float BasicPlus_ComAtk_Speed;    //기본_가중치 : 0
@@ -121,44 +124,39 @@ public class gameManager : MonoBehaviour
     void Start()
     {
         //1초 후 카운트 다운 시작
-        Invoke("OnCountDown", 1f);
-    
+        Invoke("OnReady", 1f);
+
         Eye_Atk.SetActive(false);
         Mouse_Atk.SetActive(false);
         Eye_Hit.SetActive(false);
 
         Obj_ATK_TotalDelay = BasicDefaultObj_ATKDelay;
         Enemy_ATK_TotalDelay = BasicDefaultEnemy_ATKDelay;  //5초
-        PlayerPrefs.SetInt("isDragonDie",isDragonDie);   
+        PlayerPrefs.SetInt("isDragonDie", isDragonDie);
         PlayerPrefs.SetInt("Stage", 1);
         PlayerPrefs.Save();
     }
 
     void Update()
     {
-        //카운트 다운 겜오브젝트(텍스트)가 활성화 상태일때만 카운트 시작
-        if(StartCT_G.activeSelf)
+        if (ReadyImg.activeSelf)
         {
             setTime -= Time.deltaTime;
-            //1초까지는 3, 2, 1 을 표시
-            if (setTime >= 1)
-            {
-                StartCT.text = Mathf.Round(setTime).ToString();
-            }
 
-            //0초에는 0이 아니라 GO! 텍스트를 표시
-            else
+            if (setTime < 1)
             {
-                StartCT.text = "GO!";
-                Invoke("OffCountDown", 1f);
+                ReadyImg.SetActive(false);
+                GoImg.SetActive(true);
+                soundManager.PlayAudio("Go");
+                Invoke("OffReady", 1f);
             }
-        }   
-        
+        }
+
 
         isDragonDie = PlayerPrefs.GetInt("isDragonDie");
         //현 스테이지의 1의 자리를 받아와서 스폰할 드래곤 종류를 결정
         nowStage = PlayerPrefs.GetInt("Stage");
-       
+
         Total__ComObj_SpeedCal();   //장애물 속도 함수 관련
         Total__ComAtk_SpeedCal();   //드래곤볼 속도 함수 관련                             
 
@@ -184,7 +182,12 @@ public class gameManager : MonoBehaviour
         {
             //피격 애니메이션 재생
             if (Dragon.isHit == true)
+            {
+                //폭발 효과 함수
                 Eye_Hit.SetActive(true);
+                ExplosionOn();
+            }
+
             else
                 Eye_Hit.SetActive(false);
 
@@ -204,7 +207,7 @@ public class gameManager : MonoBehaviour
                         ranAtk = Random.Range(1, 3);
                         break;
                     case 1:
-                        while(true)
+                        while (true)
                         {
                             ranAtk = Random.Range(0, 3);
                             if (ranObj != ranAtk)
@@ -217,12 +220,11 @@ public class gameManager : MonoBehaviour
                 }
                 SpawnObjects();
                 fdt = 0;
-            }          
+            }
         }
 
-      
-        //폭발 효과 함수
-        ExplosionOn();
+
+
     }
 
     public void SpawnDragon()
@@ -286,9 +288,9 @@ public class gameManager : MonoBehaviour
         //드래곤 리스폰 후에는 다시 사망 정보를 갱신!
         PlayerPrefs.SetInt("isDragonDie", 0);
         PlayerPrefs.Save();
-    }    
+    }
 
-   
+
     void SpawnObjects()
     {
         //애니메이션 재생
@@ -303,6 +305,7 @@ public class gameManager : MonoBehaviour
                 //오브젝트 풀에서 꺼내기
                 newAtkObj = objectManager.MakeObj("FireBall");
                 newAtkObj.transform.position = SpawnPoints[ranAtk].transform.position;
+                soundManager.PlayAudio("Pyro");
             }
 
             else if (ranBall == 1)
@@ -310,6 +313,7 @@ public class gameManager : MonoBehaviour
                 //오브젝트 풀에서 꺼내기
                 newAtkObj = objectManager.MakeObj("IceBall");
                 newAtkObj.transform.position = SpawnPoints[ranAtk].transform.position;
+                soundManager.PlayAudio("Ice");
             }
 
             else if (ranBall == 2)
@@ -317,6 +321,7 @@ public class gameManager : MonoBehaviour
                 //오브젝트 풀에서 꺼내기
                 newAtkObj = objectManager.MakeObj("WaterBall");
                 newAtkObj.transform.position = SpawnPoints[ranAtk].transform.position;
+                soundManager.PlayAudio("Water");
             }
 
             else if (ranBall == 3)
@@ -324,6 +329,7 @@ public class gameManager : MonoBehaviour
                 //오브젝트 풀에서 꺼내기
                 newAtkObj = objectManager.MakeObj("ElectricBall");
                 newAtkObj.transform.position = SpawnPoints[ranAtk].transform.position;
+                soundManager.PlayAudio("Electro");
             }
 
             //오브젝트가 생성되고 떨어질 때 일자로 떨어지지 않고 기울기에 맞게 비스듬하게 떨어지게 하기
@@ -377,13 +383,11 @@ public class gameManager : MonoBehaviour
 
     void ExplosionOn()
     {
-        if (Dragon.isHit == true)
-        {
-            Explosion.SetActive(true);
-            Invoke("ExplosionOff", 0.5f);
-            if (isDragonDie == 1)
-                Invoke("ExplosionOff", 1.2f);
-        }
+        //soundManager.PlayAudio("Explosion");
+        Explosion.SetActive(true);
+        Invoke("ExplosionOff", 0.5f);
+        if (isDragonDie == 1)
+            Invoke("ExplosionOff", 1.2f);
     }
 
     void ExplosionOff()
@@ -397,7 +401,7 @@ public class gameManager : MonoBehaviour
     {
         if (nowStage == 1)
             return;
-        
+
         //최종 적 공격 딜레이
         if (BasicDefaultEnemy_ATKDelay - EditDefaultEnemy_ATKDelay <= maxEnemy_ATKDelay)
             Enemy_ATK_TotalDelay = maxEnemy_ATKDelay;
@@ -436,7 +440,7 @@ public class gameManager : MonoBehaviour
         else
             Total__ComAtk_Speed = BasicDefault_ComAtk_Speed + ((nowStage - 1) * EditDefault_ComAtk_Speed);
     }
-    
+
 
     //애니메이션 끄기
     void OffAtkAnim()
@@ -446,15 +450,15 @@ public class gameManager : MonoBehaviour
     }
 
     //카운트다운 표시
-    void OnCountDown()
+    void OnReady()
     {
-        StartCT_G.SetActive(true);
-        StartCT.enabled = true;
+        soundManager.PlayAudio("Ready");
+        ReadyImg.SetActive(true);
     }
 
     //카운트다운 끄기
-    void OffCountDown()
+    void OffReady()
     {
-        StartCT.enabled = false;
+        GoImg.SetActive(false);
     }
 }

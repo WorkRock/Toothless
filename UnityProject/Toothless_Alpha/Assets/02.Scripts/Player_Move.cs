@@ -6,7 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class Player_Move : MonoBehaviour
 {
+    //인게임 사운드 매니저
+    public IG_SoundManager soundManager;
     //UI 관련
+    //게임오버
+    public GameObject GameOverImg;
+
     //플레이어 체력바
     public Slider Player_HPBar;
 
@@ -15,13 +20,19 @@ public class Player_Move : MonoBehaviour
 
     //쉴드 쿨타임
     public Image ShieldCoolTime;
+    public Text ShieldCoolTimeText;
 
     //쉴드 딜레이
-    public float curDelay = 0f;
-    public float maxDelay = 1f;
-    public float curShieldDelay;
-    public float maxShieldDelay;
+    public float curDelay = 0f; // 현재 쉴드 소모 시간
+    public float maxDelay = 1f; // 쉴드 유지 시간 max
+    public float curShieldDelay; // 현재 쉴드 쿨타임
+    public float maxShieldDelay; // 쉴드 쿨타임 max
     public bool isShieldOn;
+
+    //쉴드 업그레이드(업그레이드 비례)
+    public float BasicDefaultShieldDelay = 3;
+    public float EditPlusShieldDelay = 0.45f;
+    public float EditCorAtkUGSD = 10;
 
     //Dragon_Atk 클래스 객체 생성
     public Dragon_Atk dragon;
@@ -72,7 +83,7 @@ public class Player_Move : MonoBehaviour
     public int maxHp;
 
     // 2. 플레이어 공격력(레벨 & 업그레이드)
-    public int Player_TotalAtk;
+    public float Player_TotalAtk;
     public int BasicDefaultPlayer_Atk;      //기본_Default : 30
     public int BasicPlusPlayer_Atk;         //기본_가중치 : 0
     public int EditDefaultPlayer_Atk;       //보정값_Default : 0
@@ -81,8 +92,19 @@ public class Player_Move : MonoBehaviour
     public int EditCorLevel_Atk;            //보정레벨_보정값 : 10
     public int maxPlayer_Atk;               //최대(or최소)값 : 500
 
+    // 3. 플레이어 공격력 업그레이드
+    public float totalUGDMG;
+    public int atkUGLevel;  //PlayerPrefs
 
-    // 3. 장애물 공격력 함수
+    public float BasicDefaultUGDMG;
+    public float BasicPlusUGDMG;
+    public float EditDefaultUGDMG;
+    public float EditPlusUGDMG;
+    public int BasicCorUGDMGLevel;
+    public int EditCorUGDMGLevel;
+    public float maxUGDMG;
+
+    // 4. 장애물 공격력 함수
     //최종 공격력
     public int Total_ComObj_Atk;
 
@@ -94,7 +116,7 @@ public class Player_Move : MonoBehaviour
     public int EditCorStage_ComObj_Atk;     //보정스테이지_보정값 : 10
     public int max_ComObj_Atk;              //최대(or최소)값 : 99999
 
-    // 4. 드래곤 공격력 함수
+    // 5. 드래곤 공격력 함수
     //최종 공격력
     public int Total_ComAtk_Atk;
 
@@ -112,18 +134,35 @@ public class Player_Move : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        curShieldDelay = 0;
+        //공격력 업그레이드
+        atkUGLevel = PlayerPrefs.GetInt("AtkUG");
+        
+        //쉴드 딜레이 업그레이드
+        if (atkUGLevel == 1)
+            maxShieldDelay = BasicDefaultShieldDelay;
+        else
+            maxShieldDelay = BasicDefaultShieldDelay - (Mathf.FloorToInt(atkUGLevel / EditCorAtkUGSD) * EditPlusShieldDelay);
+
         playerShieldNum = 0;
         nowLevel = PlayerPrefs.GetInt("Level");
         //플레이어 체력, 공격력은 로비에서 업그레이드 하여 게임중에는 변하지 않으므로 Start에서 한번만 호출
         // 1. 플레이어 체력 계산 함수
         
         //체력 초기화
-        Player_NowHP = BasicDefaultHp;
+        Player_TotalHP = BasicDefaultHp;
+        Player_NowHP = Player_TotalHP;
 
         totalHpCal();
         // 2. 플레이어 공격력 계산 함수
         totalPlayer_AtkCal();
-
+        totalUGDMG = BasicDefaultUGDMG;
+        
+        if(atkUGLevel !=1)
+            totalUGDMGCal(atkUGLevel - 1);
+        Debug.Log("totalUGDMG : " + totalUGDMG);
+        Player_TotalAtk *= totalUGDMG;
+        Debug.Log("Player_TotalAtk : " + Player_TotalAtk);
         //인덱스 초기화
         minPos = 0;
         nowPos = 1;
@@ -150,10 +189,24 @@ public class Player_Move : MonoBehaviour
         Total_ComAtk_AtkCal();
 
         // 쉴드 쿨타임
-        ShieldCoolTime.fillAmount = Mathf.Lerp(0, 100, (curShieldDelay / maxShieldDelay) / 100);
+        ShieldCoolTime.fillAmount = 1.0f - Mathf.Lerp(0, 100, (curShieldDelay / maxShieldDelay) / 100);
+        
+        if(curShieldDelay >= maxShieldDelay)
+        {
+            ShieldCoolTimeText.enabled = false;
+            
+        }
+        
+        else
+        {
+            ShieldCoolTimeText.enabled = true;
+            ShieldCoolTimeText.text = (maxShieldDelay - curShieldDelay).ToString("F1");
+        }
+            
 
         // 체력바 조정(슬라이더 밸류값으로 조정)
         Player_HPBar.value = Player_NowHP / (float)Player_TotalHP;
+        Debug.Log("PlayerNowHp : " + Player_NowHP);
 
         for (int i = 0; i < shieldImgs.Length; i++)
         {
@@ -215,13 +268,21 @@ public class Player_Move : MonoBehaviour
 
     public void ShieldOn()
     {
-        curDelay += Time.deltaTime;
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (curShieldDelay < maxShieldDelay)
         {
+            curShieldDelay += Time.deltaTime;
+        }
+
+        else 
+        {
+            curShieldDelay = maxShieldDelay;
+        }
             
-            if (curDelay > maxDelay)
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            if (curShieldDelay >= maxShieldDelay)
             {
-                //gameObject.tag = "Player_OnShield";
+                soundManager.PlayAudio("ShieldOn");
                 isShieldOn = true;
                 playerShield[playerShieldNum].SetActive(true);
                 onShieldNum = playerShieldNum;
@@ -241,23 +302,24 @@ public class Player_Move : MonoBehaviour
                     case 3:
                         gameObject.tag = "ElectroShield";
                         break;
-                }                  
+                }
                 //
-                curDelay = 0;
+                curShieldDelay = 0;
                 Debug.Log("ShieldOn");
             }
         }
+
         if (isShieldOn)
         {
-            curShieldDelay += Time.deltaTime;
+            curDelay += Time.deltaTime;
         }
 
 
-        if (curShieldDelay > maxShieldDelay)
+        if (curDelay > maxDelay)
         {
             ShieldOff();
             isShieldOn = false;
-            curShieldDelay = 0;
+            curDelay = 0;
         }
     }
 
@@ -279,7 +341,16 @@ public class Player_Move : MonoBehaviour
                 ||  collision.gameObject.tag.Equals("Dragon_Atk_Ice") && gameObject.tag.Equals("IceShield")
                 ||  collision.gameObject.tag.Equals("Dragon_Atk_Water") && gameObject.tag.Equals("WaterShield")
                 ||  collision.gameObject.tag.Equals("Dragon_Atk_Electric") && gameObject.tag.Equals("ElectroShield"))
+            {
                 return;
+            }
+                
+            //맞았을 때 사운드 재생(2개중에 랜덤 재생)
+            int ranHitSound = Random.Range(0, 2);
+            if (ranHitSound == 0)
+                soundManager.PlayAudio2("Hit_1");
+            else
+                soundManager.PlayAudio2("Hit_2");
 
             collision.gameObject.SetActive(false);
             //맞을때마다 현재 체력에서 드래곤 공격력만큼 뺌
@@ -295,15 +366,32 @@ public class Player_Move : MonoBehaviour
             //0이하로 떨어지면 플레이어 비활성화, 시간 정지,  결과 씬 전환
             if (Player_NowHP <= 0)
             {
+                Player_NowHP = 0;
+                Player_HPBar.value = 0;
+                ShieldOff();
+                //죽었을 때 사운드 재생(2개중에 랜덤 재생)
+                int ranDieSound = Random.Range(0, 2);
+                if (ranDieSound == 0)
+                    soundManager.PlayAudio("Die_1");
+                else
+                    soundManager.PlayAudio("Die_2");
                 gameObject.SetActive(false);
-                Time.timeScale = 0;
-                SceneManager.LoadScene("Result");
-                PlayerPrefs.SetInt("Stage", nowStage);
+                //게임오버 텍스트 표출
+                GameOverImg.SetActive(true);
+                //결과화면 표출
+                Invoke("ShowResult", 3f);         
             }
         }
 
         else if (collision.gameObject.tag.Equals("Obstacle"))
         {
+            //맞았을 때 사운드 재생(2개중에 랜덤 재생)
+            int ranHitSound = Random.Range(0, 2);
+            if (ranHitSound == 0)
+                soundManager.PlayAudio2("Hit_1");
+            else
+                soundManager.PlayAudio2("Hit_2");
+
             collision.gameObject.SetActive(false);
             //맞을때마다 현재 체력에서 장애물 데미지만큼 뺌
             Player_NowHP -= Total_ComObj_Atk;
@@ -318,10 +406,20 @@ public class Player_Move : MonoBehaviour
             //0이하로 떨어지면 플레이어 비활성화, 시간 정지, 결과 씬 전환
             if (Player_NowHP <= 0)
             {
+                Player_NowHP = 0;
+                Player_HPBar.value = 0;
+                ShieldOff();
+                //죽었을 때 사운드 재생(2개중에 랜덤 재생)
+                int ranDieSound = Random.Range(0, 2);
+                if (ranDieSound == 0)
+                    soundManager.PlayAudio("Die_1");
+                else
+                    soundManager.PlayAudio("Die_2");
                 gameObject.SetActive(false);
-                Time.timeScale = 0;
-                SceneManager.LoadScene("Result");
-                PlayerPrefs.SetInt("Stage", nowStage);
+                //게임오버 텍스트 표출
+                GameOverImg.SetActive(true);
+                //결과화면 표출
+                Invoke("ShowResult", 3f);
             }
         }
     }
@@ -373,9 +471,45 @@ public class Player_Move : MonoBehaviour
                             EditDefaultPlayer_Atk + Mathf.FloorToInt((nowLevel - 1) / (float)EditCorLevel_Atk) * EditPlusPlayer_Atk;
     }
 
+    // 3. 플레이어 업그레이드 공격력
+    void totalUGDMGCal(int atkUGLevel)
+    {
+        if (this.atkUGLevel == 1)
+            return;
+
+        else
+        {
+            totalUGDMG = totalUGDMGFormula(this.atkUGLevel);
+            Debug.Log("추가한 값 : " + totalUGDMG);
+            Debug.Log("this.atkUGLevel-1 : " + (this.atkUGLevel));
+        }
 
 
-    // 3. 장애물 공격력
+        // 만약 max로 잡아놓은 경험치 값보다 높아질 시 max로 통일
+        if (totalUGDMG >= maxUGDMG)
+        {
+            totalUGDMG = maxUGDMG;
+        }
+    }
+
+    float totalUGDMGFormula(int toAtkUGLevel)
+    {
+        float calUGDMG;
+        Debug.Log("this.atkUGLevel : " + (toAtkUGLevel - 1));
+        Debug.Log("atkUGLevel : " + atkUGLevel);
+        Debug.Log("1 : " + Mathf.FloorToInt(((toAtkUGLevel - 1) / BasicCorUGDMGLevel)));
+        Debug.Log("2 : " + Mathf.FloorToInt(((toAtkUGLevel - 1) / BasicCorUGDMGLevel)) * BasicPlusUGDMG);
+        Debug.Log("3 : " + Mathf.FloorToInt((toAtkUGLevel - 1) / EditCorUGDMGLevel));
+        Debug.Log("4 : " + Mathf.FloorToInt((toAtkUGLevel - 1) / EditCorUGDMGLevel) * EditPlusUGDMG);
+        calUGDMG = BasicDefaultUGDMG + Mathf.FloorToInt(((toAtkUGLevel - 1) / BasicCorUGDMGLevel)) * BasicPlusUGDMG
+                    + EditDefaultUGDMG + Mathf.FloorToInt((toAtkUGLevel) / EditCorUGDMGLevel) * EditPlusUGDMG;
+
+        Debug.Log("업그레이드 시 추가되는 값 : " + calUGDMG);
+        return calUGDMG;
+    }
+
+
+    // 4. 장애물 공격력
     void Total_ComObj_AtkCal()
     {
         if (((BasicDefault_ComObj_Atk + ((nowStage - 1) * BasicPlus_ComObj_Atk)) +
@@ -386,7 +520,7 @@ public class Player_Move : MonoBehaviour
                             EditDefault_ComObj_Atk + Mathf.FloorToInt((nowStage - 1) / EditCorStage_ComObj_Atk) * EditPlus_ComObj_Atk);
     }
 
-    // 4. 드래곤 공격력
+    // 5. 드래곤 공격력
     void Total_ComAtk_AtkCal()
     {
         if (((BasicDefault_ComAtk_Atk + ((nowStage - 1) * BasicPlus_ComAtk_Atk)) +
@@ -395,5 +529,13 @@ public class Player_Move : MonoBehaviour
         else
             Total_ComAtk_Atk = ((BasicDefault_ComAtk_Atk + ((nowStage - 1) * BasicPlus_ComAtk_Atk)) +
                             EditDefault_ComAtk_Atk + Mathf.FloorToInt((nowStage - 1) / EditCorStage_ComAtk_Atk) * EditPlus_ComAtk_Atk);
+    }
+
+    //결과 화면 표출
+    void ShowResult()
+    {
+        Time.timeScale = 0;
+        SceneManager.LoadScene("Result");
+        PlayerPrefs.SetInt("Stage", nowStage);
     }
 }

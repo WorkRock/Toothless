@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class Dragon : MonoBehaviour
 {
+    //인게임 사운드 매니저
+    public IG_SoundManager soundManager;
+
     //Player_Atk 클래스 객체 생성
     public Player_Move player;
 
@@ -16,8 +19,8 @@ public class Dragon : MonoBehaviour
     public string type;
 
     //드래곤 체력
-    public int Dragon_NowHP;
-    public int Dragon_TotalHP;
+    public float Dragon_NowHP;
+    public float Dragon_TotalHP;
 
     //함수 관련 (드래곤 HP 증가)
     public int nowStage;
@@ -68,9 +71,11 @@ public class Dragon : MonoBehaviour
     {
         if(collision.gameObject.tag.Equals("Player_Atk"))
         {
-            collision.gameObject.SetActive(false);
             //폭발 효과
+            soundManager.PlayAudio("Explosion");
             isHit = true;
+
+            collision.gameObject.SetActive(false);
 
             Dragon_NowHP -= player.Player_TotalAtk;
 
@@ -78,6 +83,7 @@ public class Dragon : MonoBehaviour
             Debug.Log($"드래곤 체력 : {Dragon_NowHP}");
             if (Dragon_NowHP <= 0)
             {
+                DragonDieSound();
                 Invoke("Disappear", 0.5f);
             }
         }
@@ -99,5 +105,10 @@ public class Dragon : MonoBehaviour
     void Disappear()
     {
         gameObject.SetActive(false);
+    }
+
+    void DragonDieSound()
+    {
+        soundManager.PlayAudio2("DragonDie");
     }
 }
