@@ -125,14 +125,14 @@ public class SoundManager : MonoBehaviour
                     {
                         BGM.mute = false;
                         audioSource.mute = false;
-                        PlayBGM(BGMList[0].name);
+                        PlayBGM("Lobby");
                     }
 
                     if (fdt > lobbyDelayTime)
                     {
                         BGM.mute = false;
-                        lobbyDelay = true;
-                        PlayBGM(BGMList[0].name);
+                        lobbyDelay = false;
+                        PlayBGM("Lobby");
                         fdt = 0;
                     }
 

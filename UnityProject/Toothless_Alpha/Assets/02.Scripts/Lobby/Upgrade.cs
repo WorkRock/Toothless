@@ -27,11 +27,15 @@ public class Upgrade : MonoBehaviour
     public int playerLevel;
     public int atkUGLevel;
     public int nextUGLevel;
-
-    //public bool isBtnClicked;
+    
     private bool isCanUG;
     private bool isFirstUG;
     private bool isSecondUG;
+
+
+    // 업그레이드 버튼 누른 것 체크
+    public bool isBtnClicked;
+
 
 
     public int totalCoin;
@@ -62,7 +66,7 @@ public class Upgrade : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //isBtnClicked = false;
+        isBtnClicked = false;
 
         // 테스트를 위한 초기화
         PlayerPrefs.SetInt("AtkUG", 1);
@@ -106,8 +110,6 @@ public class Upgrade : MonoBehaviour
 
         UGLevel.text = atkUGLevel.ToString();
 
-        Debug.Log("totalUGDMG : " + totalUGDMG);
-        
         UGDmgNow.text = (100*totalUGDMG).ToString() + "%";
         UGDmgNext.text = (100*totalUGDMGNext).ToString() +"%";
 
@@ -161,7 +163,9 @@ public class Upgrade : MonoBehaviour
     public void UGbtnClick()
     {
         // Debug.Log("BtnClick");
-        //isBtnClicked = true;
+        
+        isBtnClicked = true;
+        
         PlayerPrefs.SetInt("isShop", 1);
         PlayerPrefs.Save();
         UpgradeATK();
@@ -180,6 +184,7 @@ public class Upgrade : MonoBehaviour
 
         totalUGDMGCal(atkUGLevel);
         totalUGDMGNext = totalUGDMGFormula(atkUGLevel+1);
+
         if (totalUGDMG >= maxUGDMG)
         {
             totalUGDMG = maxUGDMG;   
@@ -188,7 +193,8 @@ public class Upgrade : MonoBehaviour
         if(totalUGDMGNext >= maxUGDMG)
         {
             totalUGDMGNext = maxUGDMG;
-        }        
+        }
+        // isBtnClicked = false;        
     }
 
 
@@ -219,7 +225,7 @@ public class Upgrade : MonoBehaviour
     }
 
 
-    void totalUGDMGCal(int atkUGLevel)
+    public void totalUGDMGCal(int atkUGLevel)
     {
         if (this.atkUGLevel == 1)
             return;
@@ -227,8 +233,6 @@ public class Upgrade : MonoBehaviour
         else
         {
             totalUGDMG = totalUGDMGFormula(this.atkUGLevel);
-            Debug.Log("추가한 값 : " + totalUGDMG);
-            Debug.Log("this.atkUGLevel-1 : " + (this.atkUGLevel));
         }
 
 
@@ -239,19 +243,13 @@ public class Upgrade : MonoBehaviour
         }
     }
 
-    float totalUGDMGFormula(int toAtkUGLevel)
+    public float totalUGDMGFormula(int toAtkUGLevel)
     {
         float calUGDMG;
-        Debug.Log("this.atkUGLevel : " + (toAtkUGLevel-1));
-        Debug.Log("atkUGLevel : " + atkUGLevel);
-        Debug.Log("1 : "+Mathf.FloorToInt(((toAtkUGLevel-1) / BasicCorUGDMGLevel)));
-        Debug.Log("2 : "+Mathf.FloorToInt(((toAtkUGLevel-1) / BasicCorUGDMGLevel)) * BasicPlusUGDMG);
-        Debug.Log("3 : "+Mathf.FloorToInt((toAtkUGLevel-1) / EditCorUGDMGLevel));
-        Debug.Log("4 : "+Mathf.FloorToInt((toAtkUGLevel-1) / EditCorUGDMGLevel) * EditPlusUGDMG);
+    
         calUGDMG = BasicDefaultUGDMG + Mathf.FloorToInt(((toAtkUGLevel-1) / BasicCorUGDMGLevel)) * BasicPlusUGDMG
                     + EditDefaultUGDMG + Mathf.FloorToInt((toAtkUGLevel) / EditCorUGDMGLevel) * EditPlusUGDMG;
         
-        Debug.Log("업그레이드 시 추가되는 값 : " + calUGDMG);
         return calUGDMG;
     }
 

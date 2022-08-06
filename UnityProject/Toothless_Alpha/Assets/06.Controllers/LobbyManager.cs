@@ -18,6 +18,7 @@ public class LobbyManager : MonoBehaviour
 
     public GameObject UI_Lobby_Player;
     public BtnManager btnManager;
+    public Upgrade upgrade;
 
     // UI_Lobby_Player 좌 우 움직임 값
     public float rot;
@@ -27,10 +28,14 @@ public class LobbyManager : MonoBehaviour
 
     // Player 레벨 및 경험치 계산용 변수들
     public int playerLevel;
+
+    public int playerUGLevel;
+
     public int curExp;
     public int totalExp;
 
     public int calExp;
+
 
     public int BasicDefaultExp;
     public int BasicPlusExp;
@@ -42,6 +47,31 @@ public class LobbyManager : MonoBehaviour
 
 
     public int totalCoin;
+
+
+    // 1. 플레이어 HP(레벨 & 업그레이드)
+    //플레이어 체력
+    public int Player_TotalHP;
+    public int Player_NowHP;
+    public int BasicDefaultHp;
+    public int BasicPlusHp;
+    public int EditDefaultHp;
+    public int EditPlusHp;
+    public int BasicCorLevel_HP;               //보정레벨_기본 : 0
+    public int EditCorLevel_HP;                //보정레벨_보정값 : 10
+    public int maxHp;
+
+
+     // 2. 플레이어 공격력(레벨 & 업그레이드)
+    public float Player_TotalAtk;
+    public int BasicDefaultPlayer_Atk;      //기본_Default : 30
+    public int BasicPlusPlayer_Atk;         //기본_가중치 : 0
+    public int EditDefaultPlayer_Atk;       //보정값_Default : 0
+    public int EditPlusPlayer_Atk;          //보정값_가중치 : 15
+    public int BasicCorLevel_Atk;           //보정레벨_기본 : 0
+    public int EditCorLevel_Atk;            //보정레벨_보정값 : 10
+    public int maxPlayer_Atk;               //최대(or최소)값 : 500
+
 
     // Start is called before the first frame update
     void Start()
@@ -57,10 +87,17 @@ public class LobbyManager : MonoBehaviour
 
         curExp = PlayerPrefs.GetInt("Exp");
         playerLevel = PlayerPrefs.GetInt("Level");
+        playerUGLevel = PlayerPrefs.GetInt("AtkUG");
 
         calExp = 0;
 
         totalExp = BasicDefaultExp;
+
+        Player_TotalHP = BasicDefaultHp;
+        Player_TotalAtk = BasicDefaultPlayer_Atk;
+
+        totalHpCal();
+        totalPlayer_AtkCal();
 
         for (int i = 1; i < playerLevel + 1; i++)
             totalExpCal(i);
@@ -82,8 +119,8 @@ public class LobbyManager : MonoBehaviour
         if(btnManager.isInfoOn)
         {
             InfoLevel.text = playerLevel.ToString();
-            InfoAtk.text = "Test";
-            InfoHP.text = "Test";
+            InfoAtk.text = Player_TotalAtk.ToString("F2");
+            InfoHP.text = Player_TotalHP.ToString();
             InfoExp.text = "<color=green>"+curExp.ToString() + "</color>" + " / " + totalExp.ToString();
         }
     }
@@ -165,9 +202,25 @@ public class LobbyManager : MonoBehaviour
             PlayerPrefs.SetInt("Exp", curExp);
             PlayerPrefs.SetInt("Coin", totalCoin);
             PlayerPrefs.Save();
-
+            totalHpCal();
+            totalPlayer_AtkCal();
+            Player_TotalAtk *= upgrade.totalUGDMG;
+            upgrade.isBtnClicked = false;
         }
         markExp();
+
+        // Lobby Test를 위한 추가
+        
+        // totalPlayer_AtkCal();
+
+        if(upgrade.isBtnClicked)
+        {
+            Debug.Log("BtnClicked");
+            totalPlayer_AtkCal();
+            Player_TotalAtk *= upgrade.totalUGDMG;
+            Debug.Log("Player_TotalAtk : " + Player_TotalAtk);
+            upgrade.isBtnClicked = false;
+        }
     }
 
 
@@ -196,5 +249,35 @@ public class LobbyManager : MonoBehaviour
     {
         calExp = Mathf.FloorToInt((playerLevel / BasicCorLevel) * BasicPlusExp)
                     + Mathf.FloorToInt(EditDefaultExp + (playerLevel / EditCorLevel) * EditPlusExp);
+    }
+
+
+
+    // 플레이어 체력 계산
+    void totalHpCal()
+    {
+        if (playerLevel == 1)
+            return;
+        else if ((BasicDefaultHp + ((playerLevel - 1) * BasicPlusHp)) +
+                           EditDefaultHp + Mathf.FloorToInt(((playerLevel - 1) / (float)EditCorLevel_HP) * EditPlusHp) >= maxHp)
+            Player_TotalHP = maxHp;
+        else
+        {
+            Player_TotalHP = (BasicDefaultHp + ((playerLevel - 1) * BasicPlusHp)) +
+                           EditDefaultHp + Mathf.FloorToInt((playerLevel - 1) / (float)EditCorLevel_HP) * EditPlusHp;
+        }
+
+    }
+
+
+    // 플레이어 공격력(레벨 비례)
+    void totalPlayer_AtkCal()
+    {
+        if ((BasicDefaultPlayer_Atk + ((playerLevel - 1) * BasicPlusPlayer_Atk)) +
+                            EditDefaultPlayer_Atk + Mathf.FloorToInt((playerLevel - 1) / (float)EditCorLevel_Atk) * EditPlusPlayer_Atk >= maxPlayer_Atk)
+            Player_TotalAtk = maxPlayer_Atk;
+        else
+            Player_TotalAtk = (BasicDefaultPlayer_Atk + ((playerLevel - 1) * BasicPlusPlayer_Atk)) +
+                            EditDefaultPlayer_Atk + Mathf.FloorToInt((playerLevel - 1) / (float)EditCorLevel_Atk) * EditPlusPlayer_Atk;
     }
 }
