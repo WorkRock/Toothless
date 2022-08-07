@@ -59,9 +59,6 @@ public class SoundManager : MonoBehaviour
     private AudioSource BGM;
     private AudioSource audioSource;
 
-    public Upgrade upgrade;
-    public BtnManager btnManager;
-    public string sceneName;
 
     private int isSoundOn;
     private int isFuncOn;
@@ -70,14 +67,13 @@ public class SoundManager : MonoBehaviour
 
     private bool lobbyDelay;
 
-    [SerializeField]
-    private bool findBtnManager;
-
-    [SerializeField]
     private float fdt;
 
     [SerializeField]
     private float lobbyDelayTime;
+
+    [SerializeField]
+    private float ingameDelayTime;
 
     // Start is called before the first frame update
     void Start()
@@ -128,6 +124,7 @@ public class SoundManager : MonoBehaviour
                         BGM.mute = false;
                         audioSource.mute = false;
                         PlayBGM("Lobby");
+                        fdt = 0;
                     }
 
                     if (fdt > lobbyDelayTime)
@@ -142,11 +139,22 @@ public class SoundManager : MonoBehaviour
                     break;
 
                 case "Ingame":
-                    fdt = 0;
-                    PlayBGM(BGMList[1].name);
-                    BGM.mute = false;
-                    BGM.volume = 0.5f;
-                    audioSource.mute = false;
+                    fdt += Time.deltaTime;
+                    
+                    if(fdt > ingameDelayTime)
+                    {
+                        
+                        PlayBGM(BGMList[1].name);
+                        BGM.mute = false;
+                        BGM.volume = 0.5f;
+                        audioSource.mute = false;    
+                    }
+
+                    else
+                    {
+                        BGM.mute = true;
+                    }
+                    
                     break;
 
                 case "Result":
@@ -230,5 +238,10 @@ public class SoundManager : MonoBehaviour
 
         PlayerPrefs.SetInt("isShop", 0);
         PlayerPrefs.Save();
+    }
+
+    public void resetAccount()
+    {
+        
     }
 }

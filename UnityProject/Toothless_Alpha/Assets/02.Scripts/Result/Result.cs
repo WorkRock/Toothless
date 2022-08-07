@@ -79,7 +79,7 @@ public class Result : MonoBehaviour
         GetCoin.text = realTotalGetCoin.ToString();
 
         playerNowExp += totalGetExp;
-        totalCoin += totalGetCoin;
+        totalCoin += realTotalGetCoin;
 
         
         PlayerPrefs.SetInt("Exp",playerNowExp);
