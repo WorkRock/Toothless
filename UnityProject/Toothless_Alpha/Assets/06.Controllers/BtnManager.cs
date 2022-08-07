@@ -44,22 +44,35 @@ public class BtnManager : MonoBehaviour
     */
 
     // public SoundManager soundManager;
-
+    
+    // 기본 로비 배경 
     public GameObject UI_Lobby;
 
+    // 로비 입장 전 인트로 사용 리소스
     public GameObject OutLobbyText;
     public GameObject IntroBG;
     public GameObject IntroLogo;
 
 
+    // 로비 각 기능별 부모 객체
     public GameObject UI_Lobby_Info;
     public GameObject UI_Lobby_Shop;
     public GameObject UI_Lobby_Credit;
     public GameObject UI_Lobby_Option;
 
+    // Option : 소리 On / Off 아이콘
     public GameObject SoundOn;
     public GameObject SoundOff;
 
+    // 계정 초기화 관련
+    public GameObject Warning;
+    public GameObject WarnParent;
+    public GameObject ResetGame;
+
+    // 게임 종료 관련
+    public GameObject EscapeGame;
+
+    // Lobby인지를 체크하는 bool 변수
     public bool isLobby;
 
 
@@ -95,6 +108,7 @@ public class BtnManager : MonoBehaviour
                 else
                 {
                     funcOn();
+                    escapeGame();
                 }
                 break;
 
@@ -269,4 +283,63 @@ public class BtnManager : MonoBehaviour
         SceneManager.LoadScene("Lobby");
     }
 
+
+    public void resetAccount()
+    {
+        if(isOptionOn)
+        {
+            Warning.SetActive(true);
+            WarnParent.SetActive(true);
+            ResetGame.SetActive(false);
+        }    
+    }
+
+    public void resetClicked()
+    {
+        if(isOptionOn)
+        {
+            PlayerPrefs.SetInt("Level", 1);
+            PlayerPrefs.SetInt("AtkUG", 1);
+            PlayerPrefs.SetInt("Exp", 0);
+            PlayerPrefs.SetInt("Coin", 0);
+            PlayerPrefs.Save();
+
+            WarnParent.SetActive(false);
+            ResetGame.SetActive(true);
+        }
+    }
+
+    public void resetNotClicked()
+    {
+        if(isOptionOn)
+        {
+            Warning.SetActive(false);
+        }
+    }
+
+    public void escapeGame()
+    {
+        if(!Input.GetKeyDown(KeyCode.Escape))
+            return;
+
+        Time.timeScale = 0.0f;
+        EscapeGame.SetActive(true);
+        
+    }
+
+    public void escapeGame_Yes()
+    {
+        # if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        # else 
+            Application.Quit();
+        # endif
+    }
+
+    public void escapeGame_No()
+    {
+        
+        Time.timeScale = 1.0f;
+        EscapeGame.SetActive(false);
+    }
 }

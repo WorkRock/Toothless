@@ -228,7 +228,7 @@ MonoBehaviour:
   totalGetExp: 0
   calGetExp: 0
   BasicDefaultGetExp: 5
-  BasicPlusGetExp: 1
+  BasicPlusGetExp: 10
   EditDefaultGetExp: 0
   EditPlusGetExp: 20
   BasicCorGetExpStage: 5
@@ -237,10 +237,10 @@ MonoBehaviour:
   realTotalGetCoin: 0
   totalGetCoin: 0
   calGetCoin: 0
-  BasicDefaultGetCoin: 5
-  BasicPlusGetCoin: 1
+  BasicDefaultGetCoin: 10
+  BasicPlusGetCoin: 10
   EditDefaultGetCoin: 0
-  EditPlusGetCoin: 15
+  EditPlusGetCoin: 25
   BasicCorGetCoinStage: 5
   EditCorGetCoinStage: 15
   maxGetCoin: 30000
@@ -1773,8 +1773,10 @@ MonoBehaviour:
   UI_Lobby_Option: {fileID: 0}
   SoundOn: {fileID: 0}
   SoundOff: {fileID: 0}
+  Warning: {fileID: 0}
+  WarnParent: {fileID: 0}
+  ResetGame: {fileID: 0}
   isLobby: 0
-  isSoundPlay: 0
   isFuncOn: 0
   isInfoOn: 0
   isShopOn: 0

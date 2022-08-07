@@ -89,6 +89,22 @@ public class LobbyManager : MonoBehaviour
         playerLevel = PlayerPrefs.GetInt("Level");
         playerUGLevel = PlayerPrefs.GetInt("AtkUG");
 
+
+        if(playerLevel == 0)
+        {
+            playerLevel = 1;
+            PlayerPrefs.SetInt("Level", 1);
+            PlayerPrefs.Save();
+        }
+
+        if(playerUGLevel == 0)
+        {
+            playerUGLevel = 1;
+            PlayerPrefs.SetInt("AtkUG", 1);
+            PlayerPrefs.Save();
+        }
+
+
         calExp = 0;
 
         totalExp = BasicDefaultExp;
@@ -205,6 +221,7 @@ public class LobbyManager : MonoBehaviour
             PlayerPrefs.SetInt("Exp", curExp);
             PlayerPrefs.SetInt("Coin", totalCoin);
             PlayerPrefs.Save();
+            
             totalHpCal();
             totalPlayer_AtkCal();
             Player_TotalAtk *= upgrade.totalUGDMG;
