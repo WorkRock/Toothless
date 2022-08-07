@@ -151,9 +151,12 @@ public class Player_Move : MonoBehaviour
         
         //체력 초기화
         Player_TotalHP = BasicDefaultHp;
-        Player_NowHP = Player_TotalHP;
 
         totalHpCal();
+
+        Player_NowHP = Player_TotalHP;
+
+        
         // 2. 플레이어 공격력 계산 함수
         totalPlayer_AtkCal();
         totalUGDMG = BasicDefaultUGDMG;
