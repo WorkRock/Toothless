@@ -5,20 +5,24 @@ using UnityEngine.UI;
 
 public class LobbyManager : MonoBehaviour
 {
+    public BtnManager btnManager;
+    public Upgrade upgrade;
+
+    [Header("UI_Main_Lobby")]
     public Text Level;
     public Text Coin;
     public Slider Exp;
+    public int totalCoin;
 
-
+    [Header("UI_Info")]
     public Text InfoLevel;
     public Text InfoAtk;
     public Text InfoHP;
     public Text InfoExp;
 
-
+    [Header("UI_LobbySprite")]
     public GameObject UI_Lobby_Player;
-    public BtnManager btnManager;
-    public Upgrade upgrade;
+    
 
     // UI_Lobby_Player 좌 우 움직임 값
     public float rot;
@@ -26,50 +30,65 @@ public class LobbyManager : MonoBehaviour
     public float fdt;
     public float maxT;
 
+
     // Player 레벨 및 경험치 계산용 변수들
+    [Header("UI_Level&UG")]
     public int playerLevel;
 
     public int playerUGLevel;
 
+    [Header("ExpCal")]
     public int curExp;
     public int totalExp;
 
     public int calExp;
 
-
+    [Space(10f)]
     public int BasicDefaultExp;
     public int BasicPlusExp;
+    [Space(10f)]
     public int EditDefaultExp;
     public int EditPlusExp;
+    [Space(10f)]
     public int BasicCorLevel;
     public int EditCorLevel;
+    [Space(10f)]
     public int maxExp;
 
 
-    public int totalCoin;
+    
 
-
+    [Header("HPCal")]
     // 1. 플레이어 HP(레벨 & 업그레이드)
     //플레이어 체력
     public int Player_TotalHP;
     public int Player_NowHP;
+    [Space(10f)]
     public int BasicDefaultHp;
     public int BasicPlusHp;
+    [Space(10f)]
     public int EditDefaultHp;
     public int EditPlusHp;
+    [Space(10f)]
     public int BasicCorLevel_HP;               //보정레벨_기본 : 0
     public int EditCorLevel_HP;                //보정레벨_보정값 : 10
+    [Space(10f)]
     public int maxHp;
 
 
+    [Header("AtkCal")]
      // 2. 플레이어 공격력(레벨 & 업그레이드)
     public float Player_TotalAtk;
+    [Space(10f)]
     public int BasicDefaultPlayer_Atk;      //기본_Default : 30
     public int BasicPlusPlayer_Atk;         //기본_가중치 : 0
+    [Space(10f)]
     public int EditDefaultPlayer_Atk;       //보정값_Default : 0
     public int EditPlusPlayer_Atk;          //보정값_가중치 : 15
+    [Space(10f)]
     public int BasicCorLevel_Atk;           //보정레벨_기본 : 0
     public int EditCorLevel_Atk;            //보정레벨_보정값 : 10
+    [Space(10f)]
     public int maxPlayer_Atk;               //최대(or최소)값 : 500
 
 
@@ -78,10 +97,10 @@ public class LobbyManager : MonoBehaviour
     {
         /*
         // 테스트를 위한 레벨 및 경험치값 초기화
-        PlayerPrefs.SetInt("Level", 0);
+        PlayerPrefs.SetInt("Level", 1);
         PlayerPrefs.SetInt("Exp", 0);
         PlayerPrefs.SetInt("Coin", 0);
-        PlayerPrefs.SetInt("AtkUG", 0);
+        PlayerPrefs.SetInt("AtkUG", 1);
         PlayerPrefs.Save();
         */
 
@@ -122,8 +141,6 @@ public class LobbyManager : MonoBehaviour
             PlayerPrefs.SetInt("AtkUG", 1);
             PlayerPrefs.Save();
         }
-
-        Debug.Log(PlayerPrefs.GetInt("Level"));
 
         UIPlayerMove();
 

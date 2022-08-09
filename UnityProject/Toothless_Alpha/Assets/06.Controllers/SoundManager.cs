@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class SoundManager : MonoBehaviour
 {
-    
+
     private static SoundManager instance = null;
 
     void Awake()
@@ -40,177 +40,172 @@ public class SoundManager : MonoBehaviour
             return instance;
         }
     }
-    
-    public AudioClip Lobby_Func_Upgrade;
 
     [System.Serializable]
-    public struct BgmType
+    public struct AudioType
     {
         public string name;
         public AudioClip audio;
     }
-    public BgmType[] BGMList;
+    public AudioType[] BGMList;
 
-    public BgmType[] SoundList;
+    public AudioType[] SoundList;
 
     private string NowSoundname = "";
     private string NowBGMname = "";
 
     private AudioSource BGM;
-    private AudioSource audioSource;
+    private AudioSource audioSource_01;
+    private AudioSource audioSource_02;
+    private AudioSource audioSource_03;
+    private AudioSource audioSource_04;
 
-
-    private int isSoundOn;
-    private int isFuncOn;
-    private int isLobby;
-    private int isShop;
-
-    [SerializeField]
-    private bool lobbyDelay;
-
-    [SerializeField]
+    private bool isDelay;
     private bool isIngame;
 
-    [SerializeField]
+    private bool isSoundOn;
+
+    private bool isLobby;
+
     private float fdt;
+    [SerializeField] private float delayTime;
 
-    [SerializeField]
-    private float lobbyDelayTime;
-
-    [SerializeField]
-    private float ingameDelayTime;
-
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        PlayerPrefs.SetInt("isShop", 0);
-        PlayerPrefs.SetInt("isLobby", 0);
-        PlayerPrefs.SetInt("isDragonDie", -3);
-        PlayerPrefs.Save();
-        
-        fdt = 0;
-        
-        isSoundOn = 1;
-        isIngame = false;
-        lobbyDelay = true;
-
-        PlayerPrefs.SetInt("isSoundOn", 1);
-        PlayerPrefs.Save();
-
-        // Invoke("PlayBGM", 4.0f);
-
-        // NowBGMname = SceneManager.GetActiveScene().name;
-        audioSource = gameObject.AddComponent<AudioSource>();
         BGM = gameObject.AddComponent<AudioSource>();
+        audioSource_01 = gameObject.AddComponent<AudioSource>();
+        audioSource_02 = gameObject.AddComponent<AudioSource>();
+        audioSource_03 = gameObject.AddComponent<AudioSource>();
+        audioSource_04 = gameObject.AddComponent<AudioSource>();
+
+        PlayerPrefs.SetInt("isLobby", 0);
         BGM.loop = true;
-        audioSource.loop = false;
-        // if (BGMList.Length > 0) PlayBGM(BGMList[0].name);
+        isIngame = false;
+
     }
 
-    // Update is called once per frame
     void Update()
     {
-        isFuncOn = PlayerPrefs.GetInt("isDragonDie");
-        isSoundOn = PlayerPrefs.GetInt("isSoundOn");
-        isLobby = PlayerPrefs.GetInt("isLobby");
-        isShop = PlayerPrefs.GetInt("isShop");
-
-        Debug.Log("isLobby : " + isLobby);
-        Debug.Log("isFuncOn : " + isFuncOn);
-
         fdt += Time.deltaTime;
 
-        if (isSoundOn == 1)
+        isLobby = ScoreManager.GetIsLobby();
+        isSoundOn = ScoreManager.GetIsSoundOn();
+
+        if (isSoundOn)
         {
+            SoundManager.Instance.audioSourceOn();
+            
             switch (SceneManager.GetActiveScene().name)
             {
                 case "Lobby":
-                    if(isIngame)
+                    if (isIngame)
                     {
-                        fdt = 0;
                         isIngame = false;
+                        fdt = 0;
                     }
                     
-                    else
+                    if (!isLobby)
                     {
-                        if (isLobby == 0)
+                        if (fdt > delayTime)
                         {
-                            if (lobbyDelay)
-                            {
-                                audioSource.mute = true;
-                                BGM.mute = true;
-                            }
-
+                            Debug.Log("SoundON");
+                            SoundManager.Instance.BGMOn();
+                            SoundManager.Instance.PlayBGM("Lobby");
+                            SoundManager.Instance.BGMVolume(1.0f);
+                            ScoreManager.SetIsLobby(true);
                         }
 
                         else
                         {
-                            lobbyDelay = true;
-                            BGM.mute = false;
-                            audioSource.volume = 1.0f;
-                            audioSource.mute = false;
-                            PlayBGM("Lobby");
-                            fdt = 0;
+                            Debug.Log("SoundOff");
+                            SoundManager.Instance.BGMOff();
                         }
-
-                        if (fdt > lobbyDelayTime)
-                        {
-                            BGM.mute = false;
-                            lobbyDelay = false;
-                            PlayBGM("Lobby");
-                            fdt = 0;
-                        }
-
-                        checkLobbyBtn();
                     }
-                    
-                    break;
-
-                case "Ingame":
-                    isIngame = true;
-                    lobbyDelay = true;
-
-                    if (fdt > ingameDelayTime)
-                    {
-                        PlayBGM(BGMList[1].name);
-                        BGM.mute = false;
-                        BGM.volume = 0.5f;
-                        audioSource.mute = false;
-                    }
-
 
                     else
                     {
-                        BGM.mute = true;
-                    }                   
-                    
-                    
+                        fdt = 0;
+                        SoundManager.Instance.BGMOn();
+                        SoundManager.Instance.PlayBGM("Lobby");
+                        SoundManager.Instance.BGMVolume(1.0f);
+                    }
+
+                    break;
+
+                case "Ingame":
+                    if (!isIngame)
+                    {
+                        isIngame = true;
+                        fdt = 0;
+                    }
+
+
+                    if (fdt > delayTime)
+                    {
+                        Debug.Log("SoundON");
+                        SoundManager.Instance.BGMOn();
+                        SoundManager.Instance.PlayBGM("Ingame");
+                        SoundManager.Instance.BGMVolume(0.5f);
+
+                    }
+
+                    else
+                    {
+                        Debug.Log("SoundOff");
+                        SoundManager.Instance.BGMOff();
+                    }
                     break;
 
                 case "Result":
-                    fdt = 0;
-                    BGM.mute = false;
-                    lobbyDelay = true;
-                    PlayBGM(BGMList[2].name);
-                    BGM.volume = 1.0f;
-                    audioSource.mute = false;
+                    SoundManager.Instance.PlayBGM("Result");
                     break;
-
             }
         }
 
         else
         {
-            PlayerPrefs.SetInt("isShop", 0);
-            PlayerPrefs.Save();
+            SoundManager.Instance.BGMOff();
+            SoundManager.Instance.audioSourceOff();
 
-            BGM.mute = true;
-            audioSource.mute = true;
         }
-
 
     }
 
+    public void BGMOn()
+    {
+        BGM.mute = false;
+    }
+
+    public void BGMOff()
+    {
+        BGM.mute = true;
+    }
+
+    public void audioSourceOn()
+    {
+        SoundManager.Instance.audioSource_01.mute = false;
+        SoundManager.Instance.audioSource_02.mute = false;
+        SoundManager.Instance.audioSource_03.mute = false;
+        SoundManager.Instance.audioSource_04.mute = false;
+    }
+
+    public void audioSourceOff()
+    {
+        SoundManager.Instance.audioSource_01.mute = true;
+        SoundManager.Instance.audioSource_02.mute = true;
+        SoundManager.Instance.audioSource_03.mute = true;
+        SoundManager.Instance.audioSource_04.mute = true;
+        
+    }
+
+
+    public void BGMVolume(float _value)
+    {
+        BGM.volume = _value;
+    }
+
+
+    // Start is called before the first frame update
     public void PlayBGM(string name)
     {
         if (NowBGMname.Equals(name)) return;
@@ -224,49 +219,55 @@ public class SoundManager : MonoBehaviour
             }
     }
 
-    public void PlaySound(string name)
+    public void PlaySound_01(string name)
     {
         if (NowSoundname.Equals(name)) return;
 
         for (int i = 0; i < SoundList.Length; ++i)
             if (SoundList[i].name.Equals(name))
             {
-                audioSource.clip = SoundList[i].audio;
-                audioSource.Play();
+                audioSource_01.clip = SoundList[i].audio;
+                audioSource_01.Play();
                 NowSoundname = name;
             }
     }
 
-
-
-    void checkLobbyBtn()
+    public void PlaySound_02(string name)
     {
-        if (isLobby == 1)
-        {
-            if (isFuncOn == (-1))
-            {
-                PlaySound(SoundList[0].name);
-            }
+        if (NowSoundname.Equals(name)) return;
 
-            else if (isFuncOn == (-2))
+        for (int i = 0; i < SoundList.Length; ++i)
+            if (SoundList[i].name.Equals(name))
             {
-                PlaySound(SoundList[1].name);
+                audioSource_02.clip = SoundList[i].audio;
+                audioSource_02.Play();
+                NowSoundname = name;
             }
-
-
-            if (isFuncOn == (-1) && isShop == 1)
-            {
-                upgradeBtn();
-            }
-        }
     }
 
-    void upgradeBtn()
+    public void PlaySound_03(string name)
     {
-        // Debug.Log("Upgrade");
-        audioSource.PlayOneShot(Lobby_Func_Upgrade);
+        if (NowSoundname.Equals(name)) return;
 
-        PlayerPrefs.SetInt("isShop", 0);
-        PlayerPrefs.Save();
+        for (int i = 0; i < SoundList.Length; ++i)
+            if (SoundList[i].name.Equals(name))
+            {
+                audioSource_03.clip = SoundList[i].audio;
+                audioSource_03.Play();
+                NowSoundname = name;
+            }
+    }
+
+    public void PlaySound_04(string name)
+    {
+        if (NowSoundname.Equals(name)) return;
+
+        for (int i = 0; i < SoundList.Length; ++i)
+            if (SoundList[i].name.Equals(name))
+            {
+                audioSource_04.clip = SoundList[i].audio;
+                audioSource_04.Play();
+                NowSoundname = name;
+            }
     }
 }
