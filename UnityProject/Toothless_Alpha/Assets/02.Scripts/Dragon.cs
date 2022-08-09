@@ -38,6 +38,12 @@ public class Dragon : MonoBehaviour
     //드래곤 체력바 연결하는 방법 : 활성화될때 프리팹의 자식에서 슬라이더를 Dragon_HPBar 컴포넌트에 연결시킨다.
     void OnEnable()
     {
+        nowStage = PlayerPrefs.GetInt("Stage");
+        Dragon_TotalHP = BasicDefaultHp;
+        totalHpCal(nowStage - 1);
+        Dragon_NowHP = Dragon_TotalHP;
+        Debug.Log("드래곤 전체 체력 : " + Dragon_TotalHP);
+
         Dragon_HPBar = gameObject.GetComponentInChildren<Slider>();
         //다시 활성화 될때 hp바는 만땅으로
         Dragon_HPBar.value = 1.0f;
@@ -60,11 +66,7 @@ public class Dragon : MonoBehaviour
 
     void Start()
     {
-        nowStage = PlayerPrefs.GetInt("Stage");
-        Dragon_TotalHP = BasicDefaultHp;
-        totalHpCal(nowStage-1);
-        Dragon_NowHP = Dragon_TotalHP;
-        Debug.Log("드래곤 전체 체력 : " + Dragon_TotalHP);
+        
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -72,7 +74,7 @@ public class Dragon : MonoBehaviour
         if(collision.gameObject.tag.Equals("Player_Atk"))
         {
             //폭발 효과
-            soundManager.PlayAudio("Explosion");
+            soundManager.PlayAudio3("Explosion");
             isHit = true;
 
             collision.gameObject.SetActive(false);

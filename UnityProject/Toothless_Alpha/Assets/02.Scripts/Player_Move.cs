@@ -348,12 +348,14 @@ public class Player_Move : MonoBehaviour
                 return;
             }
                 
-            //맞았을 때 사운드 재생(2개중에 랜덤 재생)
-            int ranHitSound = Random.Range(0, 2);
+            //맞았을 때 사운드 재생(3개중에 랜덤 재생)
+            int ranHitSound = Random.Range(0, 3);
             if (ranHitSound == 0)
                 soundManager.PlayAudio2("Hit_1");
-            else
+            else if(ranHitSound == 1)
                 soundManager.PlayAudio2("Hit_2");
+            else if (ranHitSound == 2)
+                soundManager.PlayAudio2("Hit_3");
 
             collision.gameObject.SetActive(false);
             //맞을때마다 현재 체력에서 드래곤 공격력만큼 뺌
@@ -388,12 +390,14 @@ public class Player_Move : MonoBehaviour
 
         else if (collision.gameObject.tag.Equals("Obstacle"))
         {
-            //맞았을 때 사운드 재생(2개중에 랜덤 재생)
-            int ranHitSound = Random.Range(0, 2);
+            //맞았을 때 사운드 재생(3개중에 랜덤 재생)
+            int ranHitSound = Random.Range(0, 3);
             if (ranHitSound == 0)
                 soundManager.PlayAudio2("Hit_1");
-            else
+            else if(ranHitSound == 1)
                 soundManager.PlayAudio2("Hit_2");
+            else if (ranHitSound == 2)
+                soundManager.PlayAudio2("Hit_3");
 
             collision.gameObject.SetActive(false);
             //맞을때마다 현재 체력에서 장애물 데미지만큼 뺌

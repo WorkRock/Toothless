@@ -43,6 +43,8 @@ public class gameManager : MonoBehaviour
     [SerializeField]
     private float fdt;      //오브젝트 스폰 딜레이
 
+    private float fdt_Anim;
+
     //스테이지 정보
     public int nowStage;
 
@@ -124,6 +126,25 @@ public class gameManager : MonoBehaviour
 
     void Update()
     {
+        if(Eye_Atk.activeSelf || Mouse_Atk.activeSelf)
+        {
+            Debug.Log("fdt_Anim" + fdt_Anim);
+            fdt_Anim += Time.deltaTime;
+
+            if(fdt_Anim > 0.5f)
+            {
+                OffAtkAnim();
+            }
+        }
+
+        if(isDragonDie == 1)
+        {
+            OffAtkAnim();
+        }
+
+
+
+
         if (ReadyImg.activeSelf)
         {
             setTime -= Time.deltaTime;
@@ -140,6 +161,8 @@ public class gameManager : MonoBehaviour
 
         isDragonDie = PlayerPrefs.GetInt("isDragonDie");
         //현 스테이지의 1의 자리를 받아와서 스폰할 드래곤 종류를 결정
+
+
         nowStage = PlayerPrefs.GetInt("Stage");
 
         Total__ComObj_SpeedCal();   //장애물 속도 함수 관련
@@ -225,6 +248,8 @@ public class gameManager : MonoBehaviour
                     Alert_Right.SetActive(true);
                 }
 
+                
+
                 //장애물, 공격 소환
                 Invoke("SpawnObjects",0.5f);
                 //경고라인 끄기
@@ -243,6 +268,8 @@ public class gameManager : MonoBehaviour
         //드래곤이 사망상태일 때
         if (isDragonDie == 1)
         {
+            CancelInvoke("SpawnObjects");
+
             // 1 - 블루 드래곤
             if (nowStage % 10 == 1)
             {
@@ -281,17 +308,17 @@ public class gameManager : MonoBehaviour
             // 8 - 옐로우 드래곤 2
             else if (nowStage % 10 == 8)
             {
-                Dragon_Yellow.SetActive(true);
+                Dragon_Black.SetActive(true);
             }
             // 9 - 옐로우 드래곤 3
             else if (nowStage % 10 == 9)
             {
-                Dragon_Yellow.SetActive(true);
+                Dragon_Blue.SetActive(true);
             }
             // 10 - 옐로우 드래곤 4
             else if (nowStage % 10 == 0)
             {
-                Dragon_Yellow.SetActive(true);
+                Dragon_Purple.SetActive(true);
             }
 
         }
@@ -305,7 +332,7 @@ public class gameManager : MonoBehaviour
     {
         //애니메이션 재생
         Eye_Atk.SetActive(true);
-        Invoke("OffAtkAnim", 1.5f);
+
 
         if (ranBall == 0)
         {
@@ -438,6 +465,7 @@ public class gameManager : MonoBehaviour
     {
         Eye_Atk.SetActive(false);
         Mouse_Atk.SetActive(false);
+        fdt_Anim = 0;
     }
 
     //카운트다운 표시

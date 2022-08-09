@@ -108,6 +108,16 @@ public class Upgrade : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(atkUGLevel <= 0 || PlayerPrefs.GetInt("AtkUG") <= 0)
+        {
+            atkUGLevel = 1;
+            PlayerPrefs.SetInt("AtkUG", 1);
+            PlayerPrefs.Save();
+
+            totalUGDMGNext = totalUGDMGFormula(atkUGLevel + 1);
+        }
+
+
         totalCoin = PlayerPrefs.GetInt("Coin");
 
         UGLevel.text = atkUGLevel.ToString();
@@ -202,8 +212,7 @@ public class Upgrade : MonoBehaviour
 
     void needCoinCal(int atkUGLevel)
     {
-
-        if (atkUGLevel == 1)
+        if (atkUGLevel <= 1)
             return;
 
         else
@@ -229,7 +238,7 @@ public class Upgrade : MonoBehaviour
 
     public void totalUGDMGCal(int atkUGLevel)
     {
-        if (this.atkUGLevel == 1)
+        if (this.atkUGLevel <= 1)
             return;
 
         else
@@ -281,7 +290,7 @@ public class Upgrade : MonoBehaviour
     {
         if (isFirstUG)
         {
-            if (atkUGLevel == 1)
+            if (atkUGLevel <= 1)
             {
                 FirsstUGSlider.value = 0 / (float)firstUGLevel;
             }

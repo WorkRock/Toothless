@@ -78,31 +78,18 @@ public class LobbyManager : MonoBehaviour
     {
         /*
         // 테스트를 위한 레벨 및 경험치값 초기화
-        PlayerPrefs.SetInt("Level", 1);
+        PlayerPrefs.SetInt("Level", 0);
         PlayerPrefs.SetInt("Exp", 0);
         PlayerPrefs.SetInt("Coin", 0);
+        PlayerPrefs.SetInt("AtkUG", 0);
         PlayerPrefs.Save();
         */
-        // 획득한 경험치 및 코인을 불러옴
 
+        // 획득한 경험치 및 코인을 불러옴
+        // Debug.Log(PlayerPrefs.GetInt("Level"));
         curExp = PlayerPrefs.GetInt("Exp");
         playerLevel = PlayerPrefs.GetInt("Level");
         playerUGLevel = PlayerPrefs.GetInt("AtkUG");
-
-
-        if(playerLevel == 0)
-        {
-            playerLevel = 1;
-            PlayerPrefs.SetInt("Level", 1);
-            PlayerPrefs.Save();
-        }
-
-        if(playerUGLevel == 0)
-        {
-            playerUGLevel = 1;
-            PlayerPrefs.SetInt("AtkUG", 1);
-            PlayerPrefs.Save();
-        }
 
 
         calExp = 0;
@@ -122,6 +109,22 @@ public class LobbyManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (playerLevel == 0 || PlayerPrefs.GetInt("Level") == 0)
+        {
+            playerLevel = 1;
+            PlayerPrefs.SetInt("Level", 1);
+            PlayerPrefs.Save();
+        }
+
+        if (playerUGLevel == 0 || PlayerPrefs.GetInt("AtkUG") == 0)
+        {
+            playerUGLevel = 1;
+            PlayerPrefs.SetInt("AtkUG", 1);
+            PlayerPrefs.Save();
+        }
+
+        Debug.Log(PlayerPrefs.GetInt("Level"));
+
         UIPlayerMove();
 
         totalCoin = PlayerPrefs.GetInt("Coin");
@@ -276,9 +279,14 @@ public class LobbyManager : MonoBehaviour
     // 플레이어 체력 계산
     void totalHpCal()
     {
-        if (playerLevel == 1)
+        if (playerLevel == 1 || playerLevel == 0)
+        {
+            Player_TotalHP = BasicDefaultHp;
             return;
-        else if ((BasicDefaultHp + ((playerLevel - 1) * BasicPlusHp)) +
+        }
+
+
+        if ((BasicDefaultHp + ((playerLevel - 1) * BasicPlusHp)) +
                            EditDefaultHp + Mathf.FloorToInt(((playerLevel - 1) / (float)EditCorLevel_HP) * EditPlusHp) >= maxHp)
             Player_TotalHP = maxHp;
         else
@@ -293,6 +301,13 @@ public class LobbyManager : MonoBehaviour
     // 플레이어 공격력(레벨 비례)
     void totalPlayer_AtkCal()
     {
+        if(playerLevel == 1 || playerLevel == 0)
+        {
+            Player_TotalAtk = BasicDefaultPlayer_Atk;
+            return;
+        }
+
+
         if ((BasicDefaultPlayer_Atk + ((playerLevel - 1) * BasicPlusPlayer_Atk)) +
                             EditDefaultPlayer_Atk + Mathf.FloorToInt((playerLevel - 1) / (float)EditCorLevel_Atk) * EditPlusPlayer_Atk >= maxPlayer_Atk)
             Player_TotalAtk = maxPlayer_Atk;

@@ -83,7 +83,6 @@ public class BtnManager : MonoBehaviour
     public bool isCreditOn;
     public bool isOptionOn;
 
-
     public string sceneName;
 
     public GameObject Func;
@@ -137,7 +136,7 @@ public class BtnManager : MonoBehaviour
     {
         if (Input.anyKeyDown)
         {
-            PlayerPrefs.SetInt("Stage",-3);
+            PlayerPrefs.SetInt("isLobby",1);
             PlayerPrefs.Save();
             isLobby = true;
             IntroBG.SetActive(false);
@@ -277,9 +276,9 @@ public class BtnManager : MonoBehaviour
     {
         //isLobby = true;
         Time.timeScale = 1.0f;
-        PlayerPrefs.SetInt("Stage",-2);
-        PlayerPrefs.SetInt("isDragonDie", -3);
+        PlayerPrefs.SetInt("isLobby",0);
         PlayerPrefs.Save();
+
         SceneManager.LoadScene("Lobby");
     }
 
@@ -303,7 +302,7 @@ public class BtnManager : MonoBehaviour
             PlayerPrefs.SetInt("Exp", 0);
             PlayerPrefs.SetInt("Coin", 0);
             PlayerPrefs.Save();
-
+            FuncExit();
             WarnParent.SetActive(false);
             ResetGame.SetActive(true);
         }
@@ -337,8 +336,7 @@ public class BtnManager : MonoBehaviour
     }
 
     public void escapeGame_No()
-    {
-        
+    {  
         Time.timeScale = 1.0f;
         EscapeGame.SetActive(false);
     }

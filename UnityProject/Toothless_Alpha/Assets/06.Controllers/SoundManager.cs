@@ -65,8 +65,13 @@ public class SoundManager : MonoBehaviour
     private int isLobby;
     private int isShop;
 
+    [SerializeField]
     private bool lobbyDelay;
 
+    [SerializeField]
+    private bool isIngame;
+
+    [SerializeField]
     private float fdt;
 
     [SerializeField]
@@ -79,16 +84,19 @@ public class SoundManager : MonoBehaviour
     void Start()
     {
         PlayerPrefs.SetInt("isShop", 0);
-        PlayerPrefs.SetInt("Stage", -2);
+        PlayerPrefs.SetInt("isLobby", 0);
         PlayerPrefs.SetInt("isDragonDie", -3);
         PlayerPrefs.Save();
-        lobbyDelay = true;
+        
         fdt = 0;
         
         isSoundOn = 1;
+        isIngame = false;
+        lobbyDelay = true;
 
-        PlayerPrefs.SetInt("isSoundOn", isSoundOn);
+        PlayerPrefs.SetInt("isSoundOn", 1);
         PlayerPrefs.Save();
+
         // Invoke("PlayBGM", 4.0f);
 
         // NowBGMname = SceneManager.GetActiveScene().name;
@@ -104,56 +112,78 @@ public class SoundManager : MonoBehaviour
     {
         isFuncOn = PlayerPrefs.GetInt("isDragonDie");
         isSoundOn = PlayerPrefs.GetInt("isSoundOn");
-        isLobby = PlayerPrefs.GetInt("Stage");
+        isLobby = PlayerPrefs.GetInt("isLobby");
         isShop = PlayerPrefs.GetInt("isShop");
+
+        Debug.Log("isLobby : " + isLobby);
+        Debug.Log("isFuncOn : " + isFuncOn);
+
+        fdt += Time.deltaTime;
 
         if (isSoundOn == 1)
         {
             switch (SceneManager.GetActiveScene().name)
             {
                 case "Lobby":
-                    if (isLobby == (-2))
+                    if(isIngame)
                     {
-                        fdt += Time.deltaTime;
-                        if (lobbyDelay)
-                            BGM.mute = true;
+                        fdt = 0;
+                        isIngame = false;
                     }
-
+                    
                     else
                     {
-                        BGM.mute = false;
-                        audioSource.mute = false;
-                        PlayBGM("Lobby");
-                        fdt = 0;
-                    }
+                        if (isLobby == 0)
+                        {
+                            if (lobbyDelay)
+                            {
+                                audioSource.mute = true;
+                                BGM.mute = true;
+                            }
 
-                    if (fdt > lobbyDelayTime)
-                    {
-                        BGM.mute = false;
-                        lobbyDelay = false;
-                        PlayBGM("Lobby");
-                        fdt = 0;
-                    }
+                        }
 
-                    checkLobbyBtn();
+                        else
+                        {
+                            lobbyDelay = true;
+                            BGM.mute = false;
+                            audioSource.volume = 1.0f;
+                            audioSource.mute = false;
+                            PlayBGM("Lobby");
+                            fdt = 0;
+                        }
+
+                        if (fdt > lobbyDelayTime)
+                        {
+                            BGM.mute = false;
+                            lobbyDelay = false;
+                            PlayBGM("Lobby");
+                            fdt = 0;
+                        }
+
+                        checkLobbyBtn();
+                    }
+                    
                     break;
 
                 case "Ingame":
-                    fdt += Time.deltaTime;
-                    
-                    if(fdt > ingameDelayTime)
+                    isIngame = true;
+                    lobbyDelay = true;
+
+                    if (fdt > ingameDelayTime)
                     {
-                        
                         PlayBGM(BGMList[1].name);
                         BGM.mute = false;
                         BGM.volume = 0.5f;
-                        audioSource.mute = false;    
+                        audioSource.mute = false;
                     }
+
 
                     else
                     {
                         BGM.mute = true;
-                    }
+                    }                   
+                    
                     
                     break;
 
@@ -211,7 +241,7 @@ public class SoundManager : MonoBehaviour
 
     void checkLobbyBtn()
     {
-        if (isLobby == (-3))
+        if (isLobby == 1)
         {
             if (isFuncOn == (-1))
             {
@@ -238,10 +268,5 @@ public class SoundManager : MonoBehaviour
 
         PlayerPrefs.SetInt("isShop", 0);
         PlayerPrefs.Save();
-    }
-
-    public void resetAccount()
-    {
-        
     }
 }

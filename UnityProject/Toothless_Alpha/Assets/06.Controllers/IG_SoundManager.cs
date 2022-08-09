@@ -15,6 +15,7 @@ public class IG_SoundManager : MonoBehaviour
     //public AudioSource BGM;
     public AudioSource audioSource1;
     public AudioSource audioSource2;
+    public AudioSource audioSource3;
     //오디오 목록
 
     //public AudioType BGMList;
@@ -27,6 +28,7 @@ public class IG_SoundManager : MonoBehaviour
         //BGM = gameObject.AddComponent<AudioSource>();
         audioSource1 = gameObject.AddComponent<AudioSource>();
         audioSource2 = gameObject.AddComponent<AudioSource>();
+        audioSource3 = gameObject.AddComponent<AudioSource>();
     }
 
     void Update()
@@ -51,6 +53,21 @@ public class IG_SoundManager : MonoBehaviour
     }
 
     public void PlayAudio2(string name)
+    {
+        if (isSoundOn == 0)
+            return;
+
+        for (int i = 0; i < AudioList.Length; i++)
+        {
+            if (AudioList[i].name.Equals(name))
+            {
+                audioSource2.clip = AudioList[i].audio;
+                audioSource2.Play();
+            }
+        }
+    }
+
+    public void PlayAudio3(string name)
     {
         if (isSoundOn == 0)
             return;

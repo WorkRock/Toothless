@@ -30,7 +30,10 @@ public class Shield : MonoBehaviour
 
     void ShieldTrigger()
     {
-        soundManager.PlayAudio2("Parrying");
+        int ran = Random.Range(0, 3);
+        
+        soundManager.PlayAudio2("Parrying_" + ran);
+
         Time.timeScale = 0.1f;
         CutScene.SetActive(true);
         Invoke("OnRealTime", 0.06f);
