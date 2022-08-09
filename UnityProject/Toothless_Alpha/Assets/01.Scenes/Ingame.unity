@@ -348,13 +348,13 @@ MonoBehaviour:
   fdt: 0
   nowStage: 0
   Obj_ATK_TotalDelay: 0
-  BasicDefaultObj_ATKDelay: 4
+  BasicDefaultObj_ATKDelay: 1.2
   maxObj_ATKDelay: 1.2
   Total__ComObj_Speed: 0
-  BasicDefault_ComObj_Speed: 5
+  BasicDefault_ComObj_Speed: 12
   max_ComObj_Speed: 12
   Total__ComAtk_Speed: 0
-  BasicDefault_ComAtk_Speed: 5
+  BasicDefault_ComAtk_Speed: 12
   max_ComAtk_Speed: 12
   ranPoint: 0
   ranObj: 0
