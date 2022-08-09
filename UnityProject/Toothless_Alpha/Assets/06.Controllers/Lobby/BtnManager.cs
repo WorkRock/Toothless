@@ -6,77 +6,45 @@ using UnityEngine.SceneManagement;
 
 public class BtnManager : MonoBehaviour
 {
-    /*
-    private static BtnManager instance = null;
+    [Header("LobbyAudioSource")]
+    [SerializeField] private AudioSource[] audioSources;
 
-    void Awake()
-    {
-        if (null == instance)
-        {
-            //이 클래스 인스턴스가 탄생했을 때 전역변수 instance에 게임매니저 인스턴스가 담겨있지 않다면, 자신을 넣어준다.
-            instance = this;
-
-            //씬 전환이 되더라도 파괴되지 않게 한다.
-            //gameObject만으로도 이 스크립트가 컴포넌트로서 붙어있는 Hierarchy상의 게임오브젝트라는 뜻이지만, 
-            //나는 헷갈림 방지를 위해 this를 붙여주기도 한다.
-            DontDestroyOnLoad(this.gameObject);
-        }
-        else
-        {
-            //만약 씬 이동이 되었는데 그 씬에도 Hierarchy에 GameMgr이 존재할 수도 있다.
-            //그럴 경우엔 이전 씬에서 사용하던 인스턴스를 계속 사용해주는 경우가 많은 것 같다.
-            //그래서 이미 전역변수인 instance에 인스턴스가 존재한다면 자신(새로운 씬의 GameMgr)을 삭제해준다.
-            Destroy(this.gameObject);
-        }
-    }
-
-    public static BtnManager Instance
-    {
-        get
-        {
-            if (null == instance)
-            {
-                return null;
-            }
-            return instance;
-        }
-    }
-    */
-
-    // public SoundManager soundManager;
-    
-    // 기본 로비 배경 
-    public GameObject UI_Lobby;
-
+    [Header("LobbyIntro")]
     // 로비 입장 전 인트로 사용 리소스
     public GameObject OutLobbyText;
     public GameObject IntroBG;
     public GameObject IntroLogo;
 
+    [Header("InLobby")]
+    // 기본 로비 배경 
+    public GameObject UI_Lobby;
 
+    [Header("Lobby_Func")]
     // 로비 각 기능별 부모 객체
     public GameObject UI_Lobby_Info;
     public GameObject UI_Lobby_Shop;
     public GameObject UI_Lobby_Credit;
     public GameObject UI_Lobby_Option;
 
+    [Header("Sound ON / OFF")]
     // Option : 소리 On / Off 아이콘
     public GameObject SoundOn;
     public GameObject SoundOff;
 
+    [Header("Account Reset")]
     // 계정 초기화 관련
     public GameObject Warning;
     public GameObject WarnParent;
     public GameObject ResetGame;
 
+    [Header("Escape Game")]
     // 게임 종료 관련
     public GameObject EscapeGame;
 
     // Lobby인지를 체크하는 bool 변수
     public bool isLobby;
 
-
-    private int isSoundOn;
+    private bool isSoundOn;
     public bool isFuncOn;
     public bool isInfoOn;
     public bool isShopOn;
@@ -87,18 +55,30 @@ public class BtnManager : MonoBehaviour
 
     public GameObject Func;
 
-
-    void Start()
-    {
-        isSoundOn = PlayerPrefs.GetInt("isSoundOn");
-    }
-
     // Update is called once per frame
     void Update()
     {
+        isSoundOn = ScoreManager.GetIsSoundOn();
+
         switch (checkSceneName())
         {
             case "Lobby":
+
+            if(isSoundOn)
+            {
+                    for(int i = 0; i < audioSources.Length; i++)
+                {
+                    audioSources[i].mute = false;
+                }
+            }
+
+            else
+            {
+                for(int i = 0; i < audioSources.Length; i++)
+                {
+                    audioSources[i].mute = true;
+                }
+                }
                 if (!isLobby)
                 {
                     inLobby();
@@ -120,10 +100,6 @@ public class BtnManager : MonoBehaviour
                 isLobby = false;
                 break;
         }
-        if (checkSceneName() == "Lobby")
-        {
-
-        }
     }
 
     public string checkSceneName()
@@ -136,18 +112,18 @@ public class BtnManager : MonoBehaviour
     {
         if (Input.anyKeyDown)
         {
-            PlayerPrefs.SetInt("isLobby",1);
+            SoundManager.Instance.PlaySound_01("NorBtn");
+            ScoreManager.SetIsLobby(true);
             PlayerPrefs.Save();
             isLobby = true;
             IntroBG.SetActive(false);
             IntroLogo.SetActive(false);
             OutLobbyText.SetActive(false);
             UI_Lobby.SetActive(true);
-            
-            //Debug.Log("isLobby = -3");
         }
-
     }
+
+
 
 
     public void funcOn()
@@ -180,7 +156,7 @@ public class BtnManager : MonoBehaviour
             PlayerPrefs.SetInt("isDragonDie",-1);
             PlayerPrefs.Save();
 
-            if (isSoundOn == 0)
+            if (!isSoundOn)
             {
                 SoundOff.SetActive(true);
                 SoundOn.SetActive(false);
@@ -247,18 +223,16 @@ public class BtnManager : MonoBehaviour
 
     public void optionFunc()
     {
-        if (isSoundOn == 1)
+        if (isSoundOn)
         {
-            isSoundOn = 0;
+            ScoreManager.SetIsSoundOn(false);
         }
 
         else
         {
-            isSoundOn = 1;
+            ScoreManager.SetIsSoundOn(true);
         }
 
-        PlayerPrefs.SetInt("isSoundOn", isSoundOn);
-        PlayerPrefs.Save();
     }
 
 
@@ -266,6 +240,7 @@ public class BtnManager : MonoBehaviour
     {
         //isLobby = false;
         Time.timeScale = 1.0f;
+
         PlayerPrefs.SetInt("Stage",1);
         PlayerPrefs.SetInt("isDragonDie",1);
         PlayerPrefs.Save();
@@ -275,9 +250,10 @@ public class BtnManager : MonoBehaviour
     public void goLobby()
     {
         //isLobby = true;
+
         Time.timeScale = 1.0f;
-        PlayerPrefs.SetInt("isLobby",0);
-        PlayerPrefs.Save();
+        
+        ScoreManager.SetIsLobby(false);
 
         SceneManager.LoadScene("Lobby");
     }
@@ -301,6 +277,7 @@ public class BtnManager : MonoBehaviour
             PlayerPrefs.SetInt("AtkUG", 1);
             PlayerPrefs.SetInt("Exp", 0);
             PlayerPrefs.SetInt("Coin", 0);
+            PlayerPrefs.SetInt("BStage",0);
             PlayerPrefs.Save();
             FuncExit();
             WarnParent.SetActive(false);

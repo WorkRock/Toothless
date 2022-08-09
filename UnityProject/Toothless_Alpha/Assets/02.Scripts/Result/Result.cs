@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Result : MonoBehaviour
 {
+    [SerializeField] private AudioSource audioSource;
+
     public Text LastStage;
     public Text BestStage;
     public Text GetCoin;
@@ -43,9 +46,21 @@ public class Result : MonoBehaviour
     public int maxGetCoin;
 
 
+    private bool isSoundOn;
+
+    private bool isBtnClicked;
+
+
     // Start is called before the first frame update
     void Start()
     {
+        isSoundOn = ScoreManager.GetIsSoundOn();
+
+        if(isSoundOn)
+            audioSource.mute = false;
+        else
+            audioSource.mute = true;
+
         playerLastStage = PlayerPrefs.GetInt("Stage");
         playerBestStage = PlayerPrefs.GetInt("BStage");
         playerNowExp = PlayerPrefs.GetInt("Exp");
@@ -134,5 +149,27 @@ public class Result : MonoBehaviour
         {
             totalGetCoin = maxGetCoin;
         }
+    }
+
+     public void GameStart()
+    {
+        //isLobby = false;
+        Time.timeScale = 1.0f;
+
+        PlayerPrefs.SetInt("Stage",1);
+        PlayerPrefs.SetInt("isDragonDie",1);
+        PlayerPrefs.Save();
+        SceneManager.LoadScene("Ingame");
+    }
+
+    public void goLobby()
+    {
+        //isLobby = true;
+
+        Time.timeScale = 1.0f;
+        
+        ScoreManager.SetIsLobby(false);
+
+        SceneManager.LoadScene("Lobby");
     }
 }

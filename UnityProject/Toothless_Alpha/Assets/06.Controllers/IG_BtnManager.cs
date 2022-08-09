@@ -89,6 +89,7 @@ public class IG_BtnManager : MonoBehaviour
         PlayerPrefs.SetInt("isLobby", 0);
         PlayerPrefs.Save();
 
+        
         SceneManager.LoadScene("Lobby");
     }
 
