@@ -5,47 +5,20 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class Player_Move : MonoBehaviour
-{
-    //인게임 사운드 매니저
-    public IG_SoundManager soundManager;
-    //UI 관련
+{   
+    [Header ("UI")]
     //게임오버
     public GameObject GameOverImg;
-
     //플레이어 체력바
     public Slider Player_HPBar;
-
-    //플레이어 쉴드 오브젝트 연결
-    public GameObject[] playerShield;
-
-    //쉴드 쿨타임
-    public Image ShieldCoolTime;
-    public Text ShieldCoolTimeText;
-
-    //쉴드 딜레이
-    public float curDelay = 0f; // 현재 쉴드 소모 시간
-    public float maxDelay = 1f; // 쉴드 유지 시간 max
-    public float curShieldDelay; // 현재 쉴드 쿨타임
-    public float maxShieldDelay; // 쉴드 쿨타임 max
-    public bool isShieldOn;
-
-    //쉴드 업그레이드(업그레이드 비례)
-    public float BasicDefaultShieldDelay = 3;
-    public float EditPlusShieldDelay = 0.45f;
-    public float EditCorAtkUGSD = 10;
-
-    //Dragon_Atk 클래스 객체 생성
-    public Dragon_Atk dragon;
-    //Obstacle 클래스 객체 생성
-    public Obstacle obstacle;
-    //게임매니저
-    public gameManager gameManager;
-
-    //이동할 위치 배열로 선언
-    public GameObject[] targetPos;
-
+    //플레이어 필살기
+    //public Slider Player_SpecialBar;
     //쉴드 이미지 UI
     public GameObject[] shieldImgs;
+
+    [Header("Player")]
+    //이동할 위치 배열로 선언
+    public GameObject[] targetPos;
 
     //플레이어의 콜라이더 연결
     public CapsuleCollider2D capsuleCollider2D;
@@ -53,56 +26,103 @@ public class Player_Move : MonoBehaviour
     //무적상태일 때 플레이어 흐리게
     public SpriteRenderer spriteRenderer;
 
-    public int playerShieldNum;
-    private int onShieldNum;
-
     //이동 속도
-    public float playerSpeed;
+    private float playerSpeed = 0.2f;
     //이동 방향(-1 or 1)
-    public float fHor;
+    private float fHor;
 
     //위치 인덱스 : 3
     private int minPos; //0
     private int nowPos; //1
     private int maxPos; //2
 
-    //함수 관련
+    [Space(10f)]
+    [Header("Shield")]
+    //플레이어 쉴드 오브젝트 연결
+    public GameObject[] playerShield;
+    //쉴드 쿨타임
+    public Image ShieldCoolTime;
+    public Text ShieldCoolTimeText;
+
+    [Space(10f)]
+    //쉴드 딜레이
+    public float curDelay = 0f; // 현재 쉴드 소모 시간
+    public float maxDelay = 1f; // 쉴드 유지 시간 max
+    public float curShieldDelay; // 현재 쉴드 쿨타임
+    public float maxShieldDelay; // 쉴드 쿨타임 max
+    private bool isShieldOn;
+
+    //쉴드 업그레이드(업그레이드 비례)
+    private float BasicDefaultShieldDelay = 3;
+    private float EditPlusShieldDelay = 0.45f;
+    private float EditCorAtkUGSD = 10;
+    
+    private int playerShieldNum;
+    private int onShieldNum;
+
+    [Header ("Player Func")]
     // 플레이어 공통
     public int nowLevel;
 
+    [Header("HP")]
     // 1. 플레이어 HP(레벨 & 업그레이드)
     //플레이어 체력
     public int Player_TotalHP;
     public int Player_NowHP;
+    
+    [Space(10f)]
     public int BasicDefaultHp;
     public int BasicPlusHp;
+    
+    [Space(10f)]
     public int EditDefaultHp;
     public int EditPlusHp;
+
+    [Space(10f)]
     public int BasicCorLevel_HP;               //보정레벨_기본 : 0
     public int EditCorLevel_HP;                //보정레벨_보정값 : 10
+
+    [Space(10f)]
     public int maxHp;
 
+    [Header("Atk")]
     // 2. 플레이어 공격력(레벨 & 업그레이드)
     public float Player_TotalAtk;
     public int BasicDefaultPlayer_Atk;      //기본_Default : 30
     public int BasicPlusPlayer_Atk;         //기본_가중치 : 0
+
+    [Space(10f)]
     public int EditDefaultPlayer_Atk;       //보정값_Default : 0
     public int EditPlusPlayer_Atk;          //보정값_가중치 : 15
+
+    [Space(10f)]
     public int BasicCorLevel_Atk;           //보정레벨_기본 : 0
     public int EditCorLevel_Atk;            //보정레벨_보정값 : 10
+
+    [Space(10f)]
     public int maxPlayer_Atk;               //최대(or최소)값 : 500
 
+    [Header("AtkUG")]
     // 3. 플레이어 공격력 업그레이드
     public float totalUGDMG;
-    public int atkUGLevel;  //PlayerPrefs
+    public int atkUGLevel;
 
+    [Space(10f)]
     public float BasicDefaultUGDMG;
     public float BasicPlusUGDMG;
+
+    [Space(10f)]
     public float EditDefaultUGDMG;
     public float EditPlusUGDMG;
+
+    [Space(10f)]
     public int BasicCorUGDMGLevel;
     public int EditCorUGDMGLevel;
+    [Space(10f)]
     public float maxUGDMG;
+
+    //인게임 사운드 매니저
+    public IG_SoundManager soundManager;
 
     // 4. 장애물 공격력 함수
     //최종 공격력
@@ -205,7 +225,6 @@ public class Player_Move : MonoBehaviour
             ShieldCoolTimeText.enabled = true;
             ShieldCoolTimeText.text = (maxShieldDelay - curShieldDelay).ToString("F1");
         }
-            
 
         // 체력바 조정(슬라이더 밸류값으로 조정)
         Player_HPBar.value = Player_NowHP / (float)Player_TotalHP;

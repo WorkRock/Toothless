@@ -8,6 +8,8 @@ public class Dragon : MonoBehaviour
     //인게임 사운드 매니저
     public IG_SoundManager soundManager;
 
+    public gameManager gameManager;
+
     //Player_Atk 클래스 객체 생성
     public Player_Move player;
 
@@ -73,6 +75,10 @@ public class Dragon : MonoBehaviour
     {
         if(collision.gameObject.tag.Equals("Player_Atk"))
         {
+            //필살기 게이지+
+            gameManager.Player_NowSpecial += 1;
+            gameManager.Player_SpecialBar.value += 0.1f;
+
             //폭발 효과
             soundManager.PlayAudio3("Explosion");
             isHit = true;

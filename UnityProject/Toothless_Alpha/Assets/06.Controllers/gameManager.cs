@@ -5,6 +5,14 @@ using UnityEngine.UI;
 
 public class gameManager : MonoBehaviour
 {
+    //플레이어 필살기
+    public Slider Player_SpecialBar;
+    public int Player_TotalSpecial;
+    public int Player_NowSpecial;
+
+    //드래곤
+    public GameObject[] Dragons;
+
     //인게임 사운드 매니저
     public IG_SoundManager soundManager;
 
@@ -48,48 +56,51 @@ public class gameManager : MonoBehaviour
     //스테이지 정보
     public int nowStage;
 
+
+    [Header("Delay")]
     // 1. 장애물, 드래곤볼 생성 주기 함수 관련
     //장애물, 드래곤볼 최종 딜레이
-    public float Obj_ATK_TotalDelay;
-    
-    public float BasicDefaultObj_ATKDelay;
-    private float BasicPlusObj_ATKDelay;
-    private float EditDefaultObj_ATKDelay;
-    private float EditPlusObj_ATKDelay;
-    public float maxObj_ATKDelay;
-    private int BasicCorStage_Obj;
-    private int EditCorStage_Obj;
+    public float Obj_ATK_TotalDelay;        
+    public float BasicDefaultObj_ATKDelay;  //기본_Default : 4
+    public float BasicPlusObj_ATKDelay;     //기본_가중치 : 0.1
+    public float EditDefaultObj_ATKDelay;   //보정값_Default : 0
+    public float EditPlusObj_ATKDelay;      //보정값_가중치 : 0.5
+    public float maxObj_ATKDelay;           //최소 : 1.2
+    public int BasicCorStage_Obj;           //보정스테이지_기본 : 0
+    public int EditCorStage_Obj;            //보정스테이지_보정값 : 5
 
+    [Space (10f)]
     // 2. 장애물, 드래곤 볼 속도 함수 관련
+    [Header("Obstacle Speed")]
     //장애물
     //최종 장애물 속도
     public float Total__ComObj_Speed;
-
     public float BasicDefault_ComObj_Speed; //기본_Default : 5
-    private float BasicPlus_ComObj_Speed;    //기본_가중치 : 0
-    private float EditDefault_ComObj_Speed;  //보정값_Default : 0
-    private float EditPlus_ComObj_Speed;     //보정값_가중치 : 1.5
-    private int BasicCorStage_ComObj_Speed;  //보정스테이지_기본 : 0
-    private int EditCorStage_ComObj_Speed;   //보정스테이지_보정값 : 10
+    public float BasicPlus_ComObj_Speed;    //기본_가중치 : 0
+    public float EditDefault_ComObj_Speed;  //보정값_Default : 0
+    public float EditPlus_ComObj_Speed;     //보정값_가중치 : 1.5
+    public int BasicCorStage_ComObj_Speed;  //보정스테이지_기본 : 0
+    public int EditCorStage_ComObj_Speed;   //보정스테이지_보정값 : 10
     public float max_ComObj_Speed;          //최대(or최소)값 : 15
 
+    [Space (10f)]
+    [Header("DragonBall Speed")]
     //드래곤 볼
     //최종 드래곤볼 속도
     public float Total__ComAtk_Speed;
-
     public float BasicDefault_ComAtk_Speed; //기본_Default : 5
-    private float BasicPlus_ComAtk_Speed;    //기본_가중치 : 0
-    private float EditDefault_ComAtk_Speed;  //보정값_Default : 0
-    private float EditPlus_ComAtk_Speed;     //보정값_가중치 : 1.5
-    private int BasicCorStage_ComAtk_Speed;  //보정스테이지_기본 : 0
-    private int EditCorStage_ComAtk_Speed;   //보정스테이지_보정값 : 10
+    public float BasicPlus_ComAtk_Speed;    //기본_가중치 : 0
+    public float EditDefault_ComAtk_Speed;  //보정값_Default : 0
+    public float EditPlus_ComAtk_Speed;     //보정값_가중치 : 1.5
+    public int BasicCorStage_ComAtk_Speed;  //보정스테이지_기본 : 0
+    public int EditCorStage_ComAtk_Speed;   //보정스테이지_보정값 : 10
     public float max_ComAtk_Speed;          //최대(or최소)값 : 15
 
     //랜덤 생성
-    public int ranPoint;    //위치 
-    public int ranObj;      //장애물의 랜덤 좌표
-    public int ranAtk;      //드래곤볼의 랜덤 좌표
-    public int ranBall;     //드래곤볼 랜덤 종류
+    private int ranPoint;    //위치 
+    private int ranObj;      //장애물의 랜덤 좌표
+    private int ranAtk;      //드래곤볼의 랜덤 좌표
+    private int ranBall;     //드래곤볼 랜덤 종류
 
     //타겟위치로 자연스럽게 커지면서 이동하기 위해 타겟설정
     public GameObject[] ObjTargetPoints;
@@ -122,13 +133,27 @@ public class gameManager : MonoBehaviour
         PlayerPrefs.SetInt("isDragonDie", 1);
         PlayerPrefs.SetInt("Stage", 1);
         PlayerPrefs.Save();
+
+        //필살기 게이지 초기화
+        
+        Player_SpecialBar.value = 0f;
+        Player_TotalSpecial = 10;
+        Player_NowSpecial = 0;
     }
 
     void Update()
     {
+        //필살기
+        if(Player_NowSpecial == 10 && Player_SpecialBar.value == 1.0f)
+        {
+            if(Input.GetKeyDown(KeyCode.Z))
+            {
+                SpecialAtk();
+            }
+        }
+
         if(Eye_Atk.activeSelf || Mouse_Atk.activeSelf)
         {
-            Debug.Log("fdt_Anim" + fdt_Anim);
             fdt_Anim += Time.deltaTime;
 
             if(fdt_Anim > 0.5f)
@@ -432,33 +457,36 @@ public class gameManager : MonoBehaviour
     //장애물, 드래곤볼 생성 주기 함수
     void Obj_ATK_TotalDelayCal()
     {
-        if (nowStage == 1)
-            return;
-        //최종 장애물 딜레이
-        if (BasicDefaultObj_ATKDelay - EditDefaultObj_ATKDelay <= maxObj_ATKDelay)
+
+        if (((BasicDefaultObj_ATKDelay - ((nowStage - 1) * BasicPlusObj_ATKDelay)) - 
+                EditDefaultObj_ATKDelay - Mathf.FloorToInt((nowStage - 1) / (float)EditCorStage_Obj) * EditPlusObj_ATKDelay) <= maxObj_ATKDelay)
             Obj_ATK_TotalDelay = maxObj_ATKDelay;
         else
-            Obj_ATK_TotalDelay = BasicDefaultObj_ATKDelay - (((nowStage - 1) * BasicPlusObj_ATKDelay) + (Mathf.FloorToInt((nowStage - 1) / (float)EditCorStage_Obj) * EditPlusObj_ATKDelay));
+            Obj_ATK_TotalDelay = ((BasicDefaultObj_ATKDelay - ((nowStage - 1) * BasicPlusObj_ATKDelay)) -
+                EditDefaultObj_ATKDelay - Mathf.FloorToInt((nowStage - 1) / (float)EditCorStage_Obj) * EditPlusObj_ATKDelay);
+}
 
-    }
-
-    //장애물, 드래곤볼 속도 증가 함수
+    // 4. 장애물 속도
     void Total__ComObj_SpeedCal()
     {
-        if (BasicDefault_ComObj_Speed + EditDefault_ComObj_Speed > max_ComObj_Speed)
+        if (((BasicDefault_ComObj_Speed + ((nowStage - 1) * BasicPlus_ComObj_Speed)) +
+                            EditDefault_ComObj_Speed + Mathf.FloorToInt((nowStage - 1) / EditCorStage_ComObj_Speed) * EditPlus_ComObj_Speed) >= max_ComObj_Speed)
             Total__ComObj_Speed = max_ComObj_Speed;
         else
-            Total__ComObj_Speed = BasicDefault_ComObj_Speed + ((nowStage - 1) * EditDefault_ComObj_Speed);
+            Total__ComObj_Speed = ((BasicDefault_ComObj_Speed + ((nowStage - 1) * BasicPlus_ComObj_Speed)) +
+                            EditDefault_ComObj_Speed + Mathf.FloorToInt((nowStage - 1) / EditCorStage_ComObj_Speed) * EditPlus_ComObj_Speed);
     }
 
+    // 5. 드래곤볼 속도
     void Total__ComAtk_SpeedCal()
     {
-        if (BasicDefault_ComAtk_Speed + EditDefault_ComAtk_Speed > max_ComAtk_Speed)
+        if (((BasicDefault_ComAtk_Speed + ((nowStage - 1) * BasicPlus_ComAtk_Speed)) +
+                            EditDefault_ComAtk_Speed + Mathf.FloorToInt((nowStage - 1) / EditCorStage_ComAtk_Speed) * EditPlus_ComAtk_Speed) >= max_ComAtk_Speed)
             Total__ComAtk_Speed = max_ComAtk_Speed;
         else
-            Total__ComAtk_Speed = BasicDefault_ComAtk_Speed + ((nowStage - 1) * EditDefault_ComAtk_Speed);
+            Total__ComAtk_Speed = ((BasicDefault_ComAtk_Speed + ((nowStage - 1) * BasicPlus_ComAtk_Speed)) +
+                            EditDefault_ComAtk_Speed + Mathf.FloorToInt((nowStage - 1) / EditCorStage_ComAtk_Speed) * EditPlus_ComAtk_Speed);
     }
-
 
     //애니메이션 끄기
     void OffAtkAnim()
@@ -487,5 +515,20 @@ public class gameManager : MonoBehaviour
         Alert_Left.SetActive(false);
         Alert_Center.SetActive(false);
         Alert_Right.SetActive(false);
+    }
+
+    //플레이어 필살기
+    void SpecialAtk()
+    {
+        for(int i = 0; i < 30; i++)
+        {
+            if (newAtkObj.activeSelf == true || newObstacle.activeSelf == true)
+            {
+                newAtkObj.SetActive(false);
+                newObstacle.SetActive(false);
+            }
+        }
+        Player_NowSpecial = 0;
+        Player_SpecialBar.value = 0f;
     }
 }
