@@ -325,40 +325,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c07286ca0ca0e1745b198c064ffa6138, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soundManager: {fileID: 1271348027}
+  objectManager: {fileID: 811279609}
   Player_SpecialBar: {fileID: 873274326}
   Player_TotalSpecial: 10
   Player_NowSpecial: 0
-  Dragons: []
-  soundManager: {fileID: 1271348027}
-  cutScene: {fileID: 0}
+  WhiteBG: {fileID: 953759582}
+  Dragons:
+  - {fileID: 1586352015}
+  - {fileID: 1459464199}
+  - {fileID: 397885723}
+  - {fileID: 1309111908}
+  - {fileID: 1795666243}
+  - {fileID: 947408987}
+  - {fileID: 1026343315}
+  Eye_Atk: {fileID: 1808457146}
+  Mouse_Atk: {fileID: 1204009994}
+  Eye_Hit: {fileID: 303309909}
+  isDragonDie: 0
+  Explosion: {fileID: 1324796953}
   Alert_Left: {fileID: 179359126}
   Alert_Center: {fileID: 154111189}
   Alert_Right: {fileID: 635211572}
   ReadyImg: {fileID: 1834802091}
   GoImg: {fileID: 931005903}
-  Dragon_Blue: {fileID: 1586352015}
-  Dragon_Green: {fileID: 1459464199}
-  Dragon_Pink: {fileID: 397885723}
-  Dragon_Purple: {fileID: 1309111908}
-  Dragon_Black: {fileID: 1795666243}
-  Dragon_Red: {fileID: 947408987}
-  Dragon_Yellow: {fileID: 1026343315}
-  objectManager: {fileID: 811279609}
   SpawnPoints:
   - {fileID: 615991646}
   - {fileID: 1642843914}
   - {fileID: 627197459}
   fdt_Dragon: 0
   fdt: 0
+  fdt_Anim: 0
   nowStage: 0
   Obj_ATK_TotalDelay: 0
   BasicDefaultObj_ATKDelay: 5
   BasicPlusObj_ATKDelay: 0.1
   EditDefaultObj_ATKDelay: 0
   EditPlusObj_ATKDelay: 0.5
-  maxObj_ATKDelay: 1.2
   BasicCorStage_Obj: 0
   EditCorStage_Obj: 10
+  maxObj_ATKDelay: 1.2
   Total__ComObj_Speed: 0
   BasicDefault_ComObj_Speed: 5
   BasicPlus_ComObj_Speed: 0
@@ -379,11 +385,6 @@ MonoBehaviour:
   - {fileID: 2010311840}
   - {fileID: 1581330950}
   - {fileID: 1307340849}
-  Explosion: {fileID: 1324796953}
-  isDragonDie: 0
-  Eye_Atk: {fileID: 1808457146}
-  Mouse_Atk: {fileID: 1204009994}
-  Eye_Hit: {fileID: 303309909}
 --- !u!4 &33298478
 Transform:
   m_ObjectHideFlags: 0
@@ -2425,6 +2426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e79f9446c3ec8b41b77fa72881b3b8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soundManager: {fileID: 1271348027}
   GameOverImg: {fileID: 17244232}
   Player_HPBar: {fileID: 982731330}
   shieldImgs:
@@ -2432,6 +2434,8 @@ MonoBehaviour:
   - {fileID: 508874392}
   - {fileID: 1315273122}
   - {fileID: 522311658}
+  ShieldCoolTime: {fileID: 418107414}
+  ShieldCoolTimeText: {fileID: 1056650857}
   targetPos:
   - {fileID: 2010311840}
   - {fileID: 1581330950}
@@ -2443,8 +2447,6 @@ MonoBehaviour:
   - {fileID: 1449066860}
   - {fileID: 627795105}
   - {fileID: 1107756607}
-  ShieldCoolTime: {fileID: 418107414}
-  ShieldCoolTimeText: {fileID: 1056650857}
   curDelay: 0
   maxDelay: 1
   curShieldDelay: 0
@@ -2476,7 +2478,7 @@ MonoBehaviour:
   BasicCorUGDMGLevel: 1
   EditCorUGDMGLevel: 5
   maxUGDMG: 3
-  soundManager: {fileID: 1271348027}
+  nowStage: 0
   Total_ComObj_Atk: 0
   BasicDefault_ComObj_Atk: 40
   BasicPlus_ComObj_Atk: 2
@@ -2493,7 +2495,6 @@ MonoBehaviour:
   BasicCorStage_ComAtk_Atk: 0
   EditCorStage_ComAtk_Atk: 10
   max_ComAtk_Atk: 99999
-  nowStage: 0
 --- !u!1 &614474295
 GameObject:
   m_ObjectHideFlags: 0
@@ -2670,7 +2671,6 @@ MonoBehaviour:
   objectManager: {fileID: 811279609}
   dragonPos: {fileID: 866872746}
   CutScene: {fileID: 944352006}
-  isSamePos: 0
 --- !u!70 &627795107
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -4610,6 +4610,80 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 777190543}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &953759582
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 953759583}
+  - component: {fileID: 953759586}
+  - component: {fileID: 953759585}
+  m_Layer: 5
+  m_Name: WhiteBG
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &953759583
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 953759582}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2000056222}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 720, y: 1280}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &953759585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 953759582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &953759586
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 953759582}
+  m_CullTransparentMesh: 0
 --- !u!1 &963469394
 GameObject:
   m_ObjectHideFlags: 0
@@ -5219,7 +5293,6 @@ MonoBehaviour:
   objectManager: {fileID: 811279609}
   dragonPos: {fileID: 866872746}
   CutScene: {fileID: 944352006}
-  isSamePos: 0
 --- !u!1 &1107756607
 GameObject:
   m_ObjectHideFlags: 0
@@ -5256,7 +5329,6 @@ MonoBehaviour:
   objectManager: {fileID: 811279609}
   dragonPos: {fileID: 866872746}
   CutScene: {fileID: 944352006}
-  isSamePos: 0
 --- !u!70 &1107756609
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -6635,7 +6707,6 @@ MonoBehaviour:
   objectManager: {fileID: 811279609}
   dragonPos: {fileID: 866872746}
   CutScene: {fileID: 944352006}
-  isSamePos: 0
 --- !u!70 &1449066862
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -8738,6 +8809,7 @@ RectTransform:
   - {fileID: 1373535904}
   - {fileID: 1430617408}
   - {fileID: 944352007}
+  - {fileID: 953759583}
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

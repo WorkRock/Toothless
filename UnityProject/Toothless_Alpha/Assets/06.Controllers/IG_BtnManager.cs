@@ -11,7 +11,6 @@ public class IG_BtnManager : MonoBehaviour
     public GameObject GoLobby;
     public GameObject GoLobbyParent;
 
-
     private int isSoundOn;
 
     public GameObject SoundOn;
@@ -104,8 +103,11 @@ public class IG_BtnManager : MonoBehaviour
             return;
 
         Time.timeScale = 0.0f;
-        EscapeGame.SetActive(true);
-
+        //EscapeGame.SetActive(true);
+        //이 밑으로 추가한 부분
+        Func.SetActive(true);
+        isFuncOn = true;
+        Time.timeScale = 0.0f;
     }
 
     public void escapeGame_Yes()

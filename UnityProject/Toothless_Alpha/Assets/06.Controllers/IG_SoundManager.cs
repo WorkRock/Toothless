@@ -5,27 +5,25 @@ using UnityEngine;
 public class IG_SoundManager : MonoBehaviour
 {
     //오디오 타입 구조체 선언
-    [System.Serializable]
+    [System.Serializable]   //구조체를 인스펙터에 보이게 함
     public struct AudioType
     {
         public string name;
         public AudioClip audio;
     }
 
-    //public AudioSource BGM;
     public AudioSource audioSource1;
     public AudioSource audioSource2;
     public AudioSource audioSource3;
-    //오디오 목록
 
-    //public AudioType BGMList;
+    //오디오 목록
     public AudioType[] AudioList;
 
     public int isSoundOn;
    
     void Start()
     {
-        //BGM = gameObject.AddComponent<AudioSource>();
+        //소리 겹침 방지하기 위해 오디오 소스3 까지 사용
         audioSource1 = gameObject.AddComponent<AudioSource>();
         audioSource2 = gameObject.AddComponent<AudioSource>();
         audioSource3 = gameObject.AddComponent<AudioSource>();
@@ -33,15 +31,18 @@ public class IG_SoundManager : MonoBehaviour
 
     void Update()
     {
+        //게임 사운드 on/off 여부 지속적으로 체크
         isSoundOn = PlayerPrefs.GetInt("isSoundOn");
     }
 
 
     public void PlayAudio(string name)
     {
+        //사운드 off 상태이면 return
         if (isSoundOn == 0)
             return;
 
+        //사운드 on 이면 실행
         for(int i = 0; i < AudioList.Length; i++)
         {
             if(AudioList[i].name.Equals(name))
