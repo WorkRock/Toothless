@@ -51,6 +51,8 @@ public class BtnManager : MonoBehaviour
     public bool isCreditOn;
     public bool isOptionOn;
 
+    private bool isExitOn;
+
     public string sceneName;
 
     public GameObject Func;
@@ -66,7 +68,7 @@ public class BtnManager : MonoBehaviour
 
             if(isSoundOn)
             {
-                    for(int i = 0; i < audioSources.Length; i++)
+                for(int i = 0; i < audioSources.Length; i++)
                 {
                     audioSources[i].mute = false;
                 }
@@ -87,7 +89,7 @@ public class BtnManager : MonoBehaviour
                 else
                 {
                     funcOn();
-                    escapeGame();
+                    EnterOptionToEsc();
                 }
                 break;
 
@@ -130,6 +132,7 @@ public class BtnManager : MonoBehaviour
     {
         if (isInfoOn)
         {
+            
             UI_Lobby_Info.SetActive(true);
             PlayerPrefs.SetInt("isDragonDie",-1);
             PlayerPrefs.Save();
@@ -137,6 +140,7 @@ public class BtnManager : MonoBehaviour
 
         else if (isShopOn)
         {
+
             UI_Lobby_Shop.SetActive(true);
             PlayerPrefs.SetInt("isDragonDie",-1);
             PlayerPrefs.Save();
@@ -145,6 +149,7 @@ public class BtnManager : MonoBehaviour
 
         else if (isCreditOn)
         {
+
             UI_Lobby_Credit.SetActive(true);
             PlayerPrefs.SetInt("isDragonDie",-1);
             PlayerPrefs.Save();
@@ -152,6 +157,7 @@ public class BtnManager : MonoBehaviour
 
         else if (isOptionOn)
         {
+
             UI_Lobby_Option.SetActive(true);
             PlayerPrefs.SetInt("isDragonDie",-1);
             PlayerPrefs.Save();
@@ -216,6 +222,17 @@ public class BtnManager : MonoBehaviour
     }
     public void EnterOption()
     {
+        isFuncOn = true;
+        isOptionOn = true;
+        Func.SetActive(true);
+    }
+
+    public void EnterOptionToEsc()
+    {
+        if(!Input.GetKeyDown(KeyCode.Escape))
+            return;
+        
+        SoundManager.Instance.PlaySound_02("Lobby_MenuIn");
         isFuncOn = true;
         isOptionOn = true;
         Func.SetActive(true);
@@ -295,25 +312,29 @@ public class BtnManager : MonoBehaviour
 
     public void escapeGame()
     {
-        if(!Input.GetKeyDown(KeyCode.Escape))
-            return;
-
-        Time.timeScale = 0.0f;
-        EscapeGame.SetActive(true);
-        
+        if(!isExitOn)
+        {
+            isExitOn = true;
+            Time.timeScale = 0.0f;
+            EscapeGame.SetActive(true);
+        }
     }
 
     public void escapeGame_Yes()
     {
         # if UNITY_EDITOR
+            SoundManager.Instance.PlaySound_01("NorBtn");
             UnityEditor.EditorApplication.isPlaying = false;
         # else 
+            SoundManager.Instance.PlaySound_01("NorBtn");
             Application.Quit();
         # endif
     }
 
     public void escapeGame_No()
     {  
+        SoundManager.Instance.PlaySound_01("NorBtn");
+        isExitOn = false;
         Time.timeScale = 1.0f;
         EscapeGame.SetActive(false);
     }

@@ -79,6 +79,8 @@ public class LobbyManager : MonoBehaviour
     [Header("AtkCal")]
      // 2. 플레이어 공격력(레벨 & 업그레이드)
     public float Player_TotalAtk;
+    public float Player_PlusUGAtk;
+
     [Space(10f)]
     public int BasicDefaultPlayer_Atk;      //기본_Default : 30
     public int BasicPlusPlayer_Atk;         //기본_가중치 : 0
@@ -121,6 +123,8 @@ public class LobbyManager : MonoBehaviour
         totalHpCal();
         totalPlayer_AtkCal();
 
+        Player_PlusUGAtk = Player_TotalAtk * upgrade.totalUGDMG;
+
         for (int i = 1; i < playerLevel + 1; i++)
             totalExpCal(i);
     }
@@ -155,7 +159,7 @@ public class LobbyManager : MonoBehaviour
         if(btnManager.isInfoOn)
         {
             InfoLevel.text = playerLevel.ToString();
-            InfoAtk.text = Player_TotalAtk.ToString("F2");
+            InfoAtk.text = Player_PlusUGAtk.ToString("F2");
             InfoHP.text = Player_TotalHP.ToString();
             InfoExp.text = "<color=green>"+curExp.ToString() + "</color>" + " / " + totalExp.ToString();
         }
@@ -244,7 +248,7 @@ public class LobbyManager : MonoBehaviour
             
             totalHpCal();
             totalPlayer_AtkCal();
-            Player_TotalAtk *= upgrade.totalUGDMG;
+            Player_PlusUGAtk = Player_TotalAtk * upgrade.totalUGDMG;
             upgrade.isBtnClicked = false;
         }
         markExp();
@@ -257,7 +261,8 @@ public class LobbyManager : MonoBehaviour
         {
             Debug.Log("BtnClicked");
             totalPlayer_AtkCal();
-            Player_TotalAtk *= upgrade.totalUGDMG;
+            Player_PlusUGAtk = Player_TotalAtk * upgrade.totalUGDMG;
+            
             Debug.Log("Player_TotalAtk : " + Player_TotalAtk);
             upgrade.isBtnClicked = false;
         }
