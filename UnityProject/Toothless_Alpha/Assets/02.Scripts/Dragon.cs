@@ -88,9 +88,9 @@ public class Dragon : MonoBehaviour
             
             //사망시에는 Eye_Hit 상태인채로 사망하게 한다
             Eye_Hit.SetActive(true);
-            Invoke("Eye_HitOff", 1f);
+            Invoke("Eye_HitOff", 0.6f);
 
-            Invoke("Disappear", 1f);
+            Invoke("Disappear", 0.6f);
         }
     }
 
@@ -110,7 +110,7 @@ public class Dragon : MonoBehaviour
         if(collision.gameObject.tag.Equals("Player_Atk"))
         {
             //필살기 게이지 스택 + 1
-            gameManager.Player_NowSpecial += 5;
+            gameManager.Player_NowSpecial += 1;
             
             //폭발 효과 사운드 재생
             soundManager.PlayAudio3("Explosion");
@@ -131,7 +131,7 @@ public class Dragon : MonoBehaviour
             if (Dragon_NowHP <= 0)
             {
                 DragonDieSound();
-                Invoke("Disappear", 1f);
+                Invoke("Disappear", 0.6f);
             }
         }
     }
