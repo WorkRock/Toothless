@@ -59,6 +59,7 @@ public class SoundManager : MonoBehaviour
     private AudioSource audioSource_02;
     private AudioSource audioSource_03;
     private AudioSource audioSource_04;
+    private AudioSource audioSource_05;
 
     private bool isDelay;
     private bool isIngame;
@@ -77,8 +78,8 @@ public class SoundManager : MonoBehaviour
         audioSource_02 = gameObject.AddComponent<AudioSource>();
         audioSource_03 = gameObject.AddComponent<AudioSource>();
         audioSource_04 = gameObject.AddComponent<AudioSource>();
+        audioSource_05 = gameObject.AddComponent<AudioSource>();
 
-        PlayerPrefs.SetInt("isLobby", 0);
         BGM.loop = true;
         isIngame = false;
 
@@ -100,6 +101,7 @@ public class SoundManager : MonoBehaviour
                 case "Lobby":
                     if (isIngame)
                     {
+                        isLobby = false;
                         isIngame = false;
                         fdt = 0;
                     }
@@ -187,6 +189,7 @@ public class SoundManager : MonoBehaviour
         SoundManager.Instance.audioSource_02.mute = false;
         SoundManager.Instance.audioSource_03.mute = false;
         SoundManager.Instance.audioSource_04.mute = false;
+        SoundManager.Instance.audioSource_05.mute = false;
     }
 
     public void audioSourceOff()
@@ -195,6 +198,7 @@ public class SoundManager : MonoBehaviour
         SoundManager.Instance.audioSource_02.mute = true;
         SoundManager.Instance.audioSource_03.mute = true;
         SoundManager.Instance.audioSource_04.mute = true;
+        SoundManager.Instance.audioSource_05.mute = true;
         
     }
 
@@ -221,7 +225,7 @@ public class SoundManager : MonoBehaviour
 
     public void PlaySound_01(string name)
     {
-        if (NowSoundname.Equals(name)) return;
+        // if (NowSoundname.Equals(name)) return;
 
         for (int i = 0; i < SoundList.Length; ++i)
             if (SoundList[i].name.Equals(name))
@@ -234,7 +238,7 @@ public class SoundManager : MonoBehaviour
 
     public void PlaySound_02(string name)
     {
-        if (NowSoundname.Equals(name)) return;
+        // if (NowSoundname.Equals(name)) return;
 
         for (int i = 0; i < SoundList.Length; ++i)
             if (SoundList[i].name.Equals(name))
@@ -247,7 +251,7 @@ public class SoundManager : MonoBehaviour
 
     public void PlaySound_03(string name)
     {
-        if (NowSoundname.Equals(name)) return;
+        // if (NowSoundname.Equals(name)) return;
 
         for (int i = 0; i < SoundList.Length; ++i)
             if (SoundList[i].name.Equals(name))
@@ -260,13 +264,26 @@ public class SoundManager : MonoBehaviour
 
     public void PlaySound_04(string name)
     {
-        if (NowSoundname.Equals(name)) return;
+        // if (NowSoundname.Equals(name)) return;
 
         for (int i = 0; i < SoundList.Length; ++i)
             if (SoundList[i].name.Equals(name))
             {
                 audioSource_04.clip = SoundList[i].audio;
                 audioSource_04.Play();
+                NowSoundname = name;
+            }
+    }
+
+     public void PlaySound_05(string name)
+    {
+        // if (NowSoundname.Equals(name)) return;
+
+        for (int i = 0; i < SoundList.Length; ++i)
+            if (SoundList[i].name.Equals(name))
+            {
+                audioSource_05.clip = SoundList[i].audio;
+                audioSource_05.Play();
                 NowSoundname = name;
             }
     }

@@ -1,5 +1,9 @@
 sceneSetups:
+<<<<<<< HEAD
 - path: Assets/01.Scenes/Ingame.unity
+=======
+- path: Assets/01.Scenes/Lobby.unity
+>>>>>>> fb9a3f3e51289cd42dddbcf01eda01a03501c227
   isLoaded: 1
   isActive: 1
   isSubScene: 0
