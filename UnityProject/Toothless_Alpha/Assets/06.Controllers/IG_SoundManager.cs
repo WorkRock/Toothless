@@ -12,14 +12,14 @@ public class IG_SoundManager : MonoBehaviour
         public AudioClip audio;
     }
 
-    public AudioSource audioSource1;
-    public AudioSource audioSource2;
+    public AudioSource audioSource1;    //플레이어 음성
+    public AudioSource audioSource2;    //ㅇ
     public AudioSource audioSource3;
 
     //오디오 목록
     public AudioType[] AudioList;
 
-    public int isSoundOn;
+    private bool isSoundOn;
    
     void Start()
     {
@@ -32,14 +32,14 @@ public class IG_SoundManager : MonoBehaviour
     void Update()
     {
         //게임 사운드 on/off 여부 지속적으로 체크
-        isSoundOn = PlayerPrefs.GetInt("isSoundOn");
+        isSoundOn = ScoreManager.GetIsSoundOn();
     }
 
 
     public void PlayAudio(string name)
     {
         //사운드 off 상태이면 return
-        if (isSoundOn == 0)
+        if (!isSoundOn)
             return;
 
         //사운드 on 이면 실행
@@ -55,7 +55,7 @@ public class IG_SoundManager : MonoBehaviour
 
     public void PlayAudio2(string name)
     {
-        if (isSoundOn == 0)
+        if (!isSoundOn)
             return;
 
         for (int i = 0; i < AudioList.Length; i++)
@@ -70,15 +70,15 @@ public class IG_SoundManager : MonoBehaviour
 
     public void PlayAudio3(string name)
     {
-        if (isSoundOn == 0)
+        if (!isSoundOn)
             return;
 
         for (int i = 0; i < AudioList.Length; i++)
         {
             if (AudioList[i].name.Equals(name))
             {
-                audioSource2.clip = AudioList[i].audio;
-                audioSource2.Play();
+                audioSource3.clip = AudioList[i].audio;
+                audioSource3.Play();
             }
         }
     }

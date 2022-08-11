@@ -11,27 +11,24 @@ public class IG_BtnManager : MonoBehaviour
     public GameObject GoLobby;
     public GameObject GoLobbyParent;
 
-    private int isSoundOn;
+    private bool isSoundOn;
 
     public GameObject SoundOn;
     public GameObject SoundOff;
 
     private bool isFuncOn;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        isSoundOn = PlayerPrefs.GetInt("isSoundOn");
-    }
-
     // Update is called once per frame
     void Update()
     {
-        escapeGame();
+        isSoundOn = ScoreManager.GetIsSoundOn();
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+            FuncOn();
+
         if (isFuncOn)
         {
-            
-            if (isSoundOn == 0)
+            if (!isSoundOn)
             {
                 SoundOff.SetActive(true);
                 SoundOn.SetActive(false);
@@ -43,10 +40,11 @@ public class IG_BtnManager : MonoBehaviour
                 SoundOn.SetActive(true);
             }
         }
-        
+
     }
     public void FuncOn()
     {
+        SoundManager.Instance.PlaySound_01("Lobby_MenuIn");
         Func.SetActive(true);
         isFuncOn = true;
         Time.timeScale = 0.0f;
@@ -54,6 +52,7 @@ public class IG_BtnManager : MonoBehaviour
 
     public void FuncExit()
     {
+        SoundManager.Instance.PlaySound_01("Lobby_MenuOut");
         Func.SetActive(false);
         isFuncOn = false;
         Time.timeScale = 1.0f;
@@ -61,18 +60,16 @@ public class IG_BtnManager : MonoBehaviour
 
     public void optionFunc()
     {
-        if (isSoundOn == 1)
+        if (isSoundOn)
         {
-            isSoundOn = 0;
+            ScoreManager.SetIsSoundOn(false);
         }
 
         else
         {
-            isSoundOn = 1;
+            ScoreManager.SetIsSoundOn(true);
         }
 
-        PlayerPrefs.SetInt("isSoundOn", isSoundOn);
-        PlayerPrefs.Save();
     }
 
     public void goLobby()
@@ -88,7 +85,7 @@ public class IG_BtnManager : MonoBehaviour
         PlayerPrefs.SetInt("isLobby", 0);
         PlayerPrefs.Save();
 
-        
+
         SceneManager.LoadScene("Lobby");
     }
 
@@ -99,21 +96,14 @@ public class IG_BtnManager : MonoBehaviour
 
     public void escapeGame()
     {
-        if (!Input.GetKeyDown(KeyCode.Escape))
-            return;
-
-        Time.timeScale = 0.0f;
-        //EscapeGame.SetActive(true);
+        EscapeGame.SetActive(true);
         //이 밑으로 추가한 부분
-        Func.SetActive(true);
-        isFuncOn = true;
-        Time.timeScale = 0.0f;
     }
 
     public void escapeGame_Yes()
     {
         #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
+        UnityEditor.EditorApplication.isPlaying = false;
         #else
             Application.Quit();
         #endif
@@ -121,8 +111,6 @@ public class IG_BtnManager : MonoBehaviour
 
     public void escapeGame_No()
     {
-
-        Time.timeScale = 1.0f;
         EscapeGame.SetActive(false);
     }
 }

@@ -49,6 +49,8 @@ public class Dragon : MonoBehaviour
     //드래곤 피격 판정을 저장할 변수
     public static bool isHit;
 
+    [Space(10f)]
+    public GameObject Eye_Hit;
 
     //드래곤 체력바 연결하는 방법 : 활성화될때 프리팹의 자식에서 슬라이더를 Dragon_HPBar 컴포넌트에 연결시킨다.
     void OnEnable()
@@ -78,12 +80,17 @@ public class Dragon : MonoBehaviour
     {
         // 체력바 조정
         Dragon_HPBar.value = Dragon_NowHP / Dragon_TotalHP;
-
+            
         // 필살기를 맞아서 죽을 수 있도록 업데이트에서 검사
         if (Dragon_NowHP <= 0f)
         {
-            DragonDieSound();
-            gameObject.SetActive(false);
+            //DragonDieSound();
+            
+            //사망시에는 Eye_Hit 상태인채로 사망하게 한다
+            Eye_Hit.SetActive(true);
+            Invoke("Eye_HitOff", 1f);
+
+            Invoke("Disappear", 1f);
         }
     }
 
@@ -103,7 +110,7 @@ public class Dragon : MonoBehaviour
         if(collision.gameObject.tag.Equals("Player_Atk"))
         {
             //필살기 게이지 스택 + 1
-            gameManager.Player_NowSpecial += 1;
+            gameManager.Player_NowSpecial += 5;
             
             //폭발 효과 사운드 재생
             soundManager.PlayAudio3("Explosion");
@@ -119,11 +126,12 @@ public class Dragon : MonoBehaviour
 
             Debug.Log($"드래곤 체력 : {Dragon_NowHP}");
 
+            
             //드래곤 HP가 0보다 낮아지면 죽는 소리 재생, 0.5초 후 드래곤 비활성화
             if (Dragon_NowHP <= 0)
             {
                 DragonDieSound();
-                Invoke("Disappear", 0.5f);
+                Invoke("Disappear", 1f);
             }
         }
     }
@@ -155,5 +163,10 @@ public class Dragon : MonoBehaviour
     public void Special_Atk(float Special_Atk_Dmg)
     {
         Dragon_NowHP -= Special_Atk_Dmg;
+    }
+
+    void Eye_HitOff()
+    {
+        Eye_Hit.SetActive(false);
     }
 }

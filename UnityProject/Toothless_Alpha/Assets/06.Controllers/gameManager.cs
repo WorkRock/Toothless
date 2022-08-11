@@ -15,7 +15,7 @@ public class gameManager : MonoBehaviour
     public Slider Player_SpecialBar;            //필살기 게이지
     public int Player_TotalSpecial;             //필살기 필요 스택(분모)
     public int Player_NowSpecial;               //필살기 현재 스택(분자)
-    public GameObject WhiteBG;                  //화면 하얗게 하는 효과
+    // public GameObject WhiteBG;                  //화면 하얗게 하는 효과
 
     [Space(10f)]
     [Header("Dragons")]
@@ -224,9 +224,10 @@ public class gameManager : MonoBehaviour
         //드래곤 사망정보를 받아와서 1(사망)이면 드래곤 생성
         if (isDragonDie == 1)
         {
-            //사망 시 공격 애니메이션 비활성화
+            //사망 시 드래곤 애니메이션 비활성화
             Eye_Atk.SetActive(false);
             Eye_Hit.SetActive(false);
+            Mouse_Atk.SetActive(false);
 
             //드래곤 스폰 딜레이에 시간을 누적
             fdt_Dragon += Time.deltaTime;
@@ -466,7 +467,7 @@ public class gameManager : MonoBehaviour
     void ExplosionOn()
     {
         Explosion.SetActive(true);
-        Invoke("ExplosionOff", 0.5f);
+        Invoke("ExplosionOff", 0.8f);
 
         //드래곤이 사망(1) 상태이면 폭발을 1.2 초 후에 끔(드래곤 애니메이션 잔상 방지)
         if (isDragonDie == 1)
@@ -479,7 +480,6 @@ public class gameManager : MonoBehaviour
         Explosion.SetActive(false);
         Dragon.isHit = false;
     }
-
 
     //장애물, 드래곤볼 생성 주기 함수
     void Obj_ATK_TotalDelayCal()
@@ -547,7 +547,7 @@ public class gameManager : MonoBehaviour
     //플레이어 필살기
     void SpecialAtk()
     {
-        WhiteBG.SetActive(true);
+        // WhiteBG.SetActive(true);
         for(int i = 0; i < 30; i++)
         {
             if (newAtkObj.activeSelf == true || newObstacle.activeSelf == true)
@@ -562,16 +562,24 @@ public class gameManager : MonoBehaviour
             if(Dragons[i].activeSelf == true)
             {
                 Dragons[i].GetComponent<Dragon>().Special_Atk(100);
+
+                //필살기를 썼는데 드래곤 hp가 0 이하이면 사망 사운드 재생
+                if (Dragons[i].GetComponent<Dragon>().Dragon_NowHP <= 0)
+                    soundManager.PlayAudio2("DragonDie");
             }
         }
 
         Player_NowSpecial = 0;
         Player_SpecialBar.value = 0f;
-        Invoke("SpecialAtkOff", 0.5f);
+
+        
+        // Invoke("SpecialAtkOff", 0.5f);
     }
 
+    /*
     void SpecialAtkOff()
     {
         WhiteBG.SetActive(false);
     }
+    */
 }
