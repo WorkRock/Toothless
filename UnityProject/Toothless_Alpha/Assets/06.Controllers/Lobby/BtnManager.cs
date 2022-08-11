@@ -13,7 +13,7 @@ public class BtnManager : MonoBehaviour
     // 로비 입장 전 인트로 사용 리소스
     public GameObject OutLobbyText;
     public GameObject IntroBG;
-    public GameObject IntroLogo;
+    // public GameObject IntroLogo;
 
     [Header("InLobby")]
     // 기본 로비 배경 
@@ -119,7 +119,7 @@ public class BtnManager : MonoBehaviour
             PlayerPrefs.Save();
             isLobby = true;
             IntroBG.SetActive(false);
-            IntroLogo.SetActive(false);
+            // IntroLogo.SetActive(false);
             OutLobbyText.SetActive(false);
             UI_Lobby.SetActive(true);
         }
