@@ -5,17 +5,18 @@ using UnityEngine.UI;
 public class Player_Move : MonoBehaviour
 {
     //인게임 사운드 매니저
-    public IG_SoundManager soundManager;
+    // public IG_SoundManager soundManager;
 
-    [Header ("UI")]
+    [Header("UI")]
     public GameObject GameOverImg;              //게임오버
     public Slider Player_HPBar;                 //플레이어 체력바
     public GameObject[] shieldImgs;             //쉴드 이미지 UI
     public Image ShieldCoolTime;                //쉴드 쿨타임 이미지
     public Text ShieldCoolTimeText;             //쉴드 쿨타임 텍스트 표시
 
+
     [Space(10f)]
-    [Header("Player")] 
+    [Header("Player")]
     public GameObject[] targetPos;              //이동할 위치 배열로 선언
     public CapsuleCollider2D capsuleCollider2D; //플레이어의 콜라이더 연결
     public SpriteRenderer spriteRenderer;       //무적상태일 때 플레이어 흐리게
@@ -28,7 +29,7 @@ public class Player_Move : MonoBehaviour
     private int maxPos; //2
 
     [Space(10f)]
-    [Header("Shield")] 
+    [Header("Shield")]
     public GameObject[] playerShield;           //플레이어 쉴드 오브젝트 연결
     //쉴드 딜레이
     public float curDelay = 0f;                 // 현재 쉴드 유지 시간
@@ -36,17 +37,18 @@ public class Player_Move : MonoBehaviour
     public float curShieldDelay;                // 현재 쉴드 쿨타임
     public float maxShieldDelay;                // 쉴드 쿨타임 max
     private bool isShieldOn;                    // 쉴드 ON/OFF 체크
+    public bool isShieldBtnClicked;
 
     //쉴드 업그레이드(업그레이드 비례)
     private float BasicDefaultShieldDelay = 3;  //기본 쉴드 딜레이(3초)
     private float EditPlusShieldDelay = 0.45f;  //보정값 가중치(0.45초)
-    private float EditCorAtkUGSD = 10;          
-    
+    private float EditCorAtkUGSD = 10;
+
     private int playerShieldNum;                //쉴드 번호
     private int onShieldNum;                    //현재 활성화된 쉴드 번호
 
     [Space(10f)]
-    [Header ("Player Func")]
+    [Header("Player Func")]
     // 플레이어 함수 공통
     public int nowLevel;
 
@@ -55,11 +57,11 @@ public class Player_Move : MonoBehaviour
     //플레이어 체력
     public int Player_TotalHP;                  //HP(분모)
     public int Player_NowHP;                    //HP(분자)
-    
+
     [Space(10f)]
     public int BasicDefaultHp;                  //기본_Default : 100
     public int BasicPlusHp;                     //기본_가중치 : 3
-    
+
     [Space(10f)]
     public int EditDefaultHp;                   //보정값_Default : 0
     public int EditPlusHp;                      //보정값_가중치 : 20
@@ -151,6 +153,7 @@ public class Player_Move : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        isShieldBtnClicked = false;
         //쉴드 딜레이 초기화
         curShieldDelay = 0;
         //시작 시 쉴드 번호는 0번(Pyro 쉴드)로 초기화
@@ -160,7 +163,7 @@ public class Player_Move : MonoBehaviour
 
         //PlayerPrefs에서 공격력 업그레이드 레벨 값 받아오기
         atkUGLevel = PlayerPrefs.GetInt("AtkUG");
-        
+
         // 0. 쉴드 딜레이 계산
         if (atkUGLevel == 1)
             maxShieldDelay = BasicDefaultShieldDelay;
@@ -175,18 +178,18 @@ public class Player_Move : MonoBehaviour
         Player_TotalHP = BasicDefaultHp;
         totalHpCal();
         Player_NowHP = Player_TotalHP;
-     
+
         // 2. 플레이어 공격력 계산
         totalPlayer_AtkCal();
         totalUGDMG = BasicDefaultUGDMG;
-        
+
         //업그레이드 레벨이 1이 아닐 때 실행
-        if(atkUGLevel !=1)
+        if (atkUGLevel != 1)
             totalUGDMGCal(atkUGLevel - 1);
-        
+
         //플레이어 최종 공격력 = 플레이어 최종 공격력 * 최종 업그레이드 데미지
         Player_TotalAtk *= totalUGDMG;
-       
+
         //인덱스 초기화(시작은 가운데에서)
         minPos = 0;
         nowPos = 1;
@@ -202,11 +205,14 @@ public class Player_Move : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //장애물, 드래곤볼 데미지 계산을 위해 스테이지 값 지속적으로 받아오기
+        nowStage = PlayerPrefs.GetInt("Stage");
+
         //플레이어 이동 함수
         MovePlayer();
 
         //방향키 위, 아래를 눌러서 쉴드 스왑 함수 호출
-        if(Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
         {
             ShieldSwap();
         }
@@ -214,22 +220,19 @@ public class Player_Move : MonoBehaviour
         //쉴드 켜기 함수
         ShieldOn();
 
-        //장애물, 드래곤볼 데미지 계산을 위해 스테이지 값 지속적으로 받아오기
-        nowStage = PlayerPrefs.GetInt("Stage");
-
         //장애물, 드래곤볼 공격력 지속적으로 계산
         Total_ComObj_AtkCal();
         Total_ComAtk_AtkCal();
 
         //쉴드 쿨타임 UI 이미지 표시
         ShieldCoolTime.fillAmount = 1.0f - Mathf.Lerp(0, 100, (curShieldDelay / maxShieldDelay) / 100);
-        
+
         //쉴드딜레이가 max보다 커질 경우(쿨타임이 다 찼을 경우) 쿨타임 텍스트(남은 시간)을 비활성화
-        if(curShieldDelay >= maxShieldDelay)
+        if (curShieldDelay >= maxShieldDelay)
         {
-            ShieldCoolTimeText.enabled = false;    
+            ShieldCoolTimeText.enabled = false;
         }
-        
+
         //쿨타임이 덜 찼을 경우 남은시간을 활성화, 텍스트엔 남은시간을 소수 첫째 자리까지 표시
         else
         {
@@ -239,7 +242,7 @@ public class Player_Move : MonoBehaviour
 
         //플레이어 체력바 조정(슬라이더 밸류값으로 조정)
         Player_HPBar.value = Player_NowHP / (float)Player_TotalHP;
-        
+
         //쉴드 이미지가 지속적으로 현재 플레이어 쉴드 번호에 맞게 활성화 & 비활성화 됨
         for (int i = 0; i < shieldImgs.Length; i++)
         {
@@ -255,7 +258,7 @@ public class Player_Move : MonoBehaviour
         //플레이어 쉴드의 활성화 여부를 검사하여 쉴드 위치에 플레이어의 위치를 대입, 이동할 때 쉴드 끊김 현상을 방지
         for (int i = 0; i < playerShield.Length; i++)
         {
-            if(playerShield[i].activeSelf)
+            if (playerShield[i].activeSelf)
             {
                 playerShield[i].transform.position = gameObject.transform.position;
             }
@@ -282,24 +285,59 @@ public class Player_Move : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, targetPos[nowPos].transform.position, playerSpeed);
     }
 
+    //플레이어 이동 함수
+    public void MovePlayerBtn(int _Hor)
+    {
+        //0 <= nowPos <= 2 이면 (0~2사이에서만 이동 가능)
+        if (nowPos + (int)_Hor <= maxPos && nowPos + (int)_Hor >= minPos)
+        {
+            //현재 인덱스에 방향 값 +
+            nowPos += (int)_Hor;
+        }
+
+        //현 위치 -> 이동할 위치 (반드시 if문 밖에서)
+        transform.position = Vector3.MoveTowards(transform.position, targetPos[nowPos].transform.position, playerSpeed);
+    }
+
+
+
+
     //쉴드 스왑 함수
     public void ShieldSwap()
     {
         float fVer = Input.GetAxisRaw("Vertical");
         //현 쉴드 번호에 1 or -1 을 누적
         playerShieldNum += (int)fVer;
-        
+
         //쉴드 번호가 쉴드 개수를 넘어갈 경우 0번(Pyro)으로 초기화
-        if(playerShieldNum > playerShield.Length-1)
+        if (playerShieldNum > playerShield.Length - 1)
         {
             playerShieldNum = 0;
         }
         //쉴드 번호가 음수로 갈 경우 거꾸로 스왑
-        else if(playerShieldNum < 0)
+        else if (playerShieldNum < 0)
         {
             playerShieldNum = playerShield.Length - 1;
         }
     }
+
+    public void ShieldSwapBtn()
+    {
+        //현 쉴드 번호에 1 or -1 을 누적
+        playerShieldNum += 1;
+
+        //쉴드 번호가 쉴드 개수를 넘어갈 경우 0번(Pyro)으로 초기화
+        if (playerShieldNum > playerShield.Length - 1)
+        {
+            playerShieldNum = 0;
+        }
+        //쉴드 번호가 음수로 갈 경우 거꾸로 스왑
+        else if (playerShieldNum < 0)
+        {
+            playerShieldNum = playerShield.Length - 1;
+        }
+    }
+
 
     //쉴드 활성화 함수
     public void ShieldOn()
@@ -311,22 +349,23 @@ public class Player_Move : MonoBehaviour
         }
 
         //쿨타임이 max보다 커지면 쉴드 쿨타임이 max(쿨타임 다 참)
-        else 
+        else
         {
             curShieldDelay = maxShieldDelay;
         }
-            
-        
-        if(Input.GetKeyDown(KeyCode.Space))
+
+
+        if (Input.GetKeyDown(KeyCode.Space) || isShieldBtnClicked)
         {
             //쉴드 쿨타임이 다 찼을 때 Space를 누르면
             if (curShieldDelay >= maxShieldDelay)
             {
-                soundManager.PlayAudio("ShieldOn");             //쉴드 활성화 소리 재생
+                SoundManager.Instance.PlaySound_01("ShieldOn");
+                //soundManager.PlayAudio("ShieldOn");             //쉴드 활성화 소리 재생
                 isShieldOn = true;                              //쉴드활성화 상태를 true로
                 playerShield[playerShieldNum].SetActive(true);  //현재 플레이어의 쉴드 번호에 맞는 쉴드를 활성화
-                onShieldNum = playerShieldNum;                  
-                
+                onShieldNum = playerShieldNum;
+
                 // 0 - pyro, 1 - ice, 2 - water, 3 - electro
                 //onShieldNum에 맞는 태그로 플레이어의 태그를 변경
                 switch (onShieldNum)
@@ -343,9 +382,10 @@ public class Player_Move : MonoBehaviour
                     case 3:
                         gameObject.tag = "ElectroShield";
                         break;
-                }        
+                }
                 //쉴드 키고 나면 쉴드 쿨타임을 다시 0초로 초기화
                 curShieldDelay = 0;
+                isShieldBtnClicked = false;
             }
         }
 
@@ -382,23 +422,27 @@ public class Player_Move : MonoBehaviour
             || collision.gameObject.tag.Equals("Dragon_Atk_Electric"))
         {
             if (collision.gameObject.tag.Equals("Dragon_Atk_Fire") && gameObject.tag.Equals("PyroShield")
-                ||  collision.gameObject.tag.Equals("Dragon_Atk_Ice") && gameObject.tag.Equals("IceShield")
-                ||  collision.gameObject.tag.Equals("Dragon_Atk_Water") && gameObject.tag.Equals("WaterShield")
-                ||  collision.gameObject.tag.Equals("Dragon_Atk_Electric") && gameObject.tag.Equals("ElectroShield"))
+                || collision.gameObject.tag.Equals("Dragon_Atk_Ice") && gameObject.tag.Equals("IceShield")
+                || collision.gameObject.tag.Equals("Dragon_Atk_Water") && gameObject.tag.Equals("WaterShield")
+                || collision.gameObject.tag.Equals("Dragon_Atk_Electric") && gameObject.tag.Equals("ElectroShield"))
             {
                 //드래곤볼과 플레이어의 태그가 속성이 일치할 경우, 리턴
                 return;
             }
-                
+
             //맞았을 때 사운드 재생(3개중에 랜덤 재생)
             int ranHitSound = Random.Range(0, 3);
+            SoundManager.Instance.PlaySound_03("Player_Hit_" + ranHitSound);
+            
+            /*
             if (ranHitSound == 0)
-                soundManager.PlayAudio2("Hit_1");
+                SoundManager.Instance.PlaySound_03("Player_Hit_0");
+            //soundManager.PlayAudio2("Hit_1");
             else if(ranHitSound == 1)
                 soundManager.PlayAudio2("Hit_2");
             else if (ranHitSound == 2)
                 soundManager.PlayAudio2("Hit_3");
-
+            */
             //충돌한 상대방(드래곤볼) 비활성화
             collision.gameObject.SetActive(false);
 
@@ -415,19 +459,22 @@ public class Player_Move : MonoBehaviour
             //체력이 0이하로 떨어지면
             if (Player_NowHP <= 0)
             {
-                Player_NowHP = 0;                
+                Player_NowHP = 0;
                 Player_HPBar.value = 0;
-                
+
                 //쉴드 비활성화
                 ShieldOff();
 
                 //사망 사운드 재생(2개중에 랜덤 재생)
                 int ranDieSound = Random.Range(0, 2);
+                SoundManager.Instance.PlaySound_05("Player_Die_" + ranDieSound);
+
+                /*
                 if (ranDieSound == 0)
                     soundManager.PlayAudio("Die_1");
                 else
                     soundManager.PlayAudio("Die_2");
-
+                */
                 //플레이어 비활성화
                 gameObject.SetActive(false);
 
@@ -435,7 +482,7 @@ public class Player_Move : MonoBehaviour
                 GameOverImg.SetActive(true);
 
                 //3초 후 Result 씬으로 이동하는 함수 호출
-                Invoke("ShowResult", 3f);         
+                Invoke("ShowResult", 3f);
             }
         }
 
@@ -444,13 +491,15 @@ public class Player_Move : MonoBehaviour
         {
             //맞았을 때 사운드 재생(3개중에 랜덤 재생)
             int ranHitSound = Random.Range(0, 3);
+            SoundManager.Instance.PlaySound_03("Player_Hit_" + ranHitSound);
+            /*
             if (ranHitSound == 0)
                 soundManager.PlayAudio2("Hit_1");
             else if(ranHitSound == 1)
                 soundManager.PlayAudio2("Hit_2");
             else if (ranHitSound == 2)
                 soundManager.PlayAudio2("Hit_3");
-
+            */
             //장애물 비활성화
             collision.gameObject.SetActive(false);
 
@@ -475,10 +524,14 @@ public class Player_Move : MonoBehaviour
 
                 //사망 사운드 재생(2개중에 랜덤 재생)
                 int ranDieSound = Random.Range(0, 2);
+                SoundManager.Instance.PlaySound_05("Player_Die_" + ranDieSound);
+
+                /*
                 if (ranDieSound == 0)
                     soundManager.PlayAudio("Die_1");
                 else
                     soundManager.PlayAudio("Die_2");
+                */
 
                 //플레이어 비활성화
                 gameObject.SetActive(false);
@@ -601,5 +654,17 @@ public class Player_Move : MonoBehaviour
         Time.timeScale = 0;
         SceneManager.LoadScene("Result");
         PlayerPrefs.SetInt("Stage", nowStage);
+    }
+
+    //1스테이지 마다 hp 소량 회복
+    void HP_Bonus_ByOne()
+    {
+        Player_NowHP += 10;
+    }
+
+    //10스테이지 마다 hp 대량 회복
+    void HP_Bonus_ByTen()
+    {
+        Player_NowHP += 100;
     }
 }

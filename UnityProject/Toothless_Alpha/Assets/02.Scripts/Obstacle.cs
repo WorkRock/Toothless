@@ -9,7 +9,7 @@ public class Obstacle : MonoBehaviour
 
     void OnEnable()
     {
-        transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+        transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
     }
 
     void Start()
@@ -23,9 +23,9 @@ public class Obstacle : MonoBehaviour
         if (Time.timeScale > 0)
         {
             //스케일 점점 커지게
-            transform.localScale += new Vector3(0.001f, 0.001f, 0.001f);
-            if (transform.localScale.x >= 0.35f)
-                transform.localScale = new Vector3(0.35f, 0.35f, 0.35f);
+            transform.localScale += new Vector3(0.002f, 0.002f, 0.002f);
+            if (transform.localScale.x >= 0.75f)
+                transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
         }
 
     }

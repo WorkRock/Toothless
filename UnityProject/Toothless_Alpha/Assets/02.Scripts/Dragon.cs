@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Dragon : MonoBehaviour
 {
     //인게임 사운드 매니저 연결
-    public IG_SoundManager soundManager;
+    // public IG_SoundManager soundManager;
 
     [Space(10f)]
     //게임 매니저 연결
@@ -46,15 +46,37 @@ public class Dragon : MonoBehaviour
     public int maxHp;
 
     [Space(10f)]
+    [Header("Player HP Bonus")]
+    // 6. 플레이어 HP 보너스
+                                                    //      1스테이지 당                      10스테이지 당
+    public int Player_Total_BonusHP;                //최종 보너스 HP                         
+    public int BasicDefaultPlayer_BonusHP;          //기본_Default : 10                          50
+    public int BasicPlusPlayer_BonusHP;             //기본_가중치 : 0                             0
+
+    [Space(10f)]
+    public int EditDefaultPlayer_BonusHP;           //보정값_Default : 0                          0
+    public int EditPlusPlayer_BonusHP;              //보정값_가중치 : 5                           10
+
+    [Space(10f)]
+    public int BasicCorStage_BonusHP;               //보정스테이지_기본 : 0                        0
+    public int EditCorStage_BonusHP;                //보정스테이지_보정값 : 10                    20
+
+    [Space(10f)]
+    public int max_Player_BonusHP;                  //최대(or최소)값 : 100                       200
+
+    [Space(10f)]
     //드래곤 피격 판정을 저장할 변수
     public static bool isHit;
 
     [Space(10f)]
     public GameObject Eye_Hit;
-
+ 
     //드래곤 체력바 연결하는 방법 : 활성화될때 프리팹의 자식에서 슬라이더를 Dragon_HPBar 컴포넌트에 연결시킨다.
     void OnEnable()
     {
+        //애니메이션 초기화
+        Eye_Hit.SetActive(false);
+
         //현 스테이지 정보 받아오기
         nowStage = PlayerPrefs.GetInt("Stage");
 
@@ -74,23 +96,34 @@ public class Dragon : MonoBehaviour
 
         //다시 활성화 될때 hp바는 만땅으로
         Dragon_HPBar.value = 1.0f;
+
+        //Test 2 - 스테이지가 10 증가할 때마다 HP 대량 회복
+        if (nowStage % 10 == 1)
+        {
+            player.Player_NowHP += Player_Total_BonusHP;
+            Debug.Log("플레이어 체력 : " + player.Player_NowHP);
+        }
     }
 
     void Update()
     {
+        //HP회복량 계산을 위해 스테이지값 지속적으로 받아오기
+        nowStage = PlayerPrefs.GetInt("Stage");
+
+        //플레이어 HP회복량 함수 지속적으로 계산
+        totalPlayer_BonusHP();
+
         // 체력바 조정
         Dragon_HPBar.value = Dragon_NowHP / Dragon_TotalHP;
-            
+
         // 필살기를 맞아서 죽을 수 있도록 업데이트에서 검사
         if (Dragon_NowHP <= 0f)
         {
-            //DragonDieSound();
-            
             //사망시에는 Eye_Hit 상태인채로 사망하게 한다
             Eye_Hit.SetActive(true);
-            Invoke("Eye_HitOff", 0.6f);
+            Invoke("Eye_HitOff", 0.7f);
 
-            Invoke("Disappear", 0.6f);
+            Invoke("Disappear", 0.7f);
         }
     }
 
@@ -99,6 +132,10 @@ public class Dragon : MonoBehaviour
         //스테이지 값 + 1
         nowStage++;
         PlayerPrefs.SetInt("Stage", nowStage);
+
+        //Test 1 - 스테이지 1 증가할 때마다 HP 소량 회복
+        //player.Player_NowHP += Player_Total_BonusHP;
+        //Debug.Log("플레이어 체력 : " + player.Player_NowHP);
 
         //드래곤 사망 정보 저장 0-생존 1-사망
         PlayerPrefs.SetInt("isDragonDie", 1);
@@ -111,9 +148,10 @@ public class Dragon : MonoBehaviour
         {
             //필살기 게이지 스택 + 1
             gameManager.Player_NowSpecial += 1;
-            
+
             //폭발 효과 사운드 재생
-            soundManager.PlayAudio3("Explosion");
+            SoundManager.Instance.PlaySound_03("Explosion");
+            //soundManager.PlayAudio3("Explosion");
 
             //피격 상태 true
             isHit = true;
@@ -131,7 +169,7 @@ public class Dragon : MonoBehaviour
             if (Dragon_NowHP <= 0)
             {
                 DragonDieSound();
-                Invoke("Disappear", 0.6f);
+                Invoke("Disappear", 0.7f);
             }
         }
     }
@@ -156,7 +194,8 @@ public class Dragon : MonoBehaviour
 
     void DragonDieSound()
     {
-        soundManager.PlayAudio2("DragonDie");
+        SoundManager.Instance.PlaySound_05("Dragon_Die");
+        //soundManager.PlayAudio2("DragonDie");
     }
 
     //플레이어 필살기 함수 : 매개변수로 필살기 데미지를 받아서 드래곤 HP에서 그만큼 깎음
@@ -168,5 +207,19 @@ public class Dragon : MonoBehaviour
     void Eye_HitOff()
     {
         Eye_Hit.SetActive(false);
+    }
+
+    // 6. 플레이어 HP 회복량
+    void totalPlayer_BonusHP()
+    {
+        if (nowStage == 0)
+            return;
+
+        if ((BasicDefaultPlayer_BonusHP + ((nowStage - 1) * BasicPlusPlayer_BonusHP)) +
+                            EditDefaultPlayer_BonusHP + Mathf.FloorToInt((nowStage - 1) / (float)EditCorStage_BonusHP) * EditPlusPlayer_BonusHP >= max_Player_BonusHP)
+            Player_Total_BonusHP = max_Player_BonusHP;
+        else
+            Player_Total_BonusHP = (BasicDefaultPlayer_BonusHP + ((nowStage - 1) * BasicPlusPlayer_BonusHP)) +
+                            EditDefaultPlayer_BonusHP + Mathf.FloorToInt((nowStage - 1) / (float)EditCorStage_BonusHP) * EditPlusPlayer_BonusHP;
     }
 }
