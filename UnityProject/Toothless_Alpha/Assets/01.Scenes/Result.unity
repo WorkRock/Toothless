@@ -228,20 +228,20 @@ MonoBehaviour:
   realTotalGetExp: 0
   totalGetExp: 0
   calGetExp: 0
-  BasicDefaultGetExp: 5
-  BasicPlusGetExp: 10
+  BasicDefaultGetExp: 50
+  BasicPlusGetExp: 25
   EditDefaultGetExp: 0
-  EditPlusGetExp: 20
+  EditPlusGetExp: 150
   BasicCorGetExpStage: 5
   EditCorGetExpStage: 15
   maxGetExp: 50000
   realTotalGetCoin: 0
   totalGetCoin: 0
   calGetCoin: 0
-  BasicDefaultGetCoin: 10
-  BasicPlusGetCoin: 10
+  BasicDefaultGetCoin: 50
+  BasicPlusGetCoin: 20
   EditDefaultGetCoin: 0
-  EditPlusGetCoin: 25
+  EditPlusGetCoin: 120
   BasicCorGetCoinStage: 5
   EditCorGetCoinStage: 15
   maxGetCoin: 30000
@@ -1918,7 +1918,6 @@ MonoBehaviour:
   audioSources: []
   OutLobbyText: {fileID: 0}
   IntroBG: {fileID: 0}
-  IntroLogo: {fileID: 0}
   UI_Lobby: {fileID: 0}
   UI_Lobby_Info: {fileID: 0}
   UI_Lobby_Shop: {fileID: 0}
