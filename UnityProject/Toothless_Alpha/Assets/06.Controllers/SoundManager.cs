@@ -101,7 +101,7 @@ public class SoundManager : MonoBehaviour
                 case "Lobby":
                     if (isIngame)
                     {
-                        isLobby = false;
+                        // isLobby = false;
                         isIngame = false;
                         fdt = 0;
                     }

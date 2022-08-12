@@ -73,6 +73,9 @@ public class Player_Move : MonoBehaviour
     [Space(10f)]
     public int maxHp;                           //최댓값 : 2000
 
+    public bool isPlayerHPGet;
+
+
     [Space(10f)]
     [Header("Player Atk")]
     // 2. 플레이어 공격력
@@ -263,6 +266,8 @@ public class Player_Move : MonoBehaviour
                 playerShield[i].transform.position = gameObject.transform.position;
             }
         }
+
+        totalPlayer_BonusHP();
     }
 
     //플레이어 이동 함수
@@ -647,6 +652,24 @@ public class Player_Move : MonoBehaviour
                             EditDefault_ComAtk_Atk + Mathf.FloorToInt((nowStage - 1) / EditCorStage_ComAtk_Atk) * EditPlus_ComAtk_Atk);
     }
 
+    // 6. 플레이어 HP 회복량
+    void totalPlayer_BonusHP()
+    {
+        if (nowStage == 1)
+            return;
+       
+        if(nowStage % 10 == 1 && !isPlayerHPGet)
+        {
+            Player_NowHP += (int)(Player_TotalHP * 0.2);
+            isPlayerHPGet = true;
+        }
+
+        else
+        {
+            isPlayerHPGet = true;
+        }
+    }
+
     //결과 화면 표출 함수
     void ShowResult()
     {
@@ -654,17 +677,5 @@ public class Player_Move : MonoBehaviour
         Time.timeScale = 0;
         SceneManager.LoadScene("Result");
         PlayerPrefs.SetInt("Stage", nowStage);
-    }
-
-    //1스테이지 마다 hp 소량 회복
-    void HP_Bonus_ByOne()
-    {
-        Player_NowHP += 10;
-    }
-
-    //10스테이지 마다 hp 대량 회복
-    void HP_Bonus_ByTen()
-    {
-        Player_NowHP += 100;
     }
 }

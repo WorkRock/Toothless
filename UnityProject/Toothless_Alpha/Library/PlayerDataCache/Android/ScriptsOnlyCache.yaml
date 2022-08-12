@@ -5,6 +5,7 @@ ScriptsOnlyBuild:
     - Dragon
     - Dragon_Atk
     - FadeControl
+    - Fixed
     - Floor
     - Floor_Lobby
     - IG_BtnManager
@@ -90,45 +91,47 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11342}
     - Class: 114
-      Script: {instanceID: 11370}
+      Script: {instanceID: 11378}
     - Class: 114
-      Script: {instanceID: 11642}
+      Script: {instanceID: 11650}
     - Class: 114
-      Script: {instanceID: 11886}
+      Script: {instanceID: 11894}
     - Class: 114
-      Script: {instanceID: 12064}
+      Script: {instanceID: 12072}
     - Class: 114
-      Script: {instanceID: 12070}
+      Script: {instanceID: 12078}
     - Class: 114
-      Script: {instanceID: 12124}
+      Script: {instanceID: 12132}
     - Class: 114
-      Script: {instanceID: 12160}
+      Script: {instanceID: 12168}
     - Class: 114
-      Script: {instanceID: 12242}
+      Script: {instanceID: 12250}
     - Class: 114
-      Script: {instanceID: 12516}
+      Script: {instanceID: 12524}
     - Class: 114
-      Script: {instanceID: 12740}
+      Script: {instanceID: 12748}
     - Class: 114
-      Script: {instanceID: 12756}
+      Script: {instanceID: 12764}
     - Class: 114
-      Script: {instanceID: 12918}
+      Script: {instanceID: 12926}
     - Class: 114
-      Script: {instanceID: 13162}
+      Script: {instanceID: 13170}
     - Class: 114
-      Script: {instanceID: 13190}
+      Script: {instanceID: 13198}
     - Class: 114
-      Script: {instanceID: 13232}
+      Script: {instanceID: 13240}
     - Class: 114
-      Script: {instanceID: 13430}
+      Script: {instanceID: 13438}
     - Class: 114
-      Script: {instanceID: 13698}
+      Script: {instanceID: 13706}
     - Class: 114
-      Script: {instanceID: 13722}
+      Script: {instanceID: 13730}
     - Class: 114
-      Script: {instanceID: 13932}
+      Script: {instanceID: 13940}
     - Class: 114
-      Script: {instanceID: 13980}
+      Script: {instanceID: 13988}
+    - Class: 114
+      Script: {instanceID: 62830}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -185,45 +188,47 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11342}
     - Class: 114
-      Script: {instanceID: 11370}
+      Script: {instanceID: 11378}
     - Class: 114
-      Script: {instanceID: 11642}
+      Script: {instanceID: 11650}
     - Class: 114
-      Script: {instanceID: 11806}
+      Script: {instanceID: 11814}
     - Class: 114
-      Script: {instanceID: 11914}
+      Script: {instanceID: 11922}
     - Class: 114
-      Script: {instanceID: 12064}
+      Script: {instanceID: 12072}
     - Class: 114
-      Script: {instanceID: 12160}
+      Script: {instanceID: 12168}
     - Class: 114
-      Script: {instanceID: 12204}
+      Script: {instanceID: 12212}
     - Class: 114
-      Script: {instanceID: 12606}
+      Script: {instanceID: 12614}
     - Class: 114
-      Script: {instanceID: 12740}
+      Script: {instanceID: 12748}
     - Class: 114
-      Script: {instanceID: 13070}
+      Script: {instanceID: 13078}
     - Class: 114
-      Script: {instanceID: 13088}
+      Script: {instanceID: 13096}
     - Class: 114
-      Script: {instanceID: 13178}
+      Script: {instanceID: 13186}
     - Class: 114
-      Script: {instanceID: 13260}
+      Script: {instanceID: 13268}
     - Class: 114
-      Script: {instanceID: 13430}
+      Script: {instanceID: 13438}
     - Class: 114
-      Script: {instanceID: 13652}
+      Script: {instanceID: 13660}
     - Class: 114
-      Script: {instanceID: 13730}
+      Script: {instanceID: 13738}
     - Class: 114
-      Script: {instanceID: 13856}
+      Script: {instanceID: 13864}
     - Class: 114
-      Script: {instanceID: 13890}
+      Script: {instanceID: 13898}
     - Class: 114
-      Script: {instanceID: 13932}
+      Script: {instanceID: 13940}
     - Class: 114
-      Script: {instanceID: 13980}
+      Script: {instanceID: 13988}
+    - Class: 114
+      Script: {instanceID: 62830}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -276,21 +281,23 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11342}
     - Class: 114
-      Script: {instanceID: 11370}
+      Script: {instanceID: 11378}
     - Class: 114
-      Script: {instanceID: 11642}
+      Script: {instanceID: 11650}
     - Class: 114
-      Script: {instanceID: 12160}
+      Script: {instanceID: 12168}
     - Class: 114
-      Script: {instanceID: 12740}
+      Script: {instanceID: 12748}
     - Class: 114
-      Script: {instanceID: 13178}
+      Script: {instanceID: 13186}
     - Class: 114
-      Script: {instanceID: 13430}
+      Script: {instanceID: 13438}
     - Class: 114
-      Script: {instanceID: 13508}
+      Script: {instanceID: 13516}
     - Class: 114
-      Script: {instanceID: 13932}
+      Script: {instanceID: 13940}
+    - Class: 114
+      Script: {instanceID: 62830}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -490,7 +497,7 @@ ScriptsOnlyBuild:
     className: Shadow
   - hash:
       serializedVersion: 2
-      Hash: 87c466af6b78b56625a20e1725fbdc7f
+      Hash: cb59cc1e1389a703b394d7107177b088
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Player_Move
@@ -652,7 +659,7 @@ ScriptsOnlyBuild:
     className: Physics2DRaycaster
   - hash:
       serializedVersion: 2
-      Hash: dd557de7a90ad0f04e78f5c440ad3453
+      Hash: 3822541a4f600e6b31b2e9eeef55ad9f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: gameManager
@@ -722,12 +729,6 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: FadeImage
-  - hash:
-      serializedVersion: 2
-      Hash: c8de963dd09e6b4538c188d1c5627b49
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: IG_SoundManager
   - hash:
       serializedVersion: 2
       Hash: c3d3430df9e3ea95e3e3d587961390fb
@@ -860,9 +861,15 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Fixed
   platform: 13
   scenePathNames:
   - Assets/01.Scenes/Lobby.unity
   - Assets/01.Scenes/Ingame.unity
   - Assets/01.Scenes/Result.unity
-  playerPath: C:/Users/82102/Desktop/Enfp/ENFP Witch's Adventure_Apk.apk
+  playerPath: C:/Users/82102/Desktop/Enfp/ENFP Witch's Adventure.apk
