@@ -4,14 +4,23 @@ using UnityEngine.UI;
 public class gameManager : MonoBehaviour
 {
     //인게임 사운드 매니저
-    public IG_SoundManager soundManager;
+    // public IG_SoundManager soundManager;
 
     //오브젝트 매니저 객체 연결
     public ObjectManager objectManager;
 
+    //드래곤 스크립트 객체 생성
+    public Dragon dragon;
+
     [Space(10f)]
     [Header("Player Special ATK")]
     //플레이어 필살기
+    public GameObject SA_NoneCharged;
+    public GameObject SA_Charged;
+    public GameObject SA_NoneChargedBtn;
+    public GameObject SA_ChargedBtn;
+    public GameObject SA_CT;
+
     public Slider Player_SpecialBar;            //필살기 게이지
     public int Player_TotalSpecial;             //필살기 필요 스택(분모)
     public int Player_NowSpecial;               //필살기 현재 스택(분자)
@@ -25,7 +34,7 @@ public class gameManager : MonoBehaviour
     [Space(10f)]
     //애니메이션
     public GameObject Eye_Atk;
-    public GameObject Mouse_Atk;
+    public GameObject Mouth_Atk;
     public GameObject Eye_Hit;
 
     [Space(10f)]
@@ -61,8 +70,10 @@ public class gameManager : MonoBehaviour
     [SerializeField]
     private float fdt;                      //오브젝트 스폰 딜레이
 
+    /*
     [SerializeField]
     private float fdt_Anim;                 //드래곤 애니메이션 딜레이                              
+    */
 
     [Space(10f)]
     [Header("Spawn Delay")]
@@ -140,13 +151,23 @@ public class gameManager : MonoBehaviour
 
     void Start()
     {
+        //필살기 UI이미지 초기화
+        SA_NoneCharged.SetActive(true);
+        SA_Charged.SetActive(false);
+
+        SA_NoneChargedBtn.SetActive(true);
+        SA_ChargedBtn.SetActive(false);
+        SA_CT.SetActive(true);
+
         //시작 후 1초 후에 카운트 다운 함수 호출
         Invoke("OnReady", 1f);
 
+        
         //시작 시 드래곤 애니메이션 관련 오브젝트들 비활성화 상태로 초기화
         Eye_Atk.SetActive(false);
-        Mouse_Atk.SetActive(false);
+        Mouth_Atk.SetActive(false);
         Eye_Hit.SetActive(false);
+        
 
         //드래곤 볼, 장애물 생성 딜레이를 기본 값으로 초기화
         Obj_ATK_TotalDelay = BasicDefaultObj_ATKDelay;
@@ -177,28 +198,17 @@ public class gameManager : MonoBehaviour
         //부등호 쓴 이유 : 스택이 max(10)를 넘어가면 실행이 안되므로 부등호 써야함
         if(Player_NowSpecial >= Player_TotalSpecial)
         {
-            if(Input.GetKeyDown(KeyCode.Z))
+            SA_NoneCharged.SetActive(false);
+            SA_Charged.SetActive(true);
+
+            SA_NoneChargedBtn.SetActive(false);
+            SA_ChargedBtn.SetActive(true);
+            SA_CT.SetActive(false);
+
+            if (Input.GetKeyDown(KeyCode.Z))
             {
                 SpecialAtk();
             }
-        }
-
-        //눈, 입 공격 애니메이션 재생 시간 관련
-        //눈, 입 공격이 활성화 상태일 경우 fdt_Anim에 시간을 누적, 0.5초 보다 커지면 공격 애니메이션 끄는 함수 호출
-        if(Eye_Atk.activeSelf || Mouse_Atk.activeSelf)
-        {
-            fdt_Anim += Time.deltaTime;
-
-            if(fdt_Anim > 0.5f)
-            {
-                OffAtkAnim();
-            }
-        }
-
-        //드래곤이 사망 상태인 경우에도 공격 애니메이션 끄는 함수 호출
-        if(isDragonDie == 1)
-        {
-            OffAtkAnim();
         }
 
         //레디~고 이미지 표시 시간 관련
@@ -212,7 +222,7 @@ public class gameManager : MonoBehaviour
             {
                 ReadyImg.SetActive(false);      //레디 이미지 비활성화
                 GoImg.SetActive(true);          //Go 이미지 활성화
-                soundManager.PlayAudio("Go");   //Go 오디오 실행
+                SoundManager.Instance.PlaySound_05("Go"); //Go 오디오 실행
                 Invoke("OffReady", 1f);         //1초 후 레디 이미지 끄는 함수 호출
             }
         }
@@ -223,11 +233,11 @@ public class gameManager : MonoBehaviour
 
         //드래곤 사망정보를 받아와서 1(사망)이면 드래곤 생성
         if (isDragonDie == 1)
-        {
+        {      
             //사망 시 드래곤 애니메이션 비활성화
             Eye_Atk.SetActive(false);
             Eye_Hit.SetActive(false);
-            Mouse_Atk.SetActive(false);
+            Mouth_Atk.SetActive(false);   
 
             //드래곤 스폰 딜레이에 시간을 누적
             fdt_Dragon += Time.deltaTime;
@@ -317,7 +327,18 @@ public class gameManager : MonoBehaviour
                 }
 
                 //장애물, 공격 소환
-                Invoke("SpawnObjects",0.5f);
+                Invoke("SpawnObjects", 0.5f);
+                //기존에는 SpawnObjects 안에서 애니메이션을 활성화 했었는데 그렇게 하면 왠지 모르겠으나 잔상이 남음
+                //어차피 드래곤이 죽는데까지 0.7초 걸리니 공격애니메이션 비활성화를 Invoke로 0.5초 정도 걸어버리면 잔상이 안남음
+                Eye_Atk.SetActive(true);
+                if(ranAtk == 1)
+                    Mouth_Atk.SetActive(true);
+
+                //눈, 입 공격 애니메이션 재생 시간 관련
+                if (Eye_Atk.activeSelf || Mouth_Atk.activeSelf)
+                {
+                    Invoke("OffAtkAnim", 0.5f);
+                }
 
                 //경고라인 끄기
                 Invoke("OffAlert", 0.45f);
@@ -377,7 +398,7 @@ public class gameManager : MonoBehaviour
     {
         // 1. 드래곤 공격 생성
         //드래곤 공격(눈) 애니메이션 재생
-        Eye_Atk.SetActive(true);
+        //dragon.Eye_Atk.SetActive(true);
 
         //파이어 볼
         if (ranBall == 0)
@@ -385,7 +406,7 @@ public class gameManager : MonoBehaviour
             //오브젝트 풀에서 꺼내기
             newAtkObj = objectManager.MakeObj("FireBall");
             newAtkObj.transform.position = SpawnPoints[ranAtk].transform.position;
-            soundManager.PlayAudio("Pyro");
+            SoundManager.Instance.PlaySound_02("Pyro");
         }
 
         //아이스 볼
@@ -394,7 +415,7 @@ public class gameManager : MonoBehaviour
             //오브젝트 풀에서 꺼내기
             newAtkObj = objectManager.MakeObj("IceBall");
             newAtkObj.transform.position = SpawnPoints[ranAtk].transform.position;
-            soundManager.PlayAudio("Ice");
+            SoundManager.Instance.PlaySound_02("Ice");
         }
         
         //워터 볼
@@ -403,7 +424,8 @@ public class gameManager : MonoBehaviour
             //오브젝트 풀에서 꺼내기
             newAtkObj = objectManager.MakeObj("WaterBall");
             newAtkObj.transform.position = SpawnPoints[ranAtk].transform.position;
-            soundManager.PlayAudio("Water");
+            SoundManager.Instance.PlaySound_02("Water");
+            //soundManager.PlayAudio("Water");
         }
 
         //일렉트릭 볼
@@ -412,7 +434,8 @@ public class gameManager : MonoBehaviour
             //오브젝트 풀에서 꺼내기
             newAtkObj = objectManager.MakeObj("ElectricBall");
             newAtkObj.transform.position = SpawnPoints[ranAtk].transform.position;
-            soundManager.PlayAudio("Electro");
+            SoundManager.Instance.PlaySound_02("Electro");
+            //soundManager.PlayAudio("Electro");
         }
 
         //오브젝트가 생성되고 떨어질 때 일자로 떨어지지 않고 기울기에 맞게 비스듬하게 떨어지게 하기
@@ -426,7 +449,7 @@ public class gameManager : MonoBehaviour
         else if (ranAtk == 1)
         {
             //공격(입) 애니메이션 활성화
-            Mouse_Atk.SetActive(true);
+            //dragon.Mouth_Atk.SetActive(true);
             Vector3 dirVec = ObjTargetPoints[1].transform.position - newAtkObj.transform.position;
             newAtkObj.GetComponent<Rigidbody2D>().AddForce(dirVec * Total__ComAtk_Speed * 0.1f, ForceMode2D.Impulse);
         }
@@ -519,14 +542,13 @@ public class gameManager : MonoBehaviour
     void OffAtkAnim()
     {
         Eye_Atk.SetActive(false);
-        Mouse_Atk.SetActive(false);
-        fdt_Anim = 0;
+        Mouth_Atk.SetActive(false);
     }
 
     //카운트다운 표시
     void OnReady()
     {
-        soundManager.PlayAudio("Ready");
+        SoundManager.Instance.PlaySound_05("Ready");
         ReadyImg.SetActive(true);
     }
 
@@ -565,9 +587,16 @@ public class gameManager : MonoBehaviour
 
                 //필살기를 썼는데 드래곤 hp가 0 이하이면 사망 사운드 재생
                 if (Dragons[i].GetComponent<Dragon>().Dragon_NowHP <= 0)
-                    soundManager.PlayAudio2("DragonDie");
+                    SoundManager.Instance.PlaySound_05("Dragon_Die");
             }
         }
+        //필살기 UI이미지 갱신
+        SA_NoneCharged.SetActive(true);
+        SA_Charged.SetActive(false);
+
+        SA_NoneChargedBtn.SetActive(true);
+        SA_ChargedBtn.SetActive(false);
+        SA_CT.SetActive(true);
 
         Player_NowSpecial = 0;
         Player_SpecialBar.value = 0f;
@@ -575,6 +604,17 @@ public class gameManager : MonoBehaviour
         
         // Invoke("SpecialAtkOff", 0.5f);
     }
+
+    public void specialAttackBtn()
+    {
+        if (Player_NowSpecial >= Player_TotalSpecial)
+        {
+            SpecialAtk();
+        }
+    }
+
+
+
 
     /*
     void SpecialAtkOff()

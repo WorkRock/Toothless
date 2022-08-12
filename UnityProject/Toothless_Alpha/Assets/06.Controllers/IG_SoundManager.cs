@@ -12,9 +12,10 @@ public class IG_SoundManager : MonoBehaviour
         public AudioClip audio;
     }
 
-    public AudioSource audioSource1;    //플레이어 음성
-    public AudioSource audioSource2;    //ㅇ
-    public AudioSource audioSource3;
+    public AudioSource audioSource1;    //쉴드
+    public AudioSource audioSource2;    //드래곤 공격
+    public AudioSource audioSource3;    //패링, 드래곤 타격음
+    public AudioSource audioSource4;    //플레이어 피격음
 
     //오디오 목록
     public AudioType[] AudioList;

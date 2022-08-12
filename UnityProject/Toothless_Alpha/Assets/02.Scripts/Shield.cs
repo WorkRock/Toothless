@@ -5,7 +5,7 @@ using UnityEngine;
 public class Shield : MonoBehaviour
 {
     //인게임 사운드 매니저
-    public IG_SoundManager soundManager;
+    // public IG_SoundManager soundManager;
 
     [Space(10f)]
     //쉴드가 플레이어 따라 움직이게 하기
@@ -35,8 +35,8 @@ public class Shield : MonoBehaviour
     {
         //0, 1, 2 중 랜덤한 패링음 재생
         int ran = Random.Range(0, 3);
-        soundManager.PlayAudio2("Parrying_" + ran);
-        
+        SoundManager.Instance.PlaySound_03("Parrying_" + ran);
+
         Time.timeScale = 0.1f;          //패링시 슬로우 효과
 
         CutScene.SetActive(true);       //컷씬 활성화

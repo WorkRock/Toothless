@@ -18,9 +18,20 @@ public class IG_BtnManager : MonoBehaviour
 
     private bool isFuncOn;
 
+    public Player_Move player;
+
+    public float shieldDelay;
+    public float fdt;
+
+    private void Start()
+    {
+        shieldDelay = player.maxShieldDelay;
+    }
+
     // Update is called once per frame
     void Update()
     {
+        fdt += Time.deltaTime;
         isSoundOn = ScoreManager.GetIsSoundOn();
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -112,5 +123,29 @@ public class IG_BtnManager : MonoBehaviour
     public void escapeGame_No()
     {
         EscapeGame.SetActive(false);
+    }
+
+    public void ShieldSwap()
+    {
+        player.ShieldSwapBtn();
+    }
+
+    public void playerLMove()
+    {
+        player.MovePlayerBtn(-1);
+    }
+
+    public void playerRMove()
+    {
+        player.MovePlayerBtn(1);
+    }
+
+    public void shieldOn()
+    {
+        if(fdt > shieldDelay)
+        {
+            player.isShieldBtnClicked = true;
+            fdt = 0;
+        }
     }
 }
